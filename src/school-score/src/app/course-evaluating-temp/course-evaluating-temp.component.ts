@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-course-grading',
-  templateUrl: './course-grading.component.html',
-  styleUrls: ['./course-grading.component.css']
+  selector: 'app-course-evaluating-temp',
+  templateUrl: './course-evaluating-temp.component.html',
+  styleUrls: ['./course-evaluating-temp.component.css']
 })
-export class CourseGradingComponent {
+export class CourseEvaluatingTempComponent {
   data: any = {
     Data: [
       {

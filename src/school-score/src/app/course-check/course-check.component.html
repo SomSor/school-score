@@ -1,1 +1,137 @@
-<p>course-check works!</p>
+<style>
+    table {
+        width: 100%;
+    }
+
+    table,
+    tr,
+    td,
+    th {
+        border: 1px solid black;
+    }
+
+    h1 a {
+        text-decoration: none;
+    }
+
+    tr.stdCheck td,
+    tr.stdCheck td a {
+        text-align: center;
+        text-decoration: none;
+    }
+</style>
+<div class="breadcrumb">
+    <a routerLink="/home">หน้าหลัก</a> > <a routerLink="/course">บันทึกการพัฒนาผู้เรียน</a> > บันทึกเวลาการเรียน
+</div>
+<div class="center">
+    <h1>บันทึกเวลาการเรียน <a href="#/course-check">◀️</a> พ.ค. <a href="#/course-check">▶️</a></h1>
+</div>
+
+<mat-card class="example-card">
+    <mat-card-content>
+        <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="data">
+            <div fxFlex="20%" fxFlex.xs="100%"><b>ชั้นปี:</b></div>
+            <div fxFlex="80%" fxFlex.xs="100%">3/2</div>
+            <div fxFlex="20%" fxFlex.xs="100%"><b>กลุ่มสาระการเรียนรู้:</b></div>
+            <div fxFlex="80%" fxFlex.xs="100%">การงานอาชีพ</div>
+            <div fxFlex="20%" fxFlex.xs="100%"><b>วิชา:</b></div>
+            <div fxFlex="80%" fxFlex.xs="100%">คอมพิวเตอร์</div>
+        </div>
+        <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="!data">
+            <div fxFlex="100%" fxFlex.xs="100%">
+                <div class="skeleton skeleton-text"></div>
+            </div>
+            <div fxFlex="100%" fxFlex.xs="100%">
+                <div class="skeleton skeleton-text"></div>
+            </div>
+            <div fxFlex="100%" fxFlex.xs="100%">
+                <div class="skeleton skeleton-text"></div>
+            </div>
+            <div fxFlex="100%" fxFlex.xs="100%">
+                <div class="skeleton skeleton-text"></div>
+            </div>
+            <div fxFlex="100%" fxFlex.xs="100%">
+                <div class="skeleton skeleton-text"></div>
+            </div>
+            <div fxFlex="100%" fxFlex.xs="100%">
+                <div class="skeleton skeleton-text"></div>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
+<br />
+
+<button mat-raised-button color="primary">💾 บันทึก</button>
+<br />
+<br />
+<table>
+    <thead>
+        <tr>
+            <th rowspan="2">เลขที่</th>
+            <th rowspan="2">เลขประจำตัวนักเรียน</th>
+            <th rowspan="2">ชื่อ - สกุล</th>
+            <th>สัปดาห์ที่</th>
+            <th colspan="5">1</th>
+            <th colspan="5">2</th>
+            <th colspan="5">3</th>
+            <th colspan="5">4</th>
+            <th rowspan="2" style="writing-mode: vertical-rl;">รวมเวลา</th>
+            <th rowspan="2" style="writing-mode: vertical-rl;">คิดเป็นร้อยละ<br />ของเวลาเรียนทั้งหมด</th>
+        </tr>
+        <tr>
+            <th>วัน</th>
+            <th>จ.<input type="checkbox" checked /></th>
+            <th>อ.<input type="checkbox" checked /></th>
+            <th>พ.<input type="checkbox" checked /></th>
+            <th>พฤ.<input type="checkbox" checked /></th>
+            <th>ศ.<input type="checkbox" checked /></th>
+            <th>จ.<input type="checkbox" checked /></th>
+            <th>อ.<input type="checkbox" checked /></th>
+            <th>พ.<input type="checkbox" checked /></th>
+            <th>พฤ.<input type="checkbox" checked /></th>
+            <th>ศ.<input type="checkbox" checked /></th>
+            <th>จ.<input type="checkbox" checked /></th>
+            <th>อ.<input type="checkbox" checked /></th>
+            <th>พ.<input type="checkbox" checked /></th>
+            <th>พฤ.<input type="checkbox" checked /></th>
+            <th>ศ.<input type="checkbox" /></th>
+            <th>จ.<input type="checkbox" /></th>
+            <th>อ.<input type="checkbox" /></th>
+            <th>พ.<input type="checkbox" /></th>
+            <th>พฤ.<input type="checkbox" /></th>
+            <th>ศ.<input type="checkbox" /></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]" class="stdCheck">
+            <td>{{i}}</td>
+            <td>5432</td>
+            <td>ด.ช.กก ขข</td>
+            <td></td>
+            <td><input type="checkbox" checked /></td>
+            <td><input type="checkbox" checked /></td>
+            <td><input type="checkbox" checked /></td>
+            <td><input type="checkbox" checked /></td>
+            <td><input type="checkbox" checked /></td>
+            <td><input type="checkbox" checked /></td>
+            <td><input type="checkbox" checked /></td>
+            <td><input type="checkbox" checked /></td>
+            <td><input type="checkbox" checked /></td>
+            <td><input type="checkbox" checked /></td>
+            <td><input type="checkbox" checked /></td>
+            <td><input type="checkbox" checked /></td>
+            <td><input type="checkbox" checked /></td>
+            <td><input type="checkbox" checked /></td>
+            <td><input type="checkbox" /></td>
+            <td><input type="checkbox" /></td>
+            <td><input type="checkbox" /></td>
+            <td><input type="checkbox" /></td>
+            <td><input type="checkbox" /></td>
+            <td><input type="checkbox" /></td>
+            <td><b>39</b></td>
+            <td><b>97</b></td>
+        </tr>
+    </tbody>
+</table>
+<br />
+<button mat-raised-button color="primary">💾 บันทึก</button>
