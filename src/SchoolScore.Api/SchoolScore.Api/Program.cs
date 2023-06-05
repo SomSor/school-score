@@ -5,9 +5,6 @@ using SchoolScore.Api.Models.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddOptions();
-//builder.Services.AddOptions<MongoDBConfiguration>().BindConfiguration(nameof(MongoDBConfiguration)).Configure(options => { });
-
 builder.Services.AddTransient(x => builder.Configuration.GetSection(nameof(MongoDBConfiguration)).Get<MongoDBConfiguration>());
 
 builder.Services.AddTransient<IClassRoomDac<ClassRoom>, ClassRoomDac>();
