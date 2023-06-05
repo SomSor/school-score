@@ -7,11 +7,13 @@ namespace SchoolScore.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class SchoolController : Controller
+    public class SchoolsController : ApiControllerBase
     {
+        public static string SchoolId = "638215692835215387-011673d9";
+
         private readonly ISchoolDac<DbModels.School> schoolDac;
 
-        public SchoolController(ISchoolDac<DbModels.School> schoolDac)
+        public SchoolsController(ISchoolDac<DbModels.School> schoolDac)
         {
             this.schoolDac = schoolDac;
         }
