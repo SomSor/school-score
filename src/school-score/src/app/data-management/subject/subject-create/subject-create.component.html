@@ -1,0 +1,45 @@
+<div class="breadcrumb">
+    <a routerLink="/home">หน้าหลัก</a> >
+    <a routerLink="/data-management">จัดการข้อมูล</a> >
+    <span *ngIf="!editingId">เพิ่มวิชา</span>
+    <span *ngIf="editingId">
+        <a [routerLink]="['/memberdetails']" [queryParams]="{id:editingId}">รายเอียดวิชา</a> >
+        แก้ไขวิชา
+    </span>
+</div>
+<div class="center">
+    <h1 *ngIf="!editingId">เพิ่มวิชา</h1>
+    <h1 *ngIf="editingId">แก้ไขวิชา</h1>
+</div>
+
+<div fxLayout="row wrap" fxLayoutGap="grid">
+    <div fxFlex="50%" fxFlex.xs="100%">
+        <mat-card class="example-card">
+            <mat-card-content>
+                <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="fg">
+                    <form [formGroup]="fg" (ngSubmit)="onSave()">
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>รหัสวิชา</mat-label>
+                            <input matInput formControlName="Code" placeholder="">
+                        </mat-form-field>
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>ชื่อวิชา</mat-label>
+                            <input matInput formControlName="Name" placeholder="">
+                        </mat-form-field>
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>คำอธิบายเพิ่มเติม</mat-label>
+                            <input matInput formControlName="Description" placeholder="">
+                        </mat-form-field>
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>กลุ่มสาระการเรียนรู้</mat-label>
+                            <mat-select formControlName="LearningAreaId">
+                                <mat-option *ngFor="let item of data_learningArea.Data" [value]="item.Id">{{ item.Name }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <button type="submit" mat-raised-button color="primary">Save</button>
+                    </form>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

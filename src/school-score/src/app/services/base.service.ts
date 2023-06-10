@@ -86,7 +86,7 @@ export class BaseService {
 
   DeleteData(url: any): Promise<any> {
     return new Promise(resolve => {
-      this.http.delete(url, { headers: this.authService.AuthHeaders() }).subscribe({
+      this.http.put(url, null, { headers: this.authService.AuthHeaders() }).subscribe({
         next: (response) => {
           this.snackBar.open("Data deleted", "Close", { duration: 5000 });
           resolve(response);

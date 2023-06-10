@@ -1,0 +1,33 @@
+<div class="breadcrumb">
+    <a routerLink="/home">หน้าหลัก</a> >
+    <a routerLink="/data-management">จัดการข้อมูล</a> >
+    รายเอียดกลุ่มสาระการเรียนรู้
+</div>
+<div class="center">
+    <h1>รายเอียดกลุ่มสาระการเรียนรู้</h1>
+</div>
+
+<br />
+<div fxLayout="row wrap" fxLayoutGap="grid">
+    <div fxFlex="50%" fxFlex.xs="100%">
+        <button mat-raised-button color="primary" [routerLink]="['/learning-area-create']"
+            [queryParams]="{id:id}">แก้ไขกลุ่มสาระการเรียนรู้</button>
+        &nbsp;
+        <button mat-raised-button color="warn" (click)="delete()">ลบกลุ่มสาระการเรียนรู้</button>
+        <br />
+        <mat-card class="example-card">
+            <mat-card-content>
+                <h2>รายละเอียด</h2>
+                <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="data">
+                    <div fxFlex="20%" fxFlex.xs="100%"><b>ชื่อกลุ่มสาระการเรียนรู้:</b></div>
+                    <div fxFlex="80%" fxFlex.xs="100%">{{ data.Name }}</div>
+                </div>
+                <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="data">
+                    <div fxFlex="20%" fxFlex.xs="100%"><b>คำอธิบายเพิ่มเติม:</b></div>
+                    <div fxFlex="80%" fxFlex.xs="100%">{{ data.Description }}</div>
+                </div>
+                <app-skeleton *ngIf="!data" [row]="2"></app-skeleton>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

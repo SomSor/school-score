@@ -26,9 +26,9 @@ export class AuthService {
 
   public tokenExpired(): boolean {
     var token = this.getToken();
-    if(!token) return false;
+    if(!token) return true;
     const expiry = (JSON.parse(atob(token.split('.')[1]))).exp;
-    return (Math.floor((new Date).getTime() / 1000)) >= expiry;
+    return Math.floor((new Date).getTime() / 1000) >= expiry;
   }
 
 }

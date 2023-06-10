@@ -21,10 +21,10 @@ builder.Services.AddTransient<ISchoolYearDac<SchoolYear>, SchoolYearDac>();
 builder.Services.AddTransient<IScoringGroupDac<ScoringGroup>, ScoringGroupDac>();
 builder.Services.AddTransient<IStudentDac<Student>, StudentDac>();
 builder.Services.AddTransient<IStudentRegisterOpenSubjectDac<StudentRegisterOpenSubject>, StudentRegisterOpenSubjectDac>();
-builder.Services.AddTransient<ISujectDac<Suject>, SujectDac>();
+builder.Services.AddTransient<ISujectDac<Subject>, SujectDac>();
 builder.Services.AddTransient<ITeacherDac<Teacher>, TeacherDac>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -53,9 +53,9 @@ builder.Services.AddScoped<JwtHandler>();
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
 }
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 app.UseAuthorization();

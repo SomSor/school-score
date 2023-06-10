@@ -7,5 +7,6 @@
         public string MainTeacherId { get; set; }
         public IEnumerable<ScoringGroup> Evaluates { get; set; }
         public ScoringGroup Exaam { get; set; }
+        public string Remark { get; set; }
     }
 }

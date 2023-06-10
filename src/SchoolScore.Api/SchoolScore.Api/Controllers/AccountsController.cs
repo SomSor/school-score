@@ -8,8 +8,8 @@ namespace SchoolScore.Api.Controllers
     [Route("api/[controller]")]
     public class AccountsController : Controller
     {
-        public string Username { get; set; } = "admin";
-        public string Password { get; set; } = "admin";
+        public static string Username { get; set; } = "admin";
+        public static string Password { get; set; } = "admin";
 
         private readonly JwtHandler _jwtHandler;
         public AccountsController(JwtHandler jwtHandler)

@@ -23,9 +23,24 @@ namespace SchoolScore.Api.DACs.Imps
             return await Collection.Find(expression).FirstOrDefaultAsync();
         }
 
-        public async Task<List<T>> List(Expression<Func<T, bool>> expression)
+        public async Task<IEnumerable<T>> List(Expression<Func<T, bool>> expression, int page = 1, int? pageSize = null)
         {
-            return await Collection.Find(expression).ToListAsync();
+            var query = Collection.Find(expression);
+
+            if (pageSize is not null && page >= 1)
+            {
+                var skip = (page - 1) * pageSize.Value;
+                query = query.Skip(skip).Limit(pageSize.Value);
+            }
+            var result = await query.ToListAsync();
+            return result;
+        }
+
+        public async Task<IEnumerable<T>> ListAll(Expression<Func<T, bool>> expression)
+        {
+            var query = Collection.Find(expression);
+            var result = await query.ToListAsync();
+            return result;
         }
 
         public async Task Create(T document)
@@ -33,7 +48,7 @@ namespace SchoolScore.Api.DACs.Imps
             await Collection.InsertOneAsync(document);
         }
 
-        public async Task CreateMany(List<T> documents)
+        public async Task CreateMany(IEnumerable<T> documents)
         {
             await Collection.InsertManyAsync(documents);
         }
@@ -51,6 +66,11 @@ namespace SchoolScore.Api.DACs.Imps
         public async Task ReplaceOne(Expression<Func<T, bool>> expression, T document)
         {
             await Collection.ReplaceOneAsync(expression, document);
+        }
+
+        public async Task<long> Count(Expression<Func<T, bool>> expression)
+        {
+            return await Collection.CountDocumentsAsync(expression);
         }
     }
 }

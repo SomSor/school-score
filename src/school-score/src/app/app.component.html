@@ -319,7 +319,8 @@
   &nbsp;&nbsp;&nbsp;
   <a routerLink="/configuration" style="color: white;">ตั้งค่า</a>
   <div class="spacer"></div>
-  <a routerLink="/login" style="color: white;">เช้าสู่ระบบ</a>
+  <a routerLink="/login" style="color: white;" *ngIf="tokenExpired()">เช้าสู่ระบบ</a>
+  <a (click)="Logout()" style="color: white;cursor: pointer;" *ngIf="!tokenExpired()">ออกจากระบบ</a>
   <a aria-label="Angular on twitter" target="_blank" rel="noopener" href="https://twitter.com/angular" title="Twitter">
     <svg id="twitter-logo" height="24" data-name="Logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
       <rect width="400" height="400" fill="none" />

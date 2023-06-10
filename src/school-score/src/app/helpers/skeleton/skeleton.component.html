@@ -1,0 +1,22 @@
+<div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="style=='detail'">
+    <div fxFlex="100%" fxFlex.xs="100%" *ngFor="let item of data">
+        <div fxFlex="18%" fxFlex.xs="100%"><div class="skeleton skeleton-text"></div></div>
+        <div fxFlex="2%" fxFlex.xs="0%"></div>
+        <div fxFlex="80%" fxFlex.xs="100%"><div class="skeleton skeleton-text"></div></div>
+    </div>
+</div>
+
+<table mat-table [dataSource]="data" class="mat-elevation-z8 full-width" *ngIf="style=='table'">
+    <ng-container matColumnDef="{{item}}" *ngFor="let item of data[0]">
+        <th mat-header-cell *matHeaderCellDef>
+            <div class="skeleton skeleton-text"></div>
+        </th>
+        <td mat-cell *matCellDef="let i = index">
+            <div class="skeleton skeleton-text"></div>
+        </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="data[0]">
+    </tr>
+    <tr mat-row *matRowDef="let row; columns: data[0];">
+    </tr>
+</table>

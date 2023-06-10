@@ -38,7 +38,7 @@ namespace SchoolScore.Api.Controllers
         public async Task<IActionResult> Create([FromBody] SchoolCreate request)
         {
             var documentDb = request.Adapt<DbModels.School>();
-            documentDb.Init("admin");
+            documentDb.Init(AccountsController.Username);
             await schoolDac.Create(documentDb);
             return Ok();
         }
