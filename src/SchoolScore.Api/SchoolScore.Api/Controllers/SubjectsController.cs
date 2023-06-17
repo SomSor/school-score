@@ -11,18 +11,18 @@ namespace SchoolScore.Api.Controllers
     public class SubjectsController : ApiControllerBase
     {
         private readonly ILearningAreaDac<DbModels.LearningArea> learningAreaDac;
-        private readonly ISujectDac<DbModels.Subject> sujectDac;
         private readonly IOpenSubjectDac<DbModels.OpenSubject> openSubjectDac;
+        private readonly ISujectDac<DbModels.Subject> sujectDac;
 
         public SubjectsController(
             ILearningAreaDac<DbModels.LearningArea> learningAreaDac,
-            ISujectDac<DbModels.Subject> sujectDac,
-            IOpenSubjectDac<DbModels.OpenSubject> openSubjectDac
+            IOpenSubjectDac<DbModels.OpenSubject> openSubjectDac,
+            ISujectDac<DbModels.Subject> sujectDac
             )
         {
             this.learningAreaDac = learningAreaDac;
-            this.sujectDac = sujectDac;
             this.openSubjectDac = openSubjectDac;
+            this.sujectDac = sujectDac;
         }
 
         [HttpGet]
@@ -31,11 +31,11 @@ namespace SchoolScore.Api.Controllers
             if (string.IsNullOrWhiteSpace(search))
             {
                 var data = page == 0
-                    ? await sujectDac.ListAll(x => true)
-                    : await sujectDac.List(x => true, page ?? 1, pageSize);
+                    ? await sujectDac.ListAllWithLearningArea(learningAreaDac.Collection, x => true)
+                    : await sujectDac.ListWithLearningArea(learningAreaDac.Collection, x => true, page ?? 1, pageSize);
                 var count = await sujectDac.Count(x => true);
 
-                return Ok(new PagingModel<DbModels.Subject>
+                return Ok(new PagingModel<Subject>
                 {
                     Data = data,
                     Length = count,
@@ -47,11 +47,11 @@ namespace SchoolScore.Api.Controllers
                 Expression<Func<DbModels.Subject, bool>> func = x => true && x.Name.ToLower().Contains(txt);
 
                 var data = page == 0
-                    ? await sujectDac.ListAll(func)
-                    : await sujectDac.List(func, page ?? 1, pageSize);
+                    ? await sujectDac.ListAllWithLearningArea(learningAreaDac.Collection, func)
+                    : await sujectDac.ListWithLearningArea(learningAreaDac.Collection, func, page ?? 1, pageSize);
                 var count = await sujectDac.Count(func);
 
-                return Ok(new PagingModel<DbModels.Subject>
+                return Ok(new PagingModel<Subject>
                 {
                     Data = data,
                     Length = count,
@@ -115,6 +115,7 @@ namespace SchoolScore.Api.Controllers
         public async Task<IActionResult> Update(string id, [FromBody] SujectCreate request)
         {
             var documentDb = await sujectDac.Get(x => x.Id == id);
+            documentDb.Code = request.Code;
             documentDb.Name = request.Name;
             documentDb.Description = request.Description;
             await sujectDac.ReplaceOne(x => x.Id == id, documentDb);

@@ -9,9 +9,10 @@ namespace SchoolScore.Api.Controllers
     public class AccountsController : Controller
     {
         public static string Username { get; set; } = "admin";
-        public static string Password { get; set; } = "admin";
+        public static string Password { get; set; } = "Zaq12wsx[]";
 
         private readonly JwtHandler _jwtHandler;
+
         public AccountsController(JwtHandler jwtHandler)
         {
             _jwtHandler = jwtHandler;
@@ -20,7 +21,7 @@ namespace SchoolScore.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            if (request.Username != Username && request.Password != Username)
+            if (request.Username != Username || request.Password != Password)
             {
                 return BadRequest("Login fail.");
             }

@@ -9,8 +9,6 @@ namespace SchoolScore.Api.Controllers
     [Route("api/[controller]")]
     public class SchoolsController : ApiControllerBase
     {
-        public static string SchoolId = "638215692835215387-011673d9";
-
         private readonly ISchoolDac<DbModels.School> schoolDac;
 
         public SchoolsController(ISchoolDac<DbModels.School> schoolDac)

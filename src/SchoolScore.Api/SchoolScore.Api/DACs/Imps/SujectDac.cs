@@ -10,11 +10,56 @@ namespace SchoolScore.Api.DACs.Imps
     {
         public SujectDac(MongoDBConfiguration option) : base(option) { }
 
-        public async Task<Models.Subject> GetWithLearningArea(IMongoCollection<LearningArea> LearningAreaCollection, Expression<Func<Subject, bool>> expression)
+        public async Task<IEnumerable<Models.Subject>> ListWithLearningArea(IMongoCollection<LearningArea> learningAreaCollection, Expression<Func<Subject, bool>> expression, int page = 1, int? pageSize = null)
+        {
+            var query = Collection.AsQueryable()
+                .Where(expression)
+                .Join(learningAreaCollection.AsQueryable(), o => o.LearningAreaId, i => i.Id, (x, y) => new
+                {
+                    Subject = x,
+                    LearningArea = y,
+                });
+
+            if (pageSize is not null && page >= 1)
+            {
+                var skip = (page - 1) * pageSize.Value;
+                query = query.Skip(skip).Take(pageSize.Value);
+            }
+            var result = query.ToList()
+                .Select(x =>
+                {
+                    var document = x.Subject.Adapt<Models.Subject>();
+                    document.LearningArea = x.LearningArea;
+                    return document;
+                });
+            return result;
+        }
+
+        public async Task<IEnumerable<Models.Subject>> ListAllWithLearningArea(IMongoCollection<LearningArea> learningAreaCollection, Expression<Func<Subject, bool>> expression)
+        {
+            var query = Collection.AsQueryable()
+                .Where(expression)
+                .Join(learningAreaCollection.AsQueryable(), o => o.LearningAreaId, i => i.Id, (x, y) => new
+                {
+                    Subject = x,
+                    LearningArea = y,
+                });
+
+            var result = query.ToList()
+                .Select(x =>
+                {
+                    var document = x.Subject.Adapt<Models.Subject>();
+                    document.LearningArea = x.LearningArea;
+                    return document;
+                });
+            return result;
+        }
+
+        public async Task<Models.Subject> GetWithLearningArea(IMongoCollection<LearningArea> learningAreaCollection, Expression<Func<Subject, bool>> expression)
         {
             var document = Collection.AsQueryable()
                 .Where(expression)
-                .Join(LearningAreaCollection.AsQueryable(), o => o.LearningAreaId, i => i.Id, (x, y) => new
+                .Join(learningAreaCollection.AsQueryable(), o => o.LearningAreaId, i => i.Id, (x, y) => new
                 {
                     Subject = x,
                     LearningArea = y,

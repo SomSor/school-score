@@ -6,33 +6,33 @@
 <div class="center">
     <h1>รายเอียดวิชา</h1>
 </div>
-
 <br />
 <div fxLayout="row wrap" fxLayoutGap="grid">
-    <div fxFlex="50%" fxFlex.xs="100%">
-        <button mat-raised-button color="primary" [routerLink]="['/learning-area-create']"
+    <div fxFlex="100%" fxFlex.xs="100%">
+        <button mat-raised-button color="primary" [routerLink]="['/subject-create']"
             [queryParams]="{id:id}">แก้ไขวิชา</button>
         &nbsp;
         <button mat-raised-button color="warn" (click)="delete()">ลบวิชา</button>
+        <br />
         <br />
         <mat-card class="example-card">
             <mat-card-content>
                 <h2>รายละเอียด</h2>
                 <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="data">
-                    <div fxFlex="20%" fxFlex.xs="100%"><b>รหัสวิชา:</b></div>
-                    <div fxFlex="80%" fxFlex.xs="100%">{{ data.Name }}</div>
+                    <div fxFlex="30%" fxFlex.xs="100%"><b>รหัสวิชา:</b></div>
+                    <div fxFlex="70%" fxFlex.xs="100%">{{ data.Name }}</div>
                 </div>
                 <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="data">
-                    <div fxFlex="20%" fxFlex.xs="100%"><b>ชื่อวิชา:</b></div>
-                    <div fxFlex="80%" fxFlex.xs="100%">{{ data.Name }}</div>
+                    <div fxFlex="30%" fxFlex.xs="100%"><b>ชื่อวิชา:</b></div>
+                    <div fxFlex="70%" fxFlex.xs="100%">{{ data.Name }}</div>
                 </div>
                 <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="data">
-                    <div fxFlex="20%" fxFlex.xs="100%"><b>คำอธิบายเพิ่มเติม:</b></div>
-                    <div fxFlex="80%" fxFlex.xs="100%">{{ data.Description }}</div>
+                    <div fxFlex="30%" fxFlex.xs="100%"><b>คำอธิบายเพิ่มเติม:</b></div>
+                    <div fxFlex="70%" fxFlex.xs="100%">{{ data.Description }}</div>
                 </div>
                 <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="data">
-                    <div fxFlex="20%" fxFlex.xs="100%"><b>กลุ่มสาระการเรียนรู้:</b></div>
-                    <div fxFlex="80%" fxFlex.xs="100%">{{ data.LearningArea.Name }}</div>
+                    <div fxFlex="30%" fxFlex.xs="100%"><b>กลุ่มสาระการเรียนรู้:</b></div>
+                    <div fxFlex="70%" fxFlex.xs="100%">{{ data.LearningArea.Name }}</div>
                 </div>
                 <app-skeleton *ngIf="!data" [row]="2"></app-skeleton>
             </mat-card-content>

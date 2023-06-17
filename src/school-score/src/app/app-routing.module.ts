@@ -16,8 +16,14 @@ import { LearningAreaCreateComponent } from './data-management/learning-area/lea
 import { LearningAreaDetailsComponent } from './data-management/learning-area/learning-area-details/learning-area-details.component';
 import { SubjectCreateComponent } from './data-management/subject/subject-create/subject-create.component';
 import { SubjectDetailsComponent } from './data-management/subject/subject-details/subject-details.component';
+import { TeacherCreateComponent } from './data-management/teacher/teacher-create/teacher-create.component';
+import { TeacherDetailsComponent } from './data-management/teacher/teacher-details/teacher-details.component';
+import { StudentCreateComponent } from './data-management/student/student-create/student-create.component';
+import { StudentDetailsComponent } from './data-management/student/student-details/student-details.component';
 
 import { CourseEvaluatingTempComponent } from './course-evaluating-temp/course-evaluating-temp.component';
+import { ClassroomCreateComponent } from './data-management/classroom/classroom-create/classroom-create.component';
+import { ClassroomDetailsComponent } from './data-management/classroom/classroom-details/classroom-details.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -36,6 +42,12 @@ const routes: Routes = [
   { path: 'learning-area-details', component: LearningAreaDetailsComponent },
   { path: 'subject-create', component: SubjectCreateComponent },
   { path: 'subject-details', component: SubjectDetailsComponent },
+  { path: 'teacher-create', component: TeacherCreateComponent },
+  { path: 'teacher-details', component: TeacherDetailsComponent },
+  { path: 'student-create', component: StudentCreateComponent },
+  { path: 'student-details', component: StudentDetailsComponent },
+  { path: 'classroom-create', component: ClassroomCreateComponent },
+  { path: 'classroom-details', component: ClassroomDetailsComponent },
 
   { path: 'course-evaluating-temp', component: CourseEvaluatingTempComponent },
 ];

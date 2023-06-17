@@ -1,0 +1,50 @@
+<div class="breadcrumb">
+    <a routerLink="/home">หน้าหลัก</a> >
+    <a routerLink="/data-management">จัดการข้อมูล</a> >
+    <span *ngIf="!editingId">เพิ่มห้องเรียน</span>
+    <span *ngIf="editingId">
+        <a [routerLink]="['/classroom-details']" [queryParams]="{id:editingId}">รายเอียดห้องเรียน</a> >
+        แก้ไขห้องเรียน
+    </span>
+</div>
+<div class="center">
+    <h1 *ngIf="!editingId">เพิ่มห้องเรียน</h1>
+    <h1 *ngIf="editingId">แก้ไขห้องเรียน</h1>
+</div>
+
+<div fxLayout="row wrap" fxLayoutGap="grid">
+    <div fxFlex="50%" fxFlex.xs="100%">
+        <mat-card class="example-card">
+            <mat-card-content>
+                <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="fg">
+                    <form [formGroup]="fg" (ngSubmit)="onSave()">
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>ระดับ</mat-label>
+                            <mat-select formControlName="Tier">
+                                <mat-option value="PreSchool">{{ GetTier("PreSchool") }}</mat-option>
+                                <mat-option value="PrimarySchool">{{ GetTier("PrimarySchool") }}</mat-option>
+                                <mat-option value="JuniorHighSchool">{{ GetTier("JuniorHighSchool") }}</mat-option>
+                                <mat-option value="SeniorHighSchool">{{ GetTier("SeniorHighSchool") }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>ชั้นปี</mat-label>
+                            <input matInput formControlName="ClassYear" placeholder="">
+                        </mat-form-field>
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>ห้อง</mat-label>
+                            <input matInput formControlName="Subclass" placeholder="">
+                        </mat-form-field>
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>ครูประชำชั้น</mat-label>
+                            <mat-select formControlName="TeacherId">
+                                <mat-option *ngFor="let item of data_teacher.Data" [value]="item.Id">{{ item.Prefix }}{{ item.Name }} {{ item.Lastname }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <button type="submit" mat-raised-button color="primary">บันทึก</button>
+                    </form>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

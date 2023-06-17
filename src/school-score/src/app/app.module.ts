@@ -34,13 +34,18 @@ import { RegistrationComponent } from './registration/registration.component';
 import { ReportComponent } from './report/report.component';
 
 import { DataManagementComponent } from './data-management/data-management/data-management.component';
-import { TeacherComponent } from './data-management/teacher/teacher/teacher.component';
 import { LearningAreaCreateComponent } from './data-management/learning-area/learning-area-create/learning-area-create.component';
 import { LearningAreaDetailsComponent } from './data-management/learning-area/learning-area-details/learning-area-details.component';
 import { SubjectCreateComponent } from './data-management/subject/subject-create/subject-create.component';
 import { SubjectDetailsComponent } from './data-management/subject/subject-details/subject-details.component';
 
 import { SkeletonComponent } from './helpers/skeleton/skeleton.component';
+import { TeacherCreateComponent } from './data-management/teacher/teacher-create/teacher-create.component';
+import { TeacherDetailsComponent } from './data-management/teacher/teacher-details/teacher-details.component';
+import { StudentCreateComponent } from './data-management/student/student-create/student-create.component';
+import { StudentDetailsComponent } from './data-management/student/student-details/student-details.component';
+import { ClassroomDetailsComponent } from './data-management/classroom/classroom-details/classroom-details.component';
+import { ClassroomCreateComponent } from './data-management/classroom/classroom-create/classroom-create.component';
 
 const routes: Routes = [];
 
@@ -59,12 +64,17 @@ const routes: Routes = [];
     ReportComponent,
 
     DataManagementComponent,
-    TeacherComponent,
     LearningAreaCreateComponent,
     LearningAreaDetailsComponent,
     SkeletonComponent,
     SubjectCreateComponent,
-    SubjectDetailsComponent
+    SubjectDetailsComponent,
+    TeacherCreateComponent,
+    TeacherDetailsComponent,
+    StudentCreateComponent,
+    StudentDetailsComponent,
+    ClassroomDetailsComponent,
+    ClassroomCreateComponent
   ],
   imports: [
     AppRoutingModule,

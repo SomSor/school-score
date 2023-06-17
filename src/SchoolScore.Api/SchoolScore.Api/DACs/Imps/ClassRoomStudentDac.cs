@@ -3,8 +3,8 @@ using SchoolScore.Api.Models.Configuration;
 
 namespace SchoolScore.Api.DACs.Imps
 {
-    public class ClassRoomStudentDac : DataDAC<ClassRoomStudent>, IClassRoomStudentDac<ClassRoomStudent>
+    public class ClassroomStudentDac : DataDAC<ClassroomStudent>, IClassroomStudentDac<ClassroomStudent>
     {
-        public ClassRoomStudentDac(MongoDBConfiguration option) : base(option) { }
+        public ClassroomStudentDac(MongoDBConfiguration option) : base(option) { }
     }
 }

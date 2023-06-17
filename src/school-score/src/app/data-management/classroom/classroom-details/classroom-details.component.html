@@ -1,0 +1,37 @@
+<div class="breadcrumb">
+    <a routerLink="/home">หน้าหลัก</a> >
+    <a routerLink="/data-management">จัดการข้อมูล</a> >
+    รายเอียดห้องเรียน
+</div>
+<div class="center">
+    <h1>รายเอียดห้องเรียน</h1>
+</div>
+<br />
+<div fxLayout="row wrap" fxLayoutGap="grid">
+    <div fxFlex="100%" fxFlex.xs="100%">
+        <button mat-raised-button color="primary" [routerLink]="['/classroom-create']"
+            [queryParams]="{id:id}">แก้ไขห้องเรียน</button>
+        &nbsp;
+        <button mat-raised-button color="warn" (click)="delete()">ลบห้องเรียน</button>
+        <br />
+        <br />
+        <mat-card class="example-card">
+            <mat-card-content>
+                <h2>รายละเอียด</h2>
+                <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="data">
+                    <div fxFlex="30%" fxFlex.xs="100%"><b>ระดับ:</b></div>
+                    <div fxFlex="70%" fxFlex.xs="100%">{{ GetTier(data.Tier) }}</div>
+                </div>
+                <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="data">
+                    <div fxFlex="30%" fxFlex.xs="100%"><b>ห้องเรียน:</b></div>
+                    <div fxFlex="70%" fxFlex.xs="100%">{{ data.ClassYear }} / {{ data.Subclass }}</div>
+                </div>
+                <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="data">
+                    <div fxFlex="30%" fxFlex.xs="100%"><b>ครูประชำชั้น:</b></div>
+                    <div fxFlex="70%" fxFlex.xs="100%">{{ data.Teacher?.Prefix }}{{ data.Teacher?.Name }} {{ data.Teacher?.Lastname }}</div>
+                </div>
+                <app-skeleton *ngIf="!data" [row]="2"></app-skeleton>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

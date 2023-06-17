@@ -1,0 +1,53 @@
+<div class="breadcrumb">
+    <a routerLink="/home">หน้าหลัก</a> >
+    <a routerLink="/data-management">จัดการข้อมูล</a> >
+    <span *ngIf="!editingId">เพิ่มนักเรียน</span>
+    <span *ngIf="editingId">
+        <a [routerLink]="['/student-details']" [queryParams]="{id:editingId}">รายเอียดนักเรียน</a> >
+        แก้ไขนักเรียน
+    </span>
+</div>
+<div class="center">
+    <h1 *ngIf="!editingId">เพิ่มนักเรียน</h1>
+    <h1 *ngIf="editingId">แก้ไขนักเรียน</h1>
+</div>
+
+<div fxLayout="row wrap" fxLayoutGap="grid">
+    <div fxFlex="50%" fxFlex.xs="100%">
+        <mat-card class="example-card">
+            <mat-card-content>
+                <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="fg">
+                    <form [formGroup]="fg" (ngSubmit)="onSave()">
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>รหัสประจำตัว</mat-label>
+                            <input matInput formControlName="Code" placeholder="">
+                        </mat-form-field>
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-select formControlName="Prefix">
+                                <mat-label>คำนำหน้า</mat-label>
+                                <mat-option value="นาย">เด็กชาย</mat-option>
+                                <mat-option value="นาย">เด็กหญิง</mat-option>
+                                <mat-option value="นาย">นาย</mat-option>
+                                <mat-option value="นาย">นาง</mat-option>
+                                <mat-option value="นาย">นางสาว</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>ชื่อ</mat-label>
+                            <input matInput formControlName="Name" placeholder="">
+                        </mat-form-field>
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>สกุล</mat-label>
+                            <input matInput formControlName="Lastname" placeholder="">
+                        </mat-form-field>
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>รหัสประชาชน</mat-label>
+                            <input matInput formControlName="PID" placeholder="">
+                        </mat-form-field>
+                        <button type="submit" mat-raised-button color="primary">บันทึก</button>
+                    </form>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

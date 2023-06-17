@@ -69,7 +69,7 @@ namespace SchoolScore.Api.Controllers
         {
             var documentDb = request.Adapt<DbModels.LearningArea>();
             documentDb.Init(AccountsController.Username);
-            documentDb.SchoolId = SchoolsController.SchoolId;
+            documentDb.SchoolId = SchoolId;
             await learningAreaDac.Create(documentDb);
             return Ok();
         }
@@ -81,7 +81,7 @@ namespace SchoolScore.Api.Controllers
             documentDbs = documentDbs.Select(x =>
             {
                 x.Init(AccountsController.Username);
-                x.SchoolId = SchoolsController.SchoolId;
+                x.SchoolId = SchoolId;
                 return x;
             }).ToList();
             await learningAreaDac.CreateMany(documentDbs);
@@ -99,7 +99,7 @@ namespace SchoolScore.Api.Controllers
                 {
                     Name = x[0],
                     Description = x[1],
-                    SchoolId = SchoolsController.SchoolId,
+                    SchoolId = SchoolId,
                 };
                 documentDb.Init(AccountsController.Username);
 

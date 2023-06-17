@@ -3,7 +3,7 @@
     <a routerLink="/data-management">จัดการข้อมูล</a> >
     <span *ngIf="!editingId">เพิ่มวิชา</span>
     <span *ngIf="editingId">
-        <a [routerLink]="['/memberdetails']" [queryParams]="{id:editingId}">รายเอียดวิชา</a> >
+        <a [routerLink]="['/subject-details']" [queryParams]="{id:editingId}">รายเอียดวิชา</a> >
         แก้ไขวิชา
     </span>
 </div>
@@ -36,7 +36,7 @@
                                 <mat-option *ngFor="let item of data_learningArea.Data" [value]="item.Id">{{ item.Name }}</mat-option>
                             </mat-select>
                         </mat-form-field>
-                        <button type="submit" mat-raised-button color="primary">Save</button>
+                        <button type="submit" mat-raised-button color="primary">บันทึก</button>
                     </form>
                 </div>
             </mat-card-content>

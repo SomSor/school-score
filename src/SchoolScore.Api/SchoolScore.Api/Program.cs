@@ -11,8 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddTransient(x => builder.Configuration.GetSection(nameof(MongoDBConfiguration)).Get<MongoDBConfiguration>());
 
-builder.Services.AddTransient<IClassRoomDac<ClassRoom>, ClassRoomDac>();
-builder.Services.AddTransient<IClassRoomStudentDac<ClassRoomStudent>, ClassRoomStudentDac>();
+builder.Services.AddTransient<IClassroomDac<Classroom>, ClassroomDac>();
+builder.Services.AddTransient<IClassroomStudentDac<ClassroomStudent>, ClassroomStudentDac>();
 builder.Services.AddTransient<IGradingCriteriaDac<GradingCriteria>, GradingCriteriaDac>();
 builder.Services.AddTransient<ILearningAreaDac<LearningArea>, LearningAreaDac>();
 builder.Services.AddTransient<IOpenSubjectDac<OpenSubject>, OpenSubjectDac>();
@@ -27,6 +27,8 @@ builder.Services.AddTransient<ITeacherDac<Teacher>, TeacherDac>();
 builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddControllers(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 builder.Services
@@ -56,6 +58,10 @@ if (app.Environment.IsDevelopment())
 }
 app.UseSwagger();
 app.UseSwaggerUI();
+app.UseCors(config => config
+    .AllowAnyOrigin()
+    .AllowAnyHeader()
+    .AllowAnyMethod());
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
