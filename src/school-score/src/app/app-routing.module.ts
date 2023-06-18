@@ -24,6 +24,8 @@ import { StudentDetailsComponent } from './data-management/student/student-detai
 import { CourseEvaluatingTempComponent } from './course-evaluating-temp/course-evaluating-temp.component';
 import { ClassroomCreateComponent } from './data-management/classroom/classroom-create/classroom-create.component';
 import { ClassroomDetailsComponent } from './data-management/classroom/classroom-details/classroom-details.component';
+import { ClassroomStudentCreateComponent } from './data-management/classroom-student/classroom-student-create/classroom-student-create.component';
+import { ClassroomStudentDetailsComponent } from './data-management/classroom-student/classroom-student-details/classroom-student-details.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -48,6 +50,8 @@ const routes: Routes = [
   { path: 'student-details', component: StudentDetailsComponent },
   { path: 'classroom-create', component: ClassroomCreateComponent },
   { path: 'classroom-details', component: ClassroomDetailsComponent },
+  { path: 'classroom-student-create', component: ClassroomStudentCreateComponent },
+  { path: 'classroom-student-details', component: ClassroomStudentDetailsComponent },
 
   { path: 'course-evaluating-temp', component: CourseEvaluatingTempComponent },
 ];

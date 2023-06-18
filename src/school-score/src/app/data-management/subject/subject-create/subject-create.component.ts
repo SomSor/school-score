@@ -11,7 +11,7 @@ import { SubjectService } from '../../../services/subject.service';
   templateUrl: './subject-create.component.html',
   styleUrls: ['./subject-create.component.css']
 })
-export class SubjectCreateComponent{
+export class SubjectCreateComponent {
   fg: FormGroup;
   editingId: any;
 

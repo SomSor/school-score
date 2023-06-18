@@ -7,6 +7,7 @@ import { SubjectService } from '../../services/subject.service';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { StudentService } from 'src/app/services/student.service';
 import { ClassroomService } from 'src/app/services/classroom.service';
+import { ClassroomStudentService } from 'src/app/services/classroom-student.service';
 import { ClassroomTierService } from 'src/app/helpers/classroom-tier/classroom-tier.service';
 
 @Component({
@@ -21,6 +22,7 @@ export class DataManagementComponent {
   data_learningArea = new PagingModel;
   data_subject = new PagingModel;
   data_classroom = new PagingModel;
+  data_classroomStudent = new PagingModel;
 
   constructor(
     private teacherService: TeacherService,
@@ -28,6 +30,7 @@ export class DataManagementComponent {
     private learningAreaService: LearningAreaService,
     private subjectService: SubjectService,
     private classroomService: ClassroomService,
+    private classroomStudentService: ClassroomStudentService,
     private classroomTierService: ClassroomTierService,
   ) { }
 
@@ -37,6 +40,7 @@ export class DataManagementComponent {
     this.getLearingAreaData(undefined);
     this.getSubjectData(undefined);
     this.getClassroomData(undefined);
+    this.getClassroomStudentData(undefined);
   }
 
   async getTeacherData(event?: PageEvent) {
@@ -61,6 +65,11 @@ export class DataManagementComponent {
 
   async getClassroomData(event?: PageEvent) {
     this.data_classroom = await this.classroomService.Gets(this.data_subject.SearchText, event);
+    return event;
+  }
+
+  async getClassroomStudentData(event?: PageEvent) {
+    this.data_classroomStudent = await this.classroomStudentService.Gets(this.data_subject.SearchText, event);
     return event;
   }
 

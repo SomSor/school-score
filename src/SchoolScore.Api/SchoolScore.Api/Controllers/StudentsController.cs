@@ -10,17 +10,17 @@ namespace SchoolScore.Api.Controllers
     [Route("api/[controller]")]
     public class StudentsController : ApiControllerBase
     {
-        private readonly IClassroomStudentDac<DbModels.ClassroomStudent> classRoomStudentDac;
+        private readonly IClassroomStudentDac<DbModels.ClassroomStudent> classroomStudentDac;
         private readonly IStudentDac<DbModels.Student> studentDac;
         private readonly IStudentRegisterOpenSubjectDac<DbModels.StudentRegisterOpenSubject> studentRegisterOpenSubjectDac;
 
         public StudentsController(
-            IClassroomStudentDac<DbModels.ClassroomStudent> classRoomStudentDac,
+            IClassroomStudentDac<DbModels.ClassroomStudent> classroomStudentDac,
             IStudentDac<DbModels.Student> studentDac,
             IStudentRegisterOpenSubjectDac<DbModels.StudentRegisterOpenSubject> studentRegisterOpenSubjectDac
             )
         {
-            this.classRoomStudentDac = classRoomStudentDac;
+            this.classroomStudentDac = classroomStudentDac;
             this.studentDac = studentDac;
             this.studentRegisterOpenSubjectDac = studentRegisterOpenSubjectDac;
         }
@@ -128,9 +128,9 @@ namespace SchoolScore.Api.Controllers
         [HttpPut("delete/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var classRoomStudentCount = await classRoomStudentDac.Count(x => x.StudentId == id);
+            var classroomStudentCount = await classroomStudentDac.Count(x => x.StudentId == id);
             var studentRegisterOpenSubjecCount = await studentRegisterOpenSubjectDac.Count(x => x.StudentId == id);
-            if (studentRegisterOpenSubjecCount > 0 || classRoomStudentCount > 0) return Conflict($"ไม่สามารถลบได้ มี {studentRegisterOpenSubjecCount} วิชา หรือ {classRoomStudentCount} ห้องเรียน ที่เปิดอยู่");
+            if (studentRegisterOpenSubjecCount > 0 || classroomStudentCount > 0) return Conflict($"ไม่สามารถลบได้ มี {studentRegisterOpenSubjecCount} วิชา หรือ {classroomStudentCount} ห้องเรียน ที่เปิดอยู่");
 
             await studentDac.DeleteOne(x => x.Id == id);
             return Ok();

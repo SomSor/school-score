@@ -10,20 +10,20 @@ namespace SchoolScore.Api.Controllers
     [Route("api/[controller]")]
     public class ClassroomsController : ApiControllerBase
     {
-        private readonly IClassroomDac<DbModels.Classroom> classRoomDac;
-        private readonly IClassroomStudentDac<DbModels.ClassroomStudent> classRoomStudentDac;
+        private readonly IClassroomDac<DbModels.Classroom> classroomDac;
+        private readonly IClassroomStudentDac<DbModels.ClassroomStudent> classroomStudentDac;
         private readonly IStudentDac<DbModels.Student> studentDac;
         private readonly ITeacherDac<DbModels.Teacher> teacherDac;
 
         public ClassroomsController(
-            IClassroomDac<DbModels.Classroom> classRoomDac,
-            IClassroomStudentDac<DbModels.ClassroomStudent> classRoomStudentDac,
+            IClassroomDac<DbModels.Classroom> classroomDac,
+            IClassroomStudentDac<DbModels.ClassroomStudent> classroomStudentDac,
             IStudentDac<DbModels.Student> studentDac,
             ITeacherDac<DbModels.Teacher> teacherDac
             )
         {
-            this.classRoomDac = classRoomDac;
-            this.classRoomStudentDac = classRoomStudentDac;
+            this.classroomDac = classroomDac;
+            this.classroomStudentDac = classroomStudentDac;
             this.studentDac = studentDac;
             this.teacherDac = teacherDac;
         }
@@ -34,9 +34,9 @@ namespace SchoolScore.Api.Controllers
             if (string.IsNullOrWhiteSpace(search))
             {
                 var data = page == 0
-                    ? await classRoomDac.ListAllWithTeacher(teacherDac.Collection, studentDac.Collection, x => true)
-                    : await classRoomDac.ListWithTeacher(teacherDac.Collection, studentDac.Collection, x => true, page ?? 1, pageSize);
-                var count = await classRoomDac.Count(x => true);
+                    ? await classroomDac.ListWithTeacher(teacherDac.Collection, classroomStudentDac.Collection, x => true)
+                    : await classroomDac.ListWithTeacher(teacherDac.Collection, classroomStudentDac.Collection, x => true, page ?? 1, pageSize);
+                var count = await classroomDac.Count(x => true);
 
                 return Ok(new PagingModel<Classroom>
                 {
@@ -50,9 +50,9 @@ namespace SchoolScore.Api.Controllers
                 Expression<Func<DbModels.Classroom, bool>> func = x => true && x.ClassYear.ToLower().Contains(txt);
 
                 var data = page == 0
-                    ? await classRoomDac.ListAllWithTeacher(teacherDac.Collection, studentDac.Collection, func)
-                    : await classRoomDac.ListWithTeacher(teacherDac.Collection, studentDac.Collection, func, page ?? 1, pageSize);
-                var count = await classRoomDac.Count(func);
+                    ? await classroomDac.ListWithTeacher(teacherDac.Collection, classroomStudentDac.Collection, func)
+                    : await classroomDac.ListWithTeacher(teacherDac.Collection, classroomStudentDac.Collection, func, page ?? 1, pageSize);
+                var count = await classroomDac.Count(func);
 
                 return Ok(new PagingModel<Classroom>
                 {
@@ -65,7 +65,7 @@ namespace SchoolScore.Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Classroom>> Get(string id)
         {
-            var documentDb = await classRoomDac.GetWithTeacherAndStudent(teacherDac.Collection, studentDac.Collection, x => x.Id == id);
+            var documentDb = await classroomDac.GetWithTeacherAndStudent(teacherDac.Collection, classroomStudentDac.Collection, studentDac.Collection, x => x.Id == id);
             var document = documentDb.Adapt<Classroom>();
             return Ok(document);
         }
@@ -76,7 +76,7 @@ namespace SchoolScore.Api.Controllers
             var documentDb = request.Adapt<DbModels.Classroom>();
             documentDb.Init(AccountsController.Username);
             documentDb.SchoolYearId = SchoolYearId;
-            await classRoomDac.Create(documentDb);
+            await classroomDac.Create(documentDb);
             return Ok();
         }
 
@@ -90,7 +90,7 @@ namespace SchoolScore.Api.Controllers
                 x.SchoolYearId = SchoolYearId;
                 return x;
             }).ToList();
-            await classRoomDac.CreateMany(documentDbs);
+            await classroomDac.CreateMany(documentDbs);
             return Ok();
         }
 
@@ -113,28 +113,28 @@ namespace SchoolScore.Api.Controllers
                 return documentDb;
             });
 
-            await classRoomDac.CreateMany(documentDbs);
+            await classroomDac.CreateMany(documentDbs);
             return Ok();
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, [FromBody] ClassroomCreate request)
         {
-            var documentDb = await classRoomDac.Get(x => x.Id == id);
+            var documentDb = await classroomDac.Get(x => x.Id == id);
             documentDb.ClassYear = request.ClassYear;
             documentDb.Subclass = request.Subclass;
             documentDb.TeacherId = request.TeacherId;
-            await classRoomDac.ReplaceOne(x => x.Id == id, documentDb);
+            await classroomDac.ReplaceOne(x => x.Id == id, documentDb);
             return Ok();
         }
 
         [HttpPut("delete/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var classRoomStudentCount = await classRoomStudentDac.Count(x => x.ClassroomId == id);
-            if (classRoomStudentCount > 0) return Conflict($"ไม่สามารถลบได้ มี {classRoomStudentCount} นักเรียน อยู่ในห้องเรียนรู้นี้");
+            var classroomStudentCount = await classroomStudentDac.Count(x => x.ClassroomId == id);
+            if (classroomStudentCount > 0) return Conflict($"ไม่สามารถลบได้ มี {classroomStudentCount} นักเรียน อยู่ในห้องเรียนรู้นี้");
 
-            await classRoomDac.DeleteOne(x => x.Id == id);
+            await classroomDac.DeleteOne(x => x.Id == id);
             return Ok();
         }
     }

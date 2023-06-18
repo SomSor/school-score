@@ -10,7 +10,7 @@ namespace SchoolScore.Api.DACs.Imps
     {
         public ClassroomDac(MongoDBConfiguration option) : base(option) { }
 
-        public async Task<IEnumerable<Models.Classroom>> ListWithTeacher(IMongoCollection<Teacher> teacherCollection, IMongoCollection<Student> studentCollection, Expression<Func<Classroom, bool>> expression, int page = 1, int? pageSize = null)
+        public async Task<IEnumerable<Models.Classroom>> ListWithTeacher(IMongoCollection<Teacher> teacherCollection, IMongoCollection<ClassroomStudent> classroomStudentCollection, Expression<Func<Classroom, bool>> expression, int page = 1, int? pageSize = null)
         {
             var query = Collection.AsQueryable()
                 .Where(expression)
@@ -19,7 +19,7 @@ namespace SchoolScore.Api.DACs.Imps
                     Classroom = x,
                     Teacher = y,
                 })
-                .GroupJoin(studentCollection.AsQueryable(), o => o.Classroom.Id, i => i.Id, (x, y) => new
+                .GroupJoin(classroomStudentCollection.AsQueryable(), o => o.Classroom.Id, i => i.ClassroomId, (x, y) => new
                 {
                     Classroom = x.Classroom,
                     Teacher = x.Teacher,
@@ -42,34 +42,7 @@ namespace SchoolScore.Api.DACs.Imps
             return result;
         }
 
-        public async Task<IEnumerable<Models.Classroom>> ListAllWithTeacher(IMongoCollection<Teacher> teacherCollection, IMongoCollection<Student> studentCollection, Expression<Func<Classroom, bool>> expression)
-        {
-            var query = Collection.AsQueryable()
-                .Where(expression)
-                .Join(teacherCollection.AsQueryable(), o => o.TeacherId, i => i.Id, (x, y) => new
-                {
-                    Classroom = x,
-                    Teacher = y,
-                })
-                .GroupJoin(studentCollection.AsQueryable(), o => o.Classroom.Id, i => i.Id, (x, y) => new
-                {
-                    Classroom = x.Classroom,
-                    Teacher = x.Teacher,
-                    StudentCount = y.Count(),
-                });
-
-            var result = query.ToList()
-                .Select(x =>
-                {
-                    var document = x.Classroom.Adapt<Models.Classroom>();
-                    document.Teacher = x.Teacher;
-                    document.StudentCount = x.StudentCount;
-                    return document;
-                });
-            return result;
-        }
-
-        public async Task<Models.Classroom> GetWithTeacherAndStudent(IMongoCollection<Teacher> teacherCollection, IMongoCollection<Student> studentCollection, Expression<Func<Classroom, bool>> expression)
+        public async Task<Models.Classroom> GetWithTeacherAndStudent(IMongoCollection<Teacher> teacherCollection, IMongoCollection<ClassroomStudent> classroomStudentCollection, IMongoCollection<Student> studentCollection, Expression<Func<Classroom, bool>> expression)
         {
             var document = Collection.AsQueryable()
                 .Where(expression)
@@ -78,17 +51,18 @@ namespace SchoolScore.Api.DACs.Imps
                     Classroom = x,
                     Teacher = y,
                 })
-                .GroupJoin(studentCollection.AsQueryable(), o => o.Classroom.Id, i => i.Id, (x, y) => new
-                {
-                    Classroom = x.Classroom,
-                    Teacher = x.Teacher,
-                    Students = y,
-                })
                 .FirstOrDefault();
+            var classroomStudents = classroomStudentCollection.AsQueryable()
+                .Where(x => x.ClassroomId == document.Classroom.Id)
+                .Join(studentCollection.AsQueryable(), o => o.StudentId, i => i.Id, (x, y) => new
+                {
+                    ClassroomStudent = x,
+                    Student = y,
+                }).ToList();
             var result = document.Classroom.Adapt<Models.Classroom>();
             result.Teacher = document.Teacher;
-            result.Students = document.Students;
-            result.StudentCount = document.Students.Count();
+            result.Students = classroomStudents.Select(x => x.Student);
+            result.StudentCount = classroomStudents.Count();
             return result;
         }
     }

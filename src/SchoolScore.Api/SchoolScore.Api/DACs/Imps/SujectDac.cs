@@ -35,26 +35,6 @@ namespace SchoolScore.Api.DACs.Imps
             return result;
         }
 
-        public async Task<IEnumerable<Models.Subject>> ListAllWithLearningArea(IMongoCollection<LearningArea> learningAreaCollection, Expression<Func<Subject, bool>> expression)
-        {
-            var query = Collection.AsQueryable()
-                .Where(expression)
-                .Join(learningAreaCollection.AsQueryable(), o => o.LearningAreaId, i => i.Id, (x, y) => new
-                {
-                    Subject = x,
-                    LearningArea = y,
-                });
-
-            var result = query.ToList()
-                .Select(x =>
-                {
-                    var document = x.Subject.Adapt<Models.Subject>();
-                    document.LearningArea = x.LearningArea;
-                    return document;
-                });
-            return result;
-        }
-
         public async Task<Models.Subject> GetWithLearningArea(IMongoCollection<LearningArea> learningAreaCollection, Expression<Func<Subject, bool>> expression)
         {
             var document = Collection.AsQueryable()

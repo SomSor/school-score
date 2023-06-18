@@ -1,0 +1,39 @@
+<div class="breadcrumb">
+    <a routerLink="/home">หน้าหลัก</a> >
+    <a routerLink="/data-management">จัดการข้อมูล</a> >
+    <span *ngIf="!editingId">เพิ่มนักเรียนในห้องเรียน</span>
+    <span *ngIf="editingId">
+        <a [routerLink]="['/classroom-student-details']" [queryParams]="{id:editingId}">รายเอียดนักเรียนในห้องเรียน</a> >
+        แก้ไขนักเรียนในห้องเรียน
+    </span>
+</div>
+<div class="center">
+    <h1 *ngIf="!editingId">เพิ่มนักเรียนในห้องเรียน</h1>
+    <h1 *ngIf="editingId">แก้ไขนักเรียนในห้องเรียน</h1>
+</div>
+
+<div fxLayout="row wrap" fxLayoutGap="grid">
+    <div fxFlex="50%" fxFlex.xs="100%">
+        <mat-card class="example-card">
+            <mat-card-content>
+                <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="fg">
+                    <form [formGroup]="fg" (ngSubmit)="onSave()">
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>ห้องเรียนห้องเรียน</mat-label>
+                            <mat-select formControlName="ClassroomId">
+                                <mat-option *ngFor="let item of data_classroom.Data" [value]="item.Id">{{ GetTier(item.Tier) }} {{ item.ClassYear }} / {{ item.Subclass }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>นักเรียน</mat-label>
+                            <mat-select formControlName="StudentId">
+                                <mat-option *ngFor="let item of data_student.Data" [value]="item.Id">({{ item.Code }}) {{ item.Prefix }}{{ item.Name }} {{ item.Lastname }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <button type="submit" mat-raised-button color="primary">บันทึก</button>
+                    </form>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

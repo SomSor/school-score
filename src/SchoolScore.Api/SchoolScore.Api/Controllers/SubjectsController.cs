@@ -31,7 +31,7 @@ namespace SchoolScore.Api.Controllers
             if (string.IsNullOrWhiteSpace(search))
             {
                 var data = page == 0
-                    ? await sujectDac.ListAllWithLearningArea(learningAreaDac.Collection, x => true)
+                    ? await sujectDac.ListWithLearningArea(learningAreaDac.Collection, x => true)
                     : await sujectDac.ListWithLearningArea(learningAreaDac.Collection, x => true, page ?? 1, pageSize);
                 var count = await sujectDac.Count(x => true);
 
@@ -47,7 +47,7 @@ namespace SchoolScore.Api.Controllers
                 Expression<Func<DbModels.Subject, bool>> func = x => true && x.Name.ToLower().Contains(txt);
 
                 var data = page == 0
-                    ? await sujectDac.ListAllWithLearningArea(learningAreaDac.Collection, func)
+                    ? await sujectDac.ListWithLearningArea(learningAreaDac.Collection, func)
                     : await sujectDac.ListWithLearningArea(learningAreaDac.Collection, func, page ?? 1, pageSize);
                 var count = await sujectDac.Count(func);
 

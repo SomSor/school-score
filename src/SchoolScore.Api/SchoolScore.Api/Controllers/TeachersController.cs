@@ -10,18 +10,18 @@ namespace SchoolScore.Api.Controllers
     [Route("api/[controller]")]
     public class TeachersController : ApiControllerBase
     {
-        private readonly IClassroomDac<DbModels.Classroom> classRoomDac;
+        private readonly IClassroomDac<DbModels.Classroom> classroomDac;
         private readonly IOpenSubjectDac<DbModels.OpenSubject> openSubjectDac;
         private readonly ITeacherDac<DbModels.Teacher> teacherDac;
 
         public TeachersController(
-            IClassroomDac<DbModels.Classroom> classRoomDac,
+            IClassroomDac<DbModels.Classroom> classroomDac,
             IOpenSubjectDac<DbModels.OpenSubject> openSubjectDac,
             ITeacherDac<DbModels.Teacher> teacherDac
             )
         {
             this.teacherDac = teacherDac;
-            this.classRoomDac = classRoomDac;
+            this.classroomDac = classroomDac;
             this.openSubjectDac = openSubjectDac;
         }
 
@@ -129,8 +129,8 @@ namespace SchoolScore.Api.Controllers
         public async Task<IActionResult> Delete(string id)
         {
             var openSubjectCount = await openSubjectDac.Count(x => x.MainTeacherId == id);
-            var classRoomCount = await classRoomDac.Count(x => x.TeacherId == id);
-            if (openSubjectCount > 0 || classRoomCount > 0) return Conflict($"ไม่สามารถลบได้ มี {openSubjectCount} วิชา หรือ {classRoomCount} ห้องเรียน ที่เปิดอยู่");
+            var classroomCount = await classroomDac.Count(x => x.TeacherId == id);
+            if (openSubjectCount > 0 || classroomCount > 0) return Conflict($"ไม่สามารถลบได้ มี {openSubjectCount} วิชา หรือ {classroomCount} ห้องเรียน ที่เปิดอยู่");
 
             await teacherDac.DeleteOne(x => x.Id == id);
             return Ok();

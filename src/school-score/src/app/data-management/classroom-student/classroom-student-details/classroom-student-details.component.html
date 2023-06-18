@@ -1,0 +1,37 @@
+<div class="breadcrumb">
+    <a routerLink="/home">หน้าหลัก</a> >
+    <a routerLink="/data-management">จัดการข้อมูล</a> >
+    รายเอียดนักเรียนในห้องเรียน
+</div>
+<div class="center">
+    <h1>รายเอียดนักเรียนในห้องเรียน</h1>
+</div>
+<br />
+<div fxLayout="row wrap" fxLayoutGap="grid">
+    <div fxFlex="100%" fxFlex.xs="100%">
+        <button mat-raised-button color="primary" [routerLink]="['/classroom-student-create']"
+            [queryParams]="{id:id}">แก้ไขนักเรียนในห้องเรียน</button>
+        &nbsp;
+        <button mat-raised-button color="warn" (click)="delete()">ลบนักเรียนในห้องเรียน</button>
+        <br />
+        <br />
+        <mat-card class="example-card">
+            <mat-card-content>
+                <h2>รายละเอียด</h2>
+                <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="data">
+                    <div fxFlex="30%" fxFlex.xs="100%"><b>ระดับ:</b></div>
+                    <div fxFlex="70%" fxFlex.xs="100%">{{ GetTier(data.Classroom?.Tier) }}</div>
+                </div>
+                <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="data">
+                    <div fxFlex="30%" fxFlex.xs="100%"><b>นักเรียนในห้องเรียน:</b></div>
+                    <div fxFlex="70%" fxFlex.xs="100%">{{ data.Classroom?.ClassYear }} / {{ data.Classroom?.Subclass }}</div>
+                </div>
+                <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="data">
+                    <div fxFlex="30%" fxFlex.xs="100%"><b>นักเรียน:</b></div>
+                    <div fxFlex="70%" fxFlex.xs="100%">{{ data.Student?.Prefix }}{{ data.Student?.Name }} {{ data.Student?.Lastname }}</div>
+                </div>
+                <app-skeleton *ngIf="!data" [row]="2"></app-skeleton>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

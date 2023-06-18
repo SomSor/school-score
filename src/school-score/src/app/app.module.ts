@@ -46,6 +46,8 @@ import { StudentCreateComponent } from './data-management/student/student-create
 import { StudentDetailsComponent } from './data-management/student/student-details/student-details.component';
 import { ClassroomDetailsComponent } from './data-management/classroom/classroom-details/classroom-details.component';
 import { ClassroomCreateComponent } from './data-management/classroom/classroom-create/classroom-create.component';
+import { ClassroomStudentCreateComponent } from './data-management/classroom-student/classroom-student-create/classroom-student-create.component';
+import { ClassroomStudentDetailsComponent } from './data-management/classroom-student/classroom-student-details/classroom-student-details.component';
 
 const routes: Routes = [];
 
@@ -74,7 +76,9 @@ const routes: Routes = [];
     StudentCreateComponent,
     StudentDetailsComponent,
     ClassroomDetailsComponent,
-    ClassroomCreateComponent
+    ClassroomCreateComponent,
+    ClassroomStudentCreateComponent,
+    ClassroomStudentDetailsComponent
   ],
   imports: [
     AppRoutingModule,

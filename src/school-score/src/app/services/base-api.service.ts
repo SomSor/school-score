@@ -31,7 +31,7 @@ export class BaseApiService extends BaseService {
   }
 
   GetAll(searchText: any): Promise<PagingModel> {
-    let url = `${API_URL}/api/${this.controllername}?search=${searchText ?? ""}`;
+    let url = `${API_URL}/api/${this.controllername}?search=${searchText ?? ""}&page=0`;
     return this.GetDataPagging(url);
   }
 
