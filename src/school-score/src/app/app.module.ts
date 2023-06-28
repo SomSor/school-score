@@ -48,6 +48,10 @@ import { ClassroomDetailsComponent } from './data-management/classroom/classroom
 import { ClassroomCreateComponent } from './data-management/classroom/classroom-create/classroom-create.component';
 import { ClassroomStudentCreateComponent } from './data-management/classroom-student/classroom-student-create/classroom-student-create.component';
 import { ClassroomStudentDetailsComponent } from './data-management/classroom-student/classroom-student-details/classroom-student-details.component';
+import { OpenSubjectCreateComponent } from './data-management/open-subject/open-subject-create/open-subject-create.component';
+import { OpenSubjectDetailsComponent } from './data-management/open-subject/open-subject-details/open-subject-details.component';
+import { RegisterOpenSubjectCreateComponent } from './data-management/register-open-subject/register-open-subject-create/register-open-subject-create.component';
+import { RegisterOpenSubjectDetailsComponent } from './data-management/register-open-subject/register-open-subject-details/register-open-subject-details.component';
 
 const routes: Routes = [];
 
@@ -78,7 +82,11 @@ const routes: Routes = [];
     ClassroomDetailsComponent,
     ClassroomCreateComponent,
     ClassroomStudentCreateComponent,
-    ClassroomStudentDetailsComponent
+    ClassroomStudentDetailsComponent,
+    OpenSubjectCreateComponent,
+    OpenSubjectDetailsComponent,
+    RegisterOpenSubjectCreateComponent,
+    RegisterOpenSubjectDetailsComponent
   ],
   imports: [
     AppRoutingModule,

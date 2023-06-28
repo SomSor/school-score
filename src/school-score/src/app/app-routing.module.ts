@@ -26,6 +26,10 @@ import { ClassroomCreateComponent } from './data-management/classroom/classroom-
 import { ClassroomDetailsComponent } from './data-management/classroom/classroom-details/classroom-details.component';
 import { ClassroomStudentCreateComponent } from './data-management/classroom-student/classroom-student-create/classroom-student-create.component';
 import { ClassroomStudentDetailsComponent } from './data-management/classroom-student/classroom-student-details/classroom-student-details.component';
+import { OpenSubjectCreateComponent } from './data-management/open-subject/open-subject-create/open-subject-create.component';
+import { OpenSubjectDetailsComponent } from './data-management/open-subject/open-subject-details/open-subject-details.component';
+import { RegisterOpenSubjectCreateComponent } from './data-management/register-open-subject/register-open-subject-create/register-open-subject-create.component';
+import { RegisterOpenSubjectDetailsComponent } from './data-management/register-open-subject/register-open-subject-details/register-open-subject-details.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -38,7 +42,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'registration', component: RegistrationComponent },
   { path: 'report', component: ReportComponent },
-  
+
   { path: 'data-management', component: DataManagementComponent },
   { path: 'learning-area-create', component: LearningAreaCreateComponent },
   { path: 'learning-area-details', component: LearningAreaDetailsComponent },
@@ -52,6 +56,10 @@ const routes: Routes = [
   { path: 'classroom-details', component: ClassroomDetailsComponent },
   { path: 'classroom-student-create', component: ClassroomStudentCreateComponent },
   { path: 'classroom-student-details', component: ClassroomStudentDetailsComponent },
+  { path: 'open-subject-create', component: OpenSubjectCreateComponent },
+  { path: 'open-subject-details', component: OpenSubjectDetailsComponent },
+  { path: 'register-open-subject-create', component: RegisterOpenSubjectCreateComponent },
+  { path: 'register-open-subject-details', component: RegisterOpenSubjectDetailsComponent },
 
   { path: 'course-evaluating-temp', component: CourseEvaluatingTempComponent },
 ];

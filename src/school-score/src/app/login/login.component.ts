@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { API_URL } from '../config';
+import { environment } from '../../environments/environment.development';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +11,8 @@ import { API_URL } from '../config';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  dataUrl = API_URL + "/api/accounts";
+  
+  dataUrl = environment.API_URL + "/api/accounts";
 
   fg: FormGroup;
 

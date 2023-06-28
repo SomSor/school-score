@@ -1,106 +1,87 @@
-<style>
-    table {
-        width: 100%;
-    }
-
-    table,
-    tr,
-    td,
-    th {
-        border: 1px solid black;
-    }
-
-    tr.stdCheck td {
-        text-align: center;
-        text-decoration: none;
-    }
-</style>
 <div class="breadcrumb">
     <a routerLink="/home">หน้าหลัก</a> > <a routerLink="/course">บันทึกการพัฒนาผู้เรียน</a> > บันทึกการประเมินตัวชี้วัด
 </div>
-<div class="center">
-    <h1>บันทึกการประเมินตัวชี้วัด</h1>
-</div>
+<div class="page-header">บันทึกการประเมินตัวชี้วัด</div>
 
-<mat-card class="example-card">
+<mat-card class="example-card" *ngIf="data">
     <mat-card-content>
-        <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="data">
+        <div fxLayout="row wrap" fxLayoutGap="grid">
             <div fxFlex="20%" fxFlex.xs="100%"><b>ชั้นปี:</b></div>
-            <div fxFlex="80%" fxFlex.xs="100%">3/2</div>
+            <div fxFlex="80%" fxFlex.xs="100%">{{ GetTier(data.Classroom.Tier) }} {{ data.Classroom.ClassYear }} / {{
+                data.Classroom.Subclass }}</div>
             <div fxFlex="20%" fxFlex.xs="100%"><b>กลุ่มสาระการเรียนรู้:</b></div>
-            <div fxFlex="80%" fxFlex.xs="100%">การงานอาชีพ</div>
+            <div fxFlex="80%" fxFlex.xs="100%">{{ data.LearningArea.Name }}</div>
             <div fxFlex="20%" fxFlex.xs="100%"><b>วิชา:</b></div>
-            <div fxFlex="80%" fxFlex.xs="100%">คอมพิวเตอร์</div>
-        </div>
-        <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="!data">
-            <div fxFlex="100%" fxFlex.xs="100%">
-                <div class="skeleton skeleton-text"></div>
-            </div>
-            <div fxFlex="100%" fxFlex.xs="100%">
-                <div class="skeleton skeleton-text"></div>
-            </div>
-            <div fxFlex="100%" fxFlex.xs="100%">
-                <div class="skeleton skeleton-text"></div>
-            </div>
-            <div fxFlex="100%" fxFlex.xs="100%">
-                <div class="skeleton skeleton-text"></div>
-            </div>
-            <div fxFlex="100%" fxFlex.xs="100%">
-                <div class="skeleton skeleton-text"></div>
-            </div>
-            <div fxFlex="100%" fxFlex.xs="100%">
-                <div class="skeleton skeleton-text"></div>
-            </div>
+            <div fxFlex="80%" fxFlex.xs="100%">{{ data.Subject.Code }} {{ data.Subject.Name }}</div>
+            <div fxFlex="20%" fxFlex.xs="100%"><b>ครูผู้สอน:</b></div>
+            <div fxFlex="80%" fxFlex.xs="100%">{{ data.Teacher.Prefix }}{{ data.Teacher.Name }} {{ data.Teacher.Lastname
+                }}</div>
         </div>
     </mat-card-content>
 </mat-card>
+<app-skeleton [style]="'detail'" *ngIf="!data"></app-skeleton>
 <br />
-
 <button mat-raised-button color="primary">💾 บันทึก</button>
 <br />
 <br />
-<table>
+<table *ngIf="data">
     <thead>
         <tr>
             <th rowspan="2">เลขที่</th>
             <th rowspan="2">เลขประจำตัวนักเรียน</th>
             <th rowspan="2">ชื่อ - สกุล</th>
-            <th rowspan="2">รวมตัวชี้วัด</th>
+            <!-- <th rowspan="2">รวมตัวชี้วัด</th> -->
             <th colspan="2">สรุปผลการประเมิน</th>
-            <th rowspan="2">หมายเหตุ</th>
-            <th colspan="4">ภาคเรียนที่</th>
+            <!-- <th rowspan="2">หมายเหตุ</th> -->
+            <th colspan="4">{{ data.OpenSubject.Exam.ScoringSubGroups[0].Name }}</th>
             <th rowspan="2">ผลการแก้ไข</th>
             <th colspan="2">สรุปผลการประเมิน</th>
         </tr>
         <tr>
             <th>ผ่าน</th>
             <th>ไม่ผ่าน</th>
-            <th rowspan="2">ระหว่างภาค เต็ม <b>80</b> ได้</th>
-            <th rowspan="2">ระหว่างภาค เต็ม <b>20</b> ได้</th>
-            <th rowspan="2">ระหว่างภาค เต็ม <b>100</b> ได้</th>
+            <th rowspan="2" *ngFor="let scoring of data.OpenSubject.Exam.ScoringSubGroups[0].Scorings">{{ scoring.Name
+                }}</th>
+            <th rowspan="2">ระหว่างภาค เต็ม {{ maxSumScore(data.OpenSubject.Exam.ScoringSubGroups[0].Scorings) }}</th>
             <th rowspan="2">ระดับผลการเรียน ได้</th>
             <th>ผ่าน</th>
             <th>ไม่ผ่าน</th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]" class="stdCheck">
-            <td>{{i}}</td>
-            <td>5432</td>
-            <td>ด.ช.กก ขข</td>
-            <td></td>
-            <td>✅</td>
-            <td></td>
-            <td><input type="text" value="" /></td>
-            <td><input type="text" value="65" /></td>
-            <td><input type="text" value="15" /></td>
-            <td><input type="text" value="80" /></td>
-            <td>A</td>
-            <td></td>
-            <td></td>
-            <td></td>
+        <tr *ngFor="let classroomStudent of data.Data;let i = index" class="stdCheck">
+            <td>{{ i + 1 }}</td>
+            <td>{{ classroomStudent.Student.Code }}</td>
+            <td>{{ classroomStudent.Student.Prefix }}{{ classroomStudent.Student.Name }} {{
+                classroomStudent.Student.Lastname }}</td>
+            <!-- <td></td> -->
+            <td><span *ngIf="IsPass(classroomStudent, data.OpenSubject.Exam.ScoringSubGroups[0].Id)">✅</span></td>
+            <td><span *ngIf="!IsPass(classroomStudent, data.OpenSubject.Exam.ScoringSubGroups[0].Id)">❌</span></td>
+            <!-- <td><input type="text" value="{{ classroomStudent.Remark }}" /></td> -->
+            <td *ngFor="let scoring of data.OpenSubject.Exam.ScoringSubGroups[0].Scorings"
+                [ngClass]="{'editing-row':checkScoreChange(classroomStudent.StudentId,data.OpenSubject.Exam.ScoringSubGroups[0].Id,scoring.Id),'editing-row-error':checkScoreChangeError(classroomStudent.StudentId,data.OpenSubject.Exam.ScoringSubGroups[0].Id,scoring.Id)}">
+                <input type="text"
+                    (change)="ScoreChange(classroomStudent.StudentId,data.OpenSubject.Exam.ScoringSubGroups[0].Id,scoring.Id, $event)"
+                    value="{{ getScore(classroomStudent, data.OpenSubject.Exam.ScoringSubGroups[0].Id, scoring.Id) }}" />
+            </td>
+            <td>{{ SumScore(classroomStudent, data.OpenSubject.Exam.ScoringSubGroups[0].Id) }}</td>
+            <td>{{ GetGrade(classroomStudent, data.OpenSubject.Exam.ScoringSubGroups[0].Id) }}</td>
+            <td
+                [ngClass]="{'editing-row':checkScoreChange(classroomStudent.StudentId,data.OpenSubject.Exam.ScoringSubGroups[1].Id,data.OpenSubject.Exam.ScoringSubGroups[1].Scorings[0].Id),'editing-row-error':checkScoreChangeError(classroomStudent.StudentId,data.OpenSubject.Exam.ScoringSubGroups[1].Id,data.OpenSubject.Exam.ScoringSubGroups[1].Scorings[0].Id)}">
+                <input type="text"
+                    (change)="ScoreChange(classroomStudent.StudentId,data.OpenSubject.Exam.ScoringSubGroups[1].Id,data.OpenSubject.Exam.ScoringSubGroups[1].Scorings[0].Id, $event)"
+                    value="{{ getScore(classroomStudent, data.OpenSubject.Exam.ScoringSubGroups[1].Id, data.OpenSubject.Exam.ScoringSubGroups[1].Scorings[0].Id) }}"
+                    *ngIf="!IsPass(classroomStudent, data.OpenSubject.Exam.ScoringSubGroups[0].Id)" />
+            </td>
+            <td><span
+                    *ngIf="!IsPass(classroomStudent, data.OpenSubject.Exam.ScoringSubGroups[0].Id)&&IsPass(classroomStudent, data.OpenSubject.Exam.ScoringSubGroups[1].Id)">✅</span>
+            </td>
+            <td><span
+                    *ngIf="!IsPass(classroomStudent, data.OpenSubject.Exam.ScoringSubGroups[0].Id)&&!IsPass(classroomStudent, data.OpenSubject.Exam.ScoringSubGroups[1].Id)">❌</span>
+            </td>
         </tr>
     </tbody>
 </table>
+<app-skeleton [style]="'table'" [column]="12" *ngIf="!data"></app-skeleton>
 <br />
-<button mat-raised-button color="primary">💾 บันทึก</button>
+<button mat-raised-button color="primary" (click)="OnSave()">💾 บันทึก</button>

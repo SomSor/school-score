@@ -19,7 +19,7 @@
                 <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="fg">
                     <form [formGroup]="fg" (ngSubmit)="onSave()">
                         <mat-form-field class="full-width" appearance="fill">
-                            <mat-label>ห้องเรียนห้องเรียน</mat-label>
+                            <mat-label>ห้องเรียน</mat-label>
                             <mat-select formControlName="ClassroomId">
                                 <mat-option *ngFor="let item of data_classroom.Data" [value]="item.Id">{{ GetTier(item.Tier) }} {{ item.ClassYear }} / {{ item.Subclass }}</mat-option>
                             </mat-select>

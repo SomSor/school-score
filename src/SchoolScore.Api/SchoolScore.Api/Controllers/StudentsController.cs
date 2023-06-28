@@ -12,17 +12,14 @@ namespace SchoolScore.Api.Controllers
     {
         private readonly IClassroomStudentDac<DbModels.ClassroomStudent> classroomStudentDac;
         private readonly IStudentDac<DbModels.Student> studentDac;
-        private readonly IStudentRegisterOpenSubjectDac<DbModels.StudentRegisterOpenSubject> studentRegisterOpenSubjectDac;
 
         public StudentsController(
             IClassroomStudentDac<DbModels.ClassroomStudent> classroomStudentDac,
-            IStudentDac<DbModels.Student> studentDac,
-            IStudentRegisterOpenSubjectDac<DbModels.StudentRegisterOpenSubject> studentRegisterOpenSubjectDac
+            IStudentDac<DbModels.Student> studentDac
             )
         {
             this.classroomStudentDac = classroomStudentDac;
             this.studentDac = studentDac;
-            this.studentRegisterOpenSubjectDac = studentRegisterOpenSubjectDac;
         }
 
         [HttpGet]
@@ -129,8 +126,7 @@ namespace SchoolScore.Api.Controllers
         public async Task<IActionResult> Delete(string id)
         {
             var classroomStudentCount = await classroomStudentDac.Count(x => x.StudentId == id);
-            var studentRegisterOpenSubjecCount = await studentRegisterOpenSubjectDac.Count(x => x.StudentId == id);
-            if (studentRegisterOpenSubjecCount > 0 || classroomStudentCount > 0) return Conflict($"ไม่สามารถลบได้ มี {studentRegisterOpenSubjecCount} วิชา หรือ {classroomStudentCount} ห้องเรียน ที่เปิดอยู่");
+            if (classroomStudentCount > 0) return Conflict($"ไม่สามารถลบได้ {classroomStudentCount} ห้องเรียน ที่เปิดอยู่");
 
             await studentDac.DeleteOne(x => x.Id == id);
             return Ok();

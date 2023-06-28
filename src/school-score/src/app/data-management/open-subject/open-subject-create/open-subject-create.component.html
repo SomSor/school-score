@@ -1,0 +1,58 @@
+<div class="breadcrumb">
+    <a routerLink="/home">หน้าหลัก</a> >
+    <a routerLink="/data-management">จัดการข้อมูล</a> >
+    <span *ngIf="!editingId">เพิ่มวิชาที่เปิดสอน</span>
+    <span *ngIf="editingId">
+        <a [routerLink]="['/open-subject-details']" [queryParams]="{id:editingId}">รายเอียดวิชาที่เปิดสอน</a> >
+        แก้ไขวิชาที่เปิดสอน
+    </span>
+</div>
+<div class="center">
+    <h1 *ngIf="!editingId">เพิ่มวิชาที่เปิดสอน</h1>
+    <h1 *ngIf="editingId">แก้ไขวิชาที่เปิดสอน</h1>
+</div>
+
+<div fxLayout="row wrap" fxLayoutGap="grid">
+    <div fxFlex="50%" fxFlex.xs="100%">
+        <mat-card class="example-card">
+            <mat-card-content>
+                <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="fg">
+                    <form [formGroup]="fg" (ngSubmit)="onSave()">
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>ภาคเรียนที่</mat-label>
+                            <mat-select formControlName="Semester">
+                                <mat-option value="1">1</mat-option>
+                                <mat-option value="2">2</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>วิชา</mat-label>
+                            <mat-select formControlName="SubjectId">
+                                <mat-option *ngFor="let item of data_subject.Data" [value]="item.Id">({{ item.Code }}) {{ item.Name }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>ครูผู้สอน</mat-label>
+                            <mat-select formControlName="MainTeacherId">
+                                <mat-option *ngFor="let item of data_teacher.Data" [value]="item.Id">({{ item.Code }}) {{ item.Prefix }}{{ item.Name }} {{ item.Lastname }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>คะแนนเต็มกลางภาคเรียน</mat-label>
+                            <input type="number" matInput formControlName="MidTermMaxScore" placeholder="">
+                        </mat-form-field>
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>คะแนนเต็มปลายภาคเรียน</mat-label>
+                            <input type="number" matInput formControlName="FinalMaxScore" placeholder="">
+                        </mat-form-field>
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>คำอธิบายเพิ่มเติม</mat-label>
+                            <input matInput formControlName="Description" placeholder="">
+                        </mat-form-field>
+                        <button type="submit" mat-raised-button color="primary">บันทึก</button>
+                    </form>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

@@ -1,6 +1,6 @@
 ﻿namespace SchoolScore.Api.Models
 {
-    public class SujectCreate
+    public class SubjectCreate
     {
         public string Code { get; set; }
         public string Name { get; set; }

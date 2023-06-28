@@ -1,0 +1,72 @@
+<div class="breadcrumb">
+    <a routerLink="/home">หน้าหลัก</a> >
+    <a routerLink="/data-management">จัดการข้อมูล</a> >
+    รายเอียดวิชาที่เปิดสอน
+</div>
+<div class="center">
+    <h1>รายเอียดวิชาที่เปิดสอน</h1>
+</div>
+<br />
+<div fxLayout="row wrap" fxLayoutGap="grid">
+    <div fxFlex="100%" fxFlex.xs="100%">
+        <button mat-raised-button color="primary" [routerLink]="['/open-subject-create']"
+            [queryParams]="{id:id}">แก้ไขวิชาที่เปิดสอน</button>
+        &nbsp;
+        <button mat-raised-button color="warn" (click)="delete()">ลบวิชาที่เปิดสอน</button>
+        <br />
+        <br />
+        <mat-card class="example-card">
+            <mat-card-content>
+                <h2>รายละเอียด</h2>
+                <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="data">
+                    <div fxFlex="30%" fxFlex.xs="100%"><b>ภาคเรียนที่:</b></div>
+                    <div fxFlex="70%" fxFlex.xs="100%">{{ data.Semester }}</div>
+                </div>
+                <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="data">
+                    <div fxFlex="30%" fxFlex.xs="100%"><b>วิชา:</b></div>
+                    <div fxFlex="70%" fxFlex.xs="100%">{{ data.Subject?.Code }} {{ data.Subject?.Name }}</div>
+                </div>
+                <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="data">
+                    <div fxFlex="30%" fxFlex.xs="100%"><b>ครูผู้สอน:</b></div>
+                    <div fxFlex="70%" fxFlex.xs="100%">{{ data.Teacher?.Prefix }}{{ data.Teacher?.Name }} {{
+                        data.Teacher?.Lastname }}</div>
+                </div>
+                <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="data">
+                    <div fxFlex="30%" fxFlex.xs="100%"><b>คำอธิบายเพิ่มเติม:</b></div>
+                    <div fxFlex="70%" fxFlex.xs="100%">{{ data.Description }}</div>
+                </div>
+                <app-skeleton *ngIf="!data" [row]="2"></app-skeleton>
+            </mat-card-content>
+        </mat-card>
+        <br />
+        <mat-card class="example-card">
+            <mat-card-content>
+                <h2>การประเมิน</h2>
+                <div *ngIf="data">
+                    <ul *ngFor="let item of data.Evaluates">
+                        <li>
+                            <b>{{ item.Name }}</b>
+                            <ul *ngFor="let scoringSubGroup of item.ScoringSubGroups">
+                                <li>{{ scoringSubGroup.Name }}</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul>
+                        <li>
+                            <b>{{ data.Exam.Name }}</b>
+                            <ul *ngFor="let scoringSubGroup of data.Exam.ScoringSubGroups">
+                                <li>
+                                    <b>{{ scoringSubGroup.Name }}</b>
+                                    <ul *ngFor="let scoring of scoringSubGroup.Scorings">
+                                        <li>{{ scoring.Name }}</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <app-skeleton *ngIf="!data" [row]="2"></app-skeleton>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

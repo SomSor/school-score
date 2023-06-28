@@ -6,9 +6,9 @@ using System.Linq.Expressions;
 
 namespace SchoolScore.Api.DACs.Imps
 {
-    public class SujectDac : DataDAC<Subject>, ISujectDac<Subject>
+    public class SubjectDac : DataDAC<Subject>, ISubjectDac<Subject>
     {
-        public SujectDac(MongoDBConfiguration option) : base(option) { }
+        public SubjectDac(MongoDBConfiguration option) : base(option) { }
 
         public async Task<IEnumerable<Models.Subject>> ListWithLearningArea(IMongoCollection<LearningArea> learningAreaCollection, Expression<Func<Subject, bool>> expression, int page = 1, int? pageSize = null)
         {

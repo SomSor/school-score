@@ -11,15 +11,15 @@ namespace SchoolScore.Api.Controllers
     public class LearningAreasController : ApiControllerBase
     {
         private readonly ILearningAreaDac<DbModels.LearningArea> learningAreaDac;
-        private readonly ISujectDac<DbModels.Subject> sujectDac;
+        private readonly ISubjectDac<DbModels.Subject> subjectDac;
 
         public LearningAreasController(
             ILearningAreaDac<DbModels.LearningArea> learningAreaDac,
-            ISujectDac<DbModels.Subject> sujectDac
+            ISubjectDac<DbModels.Subject> subjectDac
             )
         {
             this.learningAreaDac = learningAreaDac;
-            this.sujectDac = sujectDac;
+            this.subjectDac = subjectDac;
         }
 
         [HttpGet]
@@ -123,7 +123,7 @@ namespace SchoolScore.Api.Controllers
         [HttpPut("delete/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var subjectCount = await sujectDac.Count(x => x.LearningAreaId == id);
+            var subjectCount = await subjectDac.Count(x => x.LearningAreaId == id);
             if (subjectCount > 0) return Conflict($"ไม่สามารถลบได้ มี {subjectCount} วิชา อยู่ในกลุ่มสาระการเรียนรู้นี้");
 
             await learningAreaDac.DeleteOne(x => x.Id == id);

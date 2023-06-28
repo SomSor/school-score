@@ -4,6 +4,6 @@
     {
         public string ClassroomId { get; set; }
         public string StudentId { get; set; }
-        public string SchoolYearId { get; set; }
+        public IEnumerable<RegisterOpenSubject> RegisterOpenSubjects { get; set; }
     }
 }

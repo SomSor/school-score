@@ -42,6 +42,28 @@ namespace SchoolScore.Api.DACs.Imps
             return result;
         }
 
+        public async Task<Models.Classroom> GetWithTeacher(IMongoCollection<Teacher> teacherCollection, IMongoCollection<ClassroomStudent> classroomStudentCollection, Expression<Func<Classroom, bool>> expression)
+        {
+            var query = Collection.AsQueryable()
+                .Where(expression)
+                .Join(teacherCollection.AsQueryable(), o => o.TeacherId, i => i.Id, (x, y) => new
+                {
+                    Classroom = x,
+                    Teacher = y,
+                })
+                .GroupJoin(classroomStudentCollection.AsQueryable(), o => o.Classroom.Id, i => i.ClassroomId, (x, y) => new
+                {
+                    Classroom = x.Classroom,
+                    Teacher = x.Teacher,
+                    StudentCount = y.Count(),
+                }).FirstOrDefault();
+
+            var document = query.Classroom.Adapt<Models.Classroom>();
+            document.Teacher = query.Teacher;
+            document.StudentCount = query.StudentCount;
+            return document;
+        }
+
         public async Task<Models.Classroom> GetWithTeacherAndStudent(IMongoCollection<Teacher> teacherCollection, IMongoCollection<ClassroomStudent> classroomStudentCollection, IMongoCollection<Student> studentCollection, Expression<Func<Classroom, bool>> expression)
         {
             var document = Collection.AsQueryable()

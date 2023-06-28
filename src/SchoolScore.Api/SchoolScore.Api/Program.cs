@@ -13,15 +13,12 @@ builder.Services.AddTransient(x => builder.Configuration.GetSection(nameof(Mongo
 
 builder.Services.AddTransient<IClassroomDac<Classroom>, ClassroomDac>();
 builder.Services.AddTransient<IClassroomStudentDac<ClassroomStudent>, ClassroomStudentDac>();
-builder.Services.AddTransient<IGradingCriteriaDac<GradingCriteria>, GradingCriteriaDac>();
 builder.Services.AddTransient<ILearningAreaDac<LearningArea>, LearningAreaDac>();
 builder.Services.AddTransient<IOpenSubjectDac<OpenSubject>, OpenSubjectDac>();
 builder.Services.AddTransient<ISchoolDac<School>, SchoolDac>();
 builder.Services.AddTransient<ISchoolYearDac<SchoolYear>, SchoolYearDac>();
-builder.Services.AddTransient<IScoringGroupDac<ScoringGroup>, ScoringGroupDac>();
 builder.Services.AddTransient<IStudentDac<Student>, StudentDac>();
-builder.Services.AddTransient<IStudentRegisterOpenSubjectDac<StudentRegisterOpenSubject>, StudentRegisterOpenSubjectDac>();
-builder.Services.AddTransient<ISujectDac<Subject>, SujectDac>();
+builder.Services.AddTransient<ISubjectDac<Subject>, SubjectDac>();
 builder.Services.AddTransient<ITeacherDac<Teacher>, TeacherDac>();
 
 builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);

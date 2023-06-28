@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using Mapster;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace SchoolScore.Api.DbModels
 {
@@ -16,8 +17,20 @@ namespace SchoolScore.Api.DbModels
         public void Init(string createBy)
         {
             CreateDate = DateTime.UtcNow;
-            Id = $"{CreateDate.Ticks}-{Guid.NewGuid().ToString().Substring(0, 8)}";
+            Id = RunId();
             CreateBy = createBy;
         }
+
+        public T Init<T>(string createBy)
+        {
+            CreateDate = DateTime.UtcNow;
+            Id = RunId();
+            CreateBy = createBy;
+
+            return this.Adapt<T>();
+        }
+
+        public static string RunId() => $"{DateTime.UtcNow.Ticks}-{Guid.NewGuid().ToString().Substring(0, 8)}";
+
     }
 }

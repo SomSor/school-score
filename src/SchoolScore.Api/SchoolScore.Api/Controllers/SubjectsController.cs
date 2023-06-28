@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using SchoolScore.Api.DACs;
+using SchoolScore.Api.DACs.Imps;
 using SchoolScore.Api.Models;
 using System.Linq.Expressions;
 
@@ -12,17 +13,17 @@ namespace SchoolScore.Api.Controllers
     {
         private readonly ILearningAreaDac<DbModels.LearningArea> learningAreaDac;
         private readonly IOpenSubjectDac<DbModels.OpenSubject> openSubjectDac;
-        private readonly ISujectDac<DbModels.Subject> sujectDac;
+        private readonly ISubjectDac<DbModels.Subject> subjectDac;
 
         public SubjectsController(
             ILearningAreaDac<DbModels.LearningArea> learningAreaDac,
             IOpenSubjectDac<DbModels.OpenSubject> openSubjectDac,
-            ISujectDac<DbModels.Subject> sujectDac
+            ISubjectDac<DbModels.Subject> subjectDac
             )
         {
             this.learningAreaDac = learningAreaDac;
             this.openSubjectDac = openSubjectDac;
-            this.sujectDac = sujectDac;
+            this.subjectDac = subjectDac;
         }
 
         [HttpGet]
@@ -31,9 +32,9 @@ namespace SchoolScore.Api.Controllers
             if (string.IsNullOrWhiteSpace(search))
             {
                 var data = page == 0
-                    ? await sujectDac.ListWithLearningArea(learningAreaDac.Collection, x => true)
-                    : await sujectDac.ListWithLearningArea(learningAreaDac.Collection, x => true, page ?? 1, pageSize);
-                var count = await sujectDac.Count(x => true);
+                    ? await subjectDac.ListWithLearningArea(learningAreaDac.Collection, x => true)
+                    : await subjectDac.ListWithLearningArea(learningAreaDac.Collection, x => true, page ?? 1, pageSize);
+                var count = await subjectDac.Count(x => true);
 
                 return Ok(new PagingModel<Subject>
                 {
@@ -47,9 +48,9 @@ namespace SchoolScore.Api.Controllers
                 Expression<Func<DbModels.Subject, bool>> func = x => true && x.Name.ToLower().Contains(txt);
 
                 var data = page == 0
-                    ? await sujectDac.ListWithLearningArea(learningAreaDac.Collection, func)
-                    : await sujectDac.ListWithLearningArea(learningAreaDac.Collection, func, page ?? 1, pageSize);
-                var count = await sujectDac.Count(func);
+                    ? await subjectDac.ListWithLearningArea(learningAreaDac.Collection, func)
+                    : await subjectDac.ListWithLearningArea(learningAreaDac.Collection, func, page ?? 1, pageSize);
+                var count = await subjectDac.Count(func);
 
                 return Ok(new PagingModel<Subject>
                 {
@@ -62,21 +63,21 @@ namespace SchoolScore.Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Subject>> Get(string id)
         {
-            var document = await sujectDac.GetWithLearningArea(learningAreaDac.Collection, x => x.Id == id);
+            var document = await subjectDac.GetWithLearningArea(learningAreaDac.Collection, x => x.Id == id);
             return Ok(document);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] SujectCreate request)
+        public async Task<IActionResult> Create([FromBody] SubjectCreate request)
         {
             var documentDb = request.Adapt<DbModels.Subject>();
             documentDb.Init(AccountsController.Username);
-            await sujectDac.Create(documentDb);
+            await subjectDac.Create(documentDb);
             return Ok();
         }
 
         [HttpPost("many")]
-        public async Task<IActionResult> CreateMany([FromBody] IEnumerable<SujectCreate> request)
+        public async Task<IActionResult> CreateMany([FromBody] IEnumerable<SubjectCreate> request)
         {
             var documentDbs = request.Adapt<IEnumerable<DbModels.Subject>>();
             documentDbs = documentDbs.Select(x =>
@@ -84,12 +85,12 @@ namespace SchoolScore.Api.Controllers
                 x.Init(AccountsController.Username);
                 return x;
             }).ToList();
-            await sujectDac.CreateMany(documentDbs);
+            await subjectDac.CreateMany(documentDbs);
             return Ok();
         }
 
         [HttpPost("text")]
-        public async Task<IActionResult> ImportByText([FromBody] SujectCreate request)
+        public async Task<IActionResult> ImportByText([FromBody] SubjectCreate request)
         {
             var rows = request.Name.Trim().Split(Environment.NewLine).Where(x => !string.IsNullOrWhiteSpace(x));
             var rowsSplit = rows.Select(x => x.Split("\t"));
@@ -107,28 +108,28 @@ namespace SchoolScore.Api.Controllers
                 return documentDb;
             });
 
-            await sujectDac.CreateMany(documentDbs);
+            await subjectDac.CreateMany(documentDbs);
             return Ok();
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string id, [FromBody] SujectCreate request)
+        public async Task<IActionResult> Update(string id, [FromBody] SubjectCreate request)
         {
-            var documentDb = await sujectDac.Get(x => x.Id == id);
+            var documentDb = await subjectDac.Get(x => x.Id == id);
             documentDb.Code = request.Code;
             documentDb.Name = request.Name;
             documentDb.Description = request.Description;
-            await sujectDac.ReplaceOne(x => x.Id == id, documentDb);
+            await subjectDac.ReplaceOne(x => x.Id == id, documentDb);
             return Ok();
         }
 
         [HttpPut("delete/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var documentCount = await openSubjectDac.Count(x => x.SujectId == id);
+            var documentCount = await openSubjectDac.Count(x => x.SubjectId == id);
             if (documentCount > 0) return Conflict($"ไม่สามารถลบได้ มี {documentCount} วิชา ที่เปิดอยู่");
 
-            await sujectDac.DeleteOne(x => x.Id == id);
+            await subjectDac.DeleteOne(x => x.Id == id);
             return Ok();
         }
     }
