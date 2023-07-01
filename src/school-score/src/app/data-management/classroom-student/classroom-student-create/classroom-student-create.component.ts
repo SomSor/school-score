@@ -63,7 +63,7 @@ export class ClassroomStudentCreateComponent {
           .then(response => this.router.navigate(['/classroomStudent-details'], { queryParams: { id: this.editingId } }));
       } else {
         this.classroomStudentService.Create(this.fg.value)
-          .then(response => this.router.navigate(['/data-management']));
+          .then(response => this.router.navigate(['/classroom-manage']));
       }
     }
   }

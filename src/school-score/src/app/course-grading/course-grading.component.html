@@ -21,29 +21,31 @@
 </mat-card>
 <app-skeleton [style]="'detail'" *ngIf="!data"></app-skeleton>
 <br />
-<button mat-raised-button color="primary">💾 บันทึก</button>
+<button mat-raised-button color="primary" (click)="OnSave()">💾 บันทึก</button>
 <br />
 <br />
 <table *ngIf="data">
     <thead>
         <tr>
-            <th rowspan="2">เลขที่</th>
-            <th rowspan="2">เลขประจำตัวนักเรียน</th>
-            <th rowspan="2">ชื่อ - สกุล</th>
-            <!-- <th rowspan="2">รวมตัวชี้วัด</th> -->
-            <th colspan="2">สรุปผลการประเมิน</th>
-            <!-- <th rowspan="2">หมายเหตุ</th> -->
-            <th colspan="4">{{ data.OpenSubject.Exam.ScoringSubGroups[0].Name }}</th>
-            <th rowspan="2">ผลการแก้ไข</th>
-            <th colspan="2">สรุปผลการประเมิน</th>
+            <th rowspan="3">เลขที่</th>
+            <th rowspan="3">เลขประจำตัวนักเรียน</th>
+            <th rowspan="3">ชื่อ - สกุล</th>
+            <th colspan="6">{{ data.OpenSubject.Exam.ScoringSubGroups[0].Name }}</th>
+            <th rowspan="3">ผลการแก้ไข</th>
+            <th rowspan="2" colspan="2">สรุปผลการประเมิน</th>
+            <th rowspan="3">หมายเหตุ</th>
+        </tr>
+        <tr>
+            <th rowspan="2" *ngFor="let scoring of data.OpenSubject.Exam.ScoringSubGroups[0].Scorings">
+                {{ scoring.Name}}
+            </th>
+            <th rowspan="2">รวม เต็ม {{ maxSumScore(data.OpenSubject.Exam.ScoringSubGroups[0].Scorings) }}</th>
+            <th rowspan="2">ระดับผลการเรียน ได้</th>
+            <th colspan="2">ผลการประเมิน</th>
         </tr>
         <tr>
             <th>ผ่าน</th>
             <th>ไม่ผ่าน</th>
-            <th rowspan="2" *ngFor="let scoring of data.OpenSubject.Exam.ScoringSubGroups[0].Scorings">{{ scoring.Name
-                }}</th>
-            <th rowspan="2">ระหว่างภาค เต็ม {{ maxSumScore(data.OpenSubject.Exam.ScoringSubGroups[0].Scorings) }}</th>
-            <th rowspan="2">ระดับผลการเรียน ได้</th>
             <th>ผ่าน</th>
             <th>ไม่ผ่าน</th>
         </tr>
@@ -54,30 +56,32 @@
             <td>{{ classroomStudent.Student.Code }}</td>
             <td>{{ classroomStudent.Student.Prefix }}{{ classroomStudent.Student.Name }} {{
                 classroomStudent.Student.Lastname }}</td>
-            <!-- <td></td> -->
-            <td><span *ngIf="IsPass(classroomStudent, data.OpenSubject.Exam.ScoringSubGroups[0].Id)">✅</span></td>
-            <td><span *ngIf="!IsPass(classroomStudent, data.OpenSubject.Exam.ScoringSubGroups[0].Id)">❌</span></td>
-            <!-- <td><input type="text" value="{{ classroomStudent.Remark }}" /></td> -->
             <td *ngFor="let scoring of data.OpenSubject.Exam.ScoringSubGroups[0].Scorings"
                 [ngClass]="{'editing-row':checkScoreChange(classroomStudent.StudentId,data.OpenSubject.Exam.ScoringSubGroups[0].Id,scoring.Id),'editing-row-error':checkScoreChangeError(classroomStudent.StudentId,data.OpenSubject.Exam.ScoringSubGroups[0].Id,scoring.Id)}">
-                <input type="text"
+                <input type="number" max="{{ scoring.MaxScore }}" min="0"
                     (change)="ScoreChange(classroomStudent.StudentId,data.OpenSubject.Exam.ScoringSubGroups[0].Id,scoring.Id, $event)"
-                    value="{{ getScore(classroomStudent, data.OpenSubject.Exam.ScoringSubGroups[0].Id, scoring.Id) }}" />
+                    value="{{ getScore(classroomStudent.StudentId, scoring.Id) }}" />
             </td>
-            <td>{{ SumScore(classroomStudent, data.OpenSubject.Exam.ScoringSubGroups[0].Id) }}</td>
-            <td>{{ GetGrade(classroomStudent, data.OpenSubject.Exam.ScoringSubGroups[0].Id) }}</td>
+            <td>{{ SumScore(classroomStudent.StudentId) }}</td>
+            <td>{{ GetGrade(classroomStudent.StudentId) }}</td>
+            <td><span *ngIf="IsPass(classroomStudent.StudentId)">✅</span></td>
+            <td><span *ngIf="!IsPass(classroomStudent.StudentId)">❌</span></td>
             <td
                 [ngClass]="{'editing-row':checkScoreChange(classroomStudent.StudentId,data.OpenSubject.Exam.ScoringSubGroups[1].Id,data.OpenSubject.Exam.ScoringSubGroups[1].Scorings[0].Id),'editing-row-error':checkScoreChangeError(classroomStudent.StudentId,data.OpenSubject.Exam.ScoringSubGroups[1].Id,data.OpenSubject.Exam.ScoringSubGroups[1].Scorings[0].Id)}">
-                <input type="text"
+                <input type="number"
                     (change)="ScoreChange(classroomStudent.StudentId,data.OpenSubject.Exam.ScoringSubGroups[1].Id,data.OpenSubject.Exam.ScoringSubGroups[1].Scorings[0].Id, $event)"
-                    value="{{ getScore(classroomStudent, data.OpenSubject.Exam.ScoringSubGroups[1].Id, data.OpenSubject.Exam.ScoringSubGroups[1].Scorings[0].Id) }}"
-                    *ngIf="!IsPass(classroomStudent, data.OpenSubject.Exam.ScoringSubGroups[0].Id)" />
+                    value="{{ getScore(classroomStudent.StudentId, data.OpenSubject.Exam.ScoringSubGroups[1].Scorings[0].Id) }}"
+                    *ngIf="!IsPass(classroomStudent.StudentId)" />
             </td>
-            <td><span
-                    *ngIf="!IsPass(classroomStudent, data.OpenSubject.Exam.ScoringSubGroups[0].Id)&&IsPass(classroomStudent, data.OpenSubject.Exam.ScoringSubGroups[1].Id)">✅</span>
+            <td>
+                <span *ngIf="IsPass(classroomStudent.StudentId)||IsPassFixed(classroomStudent.StudentId)">✅</span>
             </td>
-            <td><span
-                    *ngIf="!IsPass(classroomStudent, data.OpenSubject.Exam.ScoringSubGroups[0].Id)&&!IsPass(classroomStudent, data.OpenSubject.Exam.ScoringSubGroups[1].Id)">❌</span>
+            <td>
+                <span *ngIf="!IsPass(classroomStudent.StudentId)&&!IsPassFixed(classroomStudent.StudentId)">❌</span>
+            </td>
+            <td [ngClass]="{'editing-row':checkRemarkChange(classroomStudent.StudentId)}">
+                <input type="text" (change)="RemarkChange(classroomStudent.StudentId, $event)"
+                    value="{{ getRemark(classroomStudent.StudentId) }}" />
             </td>
         </tr>
     </tbody>
@@ -85,3 +89,9 @@
 <app-skeleton [style]="'table'" [column]="12" *ngIf="!data"></app-skeleton>
 <br />
 <button mat-raised-button color="primary" (click)="OnSave()">💾 บันทึก</button>
+<br />
+<br />
+<h2><b>เกณฑ์การประเมิณ</b></h2>
+<div *ngFor="let criteria of data.OpenSubject.Exam.GradingCriterias">
+    มากกว่าหรือเท่ากับ <b>{{ criteria.Score }}</b> ได้ <b>{{ criteria.Grade }}</b>
+</div>

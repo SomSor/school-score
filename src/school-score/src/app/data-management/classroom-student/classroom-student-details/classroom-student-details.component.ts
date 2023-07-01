@@ -31,7 +31,7 @@ export class ClassroomStudentDetailsComponent implements OnInit {
   async delete() {
     if (!confirm(`ยืนยันการลบวิชา ${this.data.Name} !!!`)) { return; }
     await this.classroomStudentService.Delete(this.id)
-      .then((response) => this.router.navigate(['/data-management']));
+      .then((response) => this.router.navigate(['/classroom-management']));
   }
 
   GetTier(tier: any) {

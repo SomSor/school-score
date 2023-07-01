@@ -1,0 +1,95 @@
+<div class="breadcrumb">
+    <a routerLink="/home">หน้าหลัก</a> > จัดการข้อมูลบุคคล
+</div>
+<div class="center">
+    <h1>จัดการข้อมูลบุคคล</h1>
+</div>
+<nav mat-tab-nav-bar [tabPanel]="tabPanel">
+    <a mat-tab-link routerLink="/opensubject-manage">วิชาที่เปิดสอน</a>
+    <a mat-tab-link routerLink="/classroom-manage">ห้องเรียน</a>
+    <a mat-tab-link routerLink="/subject-manage">กลุ่มสาระการเรียนรู้</a>
+    <a mat-tab-link routerLink="/person-manage" active>บุคคล</a>
+</nav>
+<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
+<br />
+<h2>ครู</h2>
+<div fxLayout="row wrap" fxLayoutGap="grid">
+    <div fxFlex="50%" fxFlex.xs="100%">
+        <button mat-raised-button color="primary" routerLink="/teacher-create">+ เพิ่มครู</button>
+    </div>
+</div>
+<br />
+<table mat-table [dataSource]="data_teacher.Data" class="mat-elevation-z8 full-width" *ngIf="data_teacher.Data">
+    <ng-container matColumnDef="No">
+        <th mat-header-cell *matHeaderCellDef>#</th>
+        <td mat-cell *matCellDef="let i = index">{{ data_teacher.LastCount + i + 1 }}</td>
+    </ng-container>
+    <ng-container matColumnDef="Code">
+        <th mat-header-cell *matHeaderCellDef>รหัสประจำตัว</th>
+        <td mat-cell *matCellDef="let element">{{ element.Code }}</td>
+    </ng-container>
+    <ng-container matColumnDef="Name">
+        <th mat-header-cell *matHeaderCellDef>ชื่อ</th>
+        <td mat-cell *matCellDef="let element">{{ element.Prefix }}{{ element.Name }} {{ element.Lastname }}
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="PID">
+        <th mat-header-cell *matHeaderCellDef>รหัสประชาชน</th>
+        <td mat-cell *matCellDef="let element">{{ element.PID }}</td>
+    </ng-container>
+    <ng-container matColumnDef="Actions">
+        <th mat-header-cell *matHeaderCellDef>#</th>
+        <td mat-cell *matCellDef="let element">
+            <button mat-button [routerLink]="['/teacher-details']" [queryParams]="{id:element.Id}">
+                <mat-icon>search</mat-icon>
+            </button>
+        </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="['No','Code','Name','PID','Actions']">
+    </tr>
+    <tr mat-row *matRowDef="let row; columns: ['No','Code','Name','PID','Actions'];">
+    </tr>
+</table>
+<br />
+<app-skeleton *ngIf="!data_teacher.Data" [style]="'table'" [column]="4"></app-skeleton>
+
+<h2>นักเรียน</h2>
+<div fxLayout="row wrap" fxLayoutGap="grid">
+    <div fxFlex="50%" fxFlex.xs="100%">
+        <button mat-raised-button color="primary" routerLink="/student-create">+ เพิ่มนักเรียน</button>
+    </div>
+</div>
+<br />
+<table mat-table [dataSource]="data_student.Data" class="mat-elevation-z8 full-width" *ngIf="data_student.Data">
+    <ng-container matColumnDef="No">
+        <th mat-header-cell *matHeaderCellDef>#</th>
+        <td mat-cell *matCellDef="let i = index">{{ data_student.LastCount + i + 1 }}</td>
+    </ng-container>
+    <ng-container matColumnDef="Code">
+        <th mat-header-cell *matHeaderCellDef>รหัสประจำตัว</th>
+        <td mat-cell *matCellDef="let element">{{ element.Code }}</td>
+    </ng-container>
+    <ng-container matColumnDef="Name">
+        <th mat-header-cell *matHeaderCellDef>ชื่อ</th>
+        <td mat-cell *matCellDef="let element">{{ element.Prefix }}{{ element.Name }} {{ element.Lastname }}
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="PID">
+        <th mat-header-cell *matHeaderCellDef>รหัสประชาชน</th>
+        <td mat-cell *matCellDef="let element">{{ element.PID }}</td>
+    </ng-container>
+    <ng-container matColumnDef="Actions">
+        <th mat-header-cell *matHeaderCellDef>#</th>
+        <td mat-cell *matCellDef="let element">
+            <button mat-button [routerLink]="['/student-details']" [queryParams]="{id:element.Id}">
+                <mat-icon>search</mat-icon>
+            </button>
+        </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="['No','Code','Name','PID','Actions']">
+    </tr>
+    <tr mat-row *matRowDef="let row; columns: ['No','Code','Name','PID','Actions'];">
+    </tr>
+</table>
+<br />
+<app-skeleton *ngIf="!data_student.Data" [style]="'table'" [column]="4"></app-skeleton>

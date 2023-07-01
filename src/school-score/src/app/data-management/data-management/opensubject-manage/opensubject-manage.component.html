@@ -1,0 +1,97 @@
+<div class="breadcrumb">
+    <a routerLink="/home">หน้าหลัก</a> > จัดการข้อมูลวิชาที่เปิดสอน
+</div>
+<div class="center">
+    <h1>จัดการข้อมูลวิชาที่เปิดสอน</h1>
+</div>
+<nav mat-tab-nav-bar [tabPanel]="tabPanel">
+    <a mat-tab-link routerLink="/opensubject-manage" active>วิชาที่เปิดสอน</a>
+    <a mat-tab-link routerLink="/classroom-manage">ห้องเรียน</a>
+    <a mat-tab-link routerLink="/subject-manage">กลุ่มสาระการเรียนรู้</a>
+    <a mat-tab-link routerLink="/person-manage">บุคคล</a>
+</nav>
+<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
+<br />
+<h2>วิชาที่เปิดสอน</h2>
+<div fxLayout="row wrap" fxLayoutGap="grid">
+    <div fxFlex="50%" fxFlex.xs="100%">
+        <button mat-raised-button color="primary" routerLink="/open-subject-create">+
+            เพิ่มวิชาที่เปิดสอน</button>
+    </div>
+</div>
+<br />
+<table mat-table [dataSource]="data_openSubject.Data" class="mat-elevation-z8 full-width" *ngIf="data_openSubject.Data">
+    <ng-container matColumnDef="No">
+        <th mat-header-cell *matHeaderCellDef>#</th>
+        <td mat-cell *matCellDef="let i = index">{{ data_openSubject.LastCount + i + 1 }}</td>
+    </ng-container>
+    <ng-container matColumnDef="SubjectCode">
+        <th mat-header-cell *matHeaderCellDef>รหัสวิชา</th>
+        <td mat-cell *matCellDef="let element">{{ element.Subject?.Code }}</td>
+    </ng-container>
+    <ng-container matColumnDef="SubjectName">
+        <th mat-header-cell *matHeaderCellDef>วิชา</th>
+        <td mat-cell *matCellDef="let element">{{ element.Subject?.Name }}</td>
+    </ng-container>
+    <ng-container matColumnDef="MainTeacherId">
+        <th mat-header-cell *matHeaderCellDef>ครูผู้สอน</th>
+        <td mat-cell *matCellDef="let element">{{ element.Teacher?.Prefix }}{{ element.Teacher?.Name }} {{
+            element.Teacher?.Lastname }}</td>
+    </ng-container>
+    <ng-container matColumnDef="Actions">
+        <th mat-header-cell *matHeaderCellDef>#</th>
+        <td mat-cell *matCellDef="let element">
+            <button mat-button [routerLink]="['/open-subject-details']" [queryParams]="{id:element.Id}">
+                <mat-icon>search</mat-icon>
+            </button>
+        </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="['No','SubjectCode','SubjectName','MainTeacherId','Actions']">
+    </tr>
+    <tr mat-row *matRowDef="let row; columns: ['No','SubjectCode','SubjectName','MainTeacherId','Actions'];">
+    </tr>
+</table>
+<br />
+<app-skeleton *ngIf="!data_openSubject.Data" [style]="'table'" [column]="4"></app-skeleton>
+
+<h2>ลงทะเบียนห้องเรียน</h2>
+<div fxLayout="row wrap" fxLayoutGap="grid">
+    <div fxFlex="50%" fxFlex.xs="100%">
+        <button mat-raised-button color="primary" routerLink="/register-open-subject-create">+
+            ลงทะเบียนห้องเรียน</button>
+    </div>
+</div>
+<br />
+<table mat-table [dataSource]="data_registerOpenSubject.Data" class="mat-elevation-z8 full-width"
+    *ngIf="data_registerOpenSubject.Data">
+    <ng-container matColumnDef="No">
+        <th mat-header-cell *matHeaderCellDef>#</th>
+        <td mat-cell *matCellDef="let i = index">{{ data_registerOpenSubject.LastCount + i + 1 }}</td>
+    </ng-container>
+    <ng-container matColumnDef="Classroom">
+        <th mat-header-cell *matHeaderCellDef>ห้องเรียน</th>
+        <td mat-cell *matCellDef="let element">{{ GetTierAbb(element.Classroom?.Tier) }} {{
+            element.Classroom?.ClassYear }} / {{ element.Classroom?.Subclass }}</td>
+    </ng-container>
+    <ng-container matColumnDef="Subject">
+        <th mat-header-cell *matHeaderCellDef>วิชาที่เรียน</th>
+        <td mat-cell *matCellDef="let element">
+            <div *ngFor="let item of fetchSubject(element.OpenSubjectIds)">{{ item.Code }} {{ item.Name }}</div>
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="Actions">
+        <th mat-header-cell *matHeaderCellDef>#</th>
+        <td mat-cell *matCellDef="let element">
+            <button mat-button [routerLink]="['/register-open-subject-details']"
+                [queryParams]="{id:element.Classroom.Id}">
+                <mat-icon>search</mat-icon>
+            </button>
+        </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="['No','Classroom','Subject','Actions']">
+    </tr>
+    <tr mat-row *matRowDef="let row; columns: ['No','Classroom','Subject','Actions'];">
+    </tr>
+</table>
+<br />
+<app-skeleton *ngIf="!data_registerOpenSubject.Data" [style]="'table'" [column]="4"></app-skeleton>

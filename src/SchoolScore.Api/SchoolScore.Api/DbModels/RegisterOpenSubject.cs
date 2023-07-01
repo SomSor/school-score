@@ -8,7 +8,6 @@
         public ScoringGroupResult ExamResult { get; set; }
         public IEnumerable<Attendance> Attendances { get; set; }
         public string GradingResult { get; set; }
-        public string Remark { get; set; }
     }
 
     public class Attendance

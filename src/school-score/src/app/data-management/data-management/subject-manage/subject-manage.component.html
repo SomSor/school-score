@@ -1,0 +1,92 @@
+<div class="breadcrumb">
+    <a routerLink="/home">หน้าหลัก</a> > จัดการข้อมูลกลุ่มสาระการเรียนรู้
+</div>
+<div class="center">
+    <h1>จัดการข้อมูลกลุ่มสาระการเรียนรู้</h1>
+</div>
+<nav mat-tab-nav-bar [tabPanel]="tabPanel">
+    <a mat-tab-link routerLink="/opensubject-manage">วิชาที่เปิดสอน</a>
+    <a mat-tab-link routerLink="/classroom-manage">ห้องเรียน</a>
+    <a mat-tab-link routerLink="/subject-manage" active>กลุ่มสาระการเรียนรู้</a>
+    <a mat-tab-link routerLink="/person-manage">บุคคล</a>
+</nav>
+<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
+<br />
+<h2>กลุ่มสาระการเรียนรู้</h2>
+<div fxLayout="row wrap" fxLayoutGap="grid">
+    <div fxFlex="50%" fxFlex.xs="100%">
+        <button mat-raised-button color="primary" routerLink="/learning-area-create">+
+            เพิ่มกลุ่มสาระการเรียนรู้</button>
+    </div>
+</div>
+<br />
+<table mat-table [dataSource]="data_learningArea.Data" class="mat-elevation-z8 full-width"
+    *ngIf="data_learningArea.Data">
+    <ng-container matColumnDef="No">
+        <th mat-header-cell *matHeaderCellDef>#</th>
+        <td mat-cell *matCellDef="let i = index">{{ data_learningArea.LastCount + i + 1 }}</td>
+    </ng-container>
+    <ng-container matColumnDef="Name">
+        <th mat-header-cell *matHeaderCellDef>กลุ่มสาระการเรียนรู้</th>
+        <td mat-cell *matCellDef="let element">{{ element.Name }}</td>
+    </ng-container>
+    <ng-container matColumnDef="Description">
+        <th mat-header-cell *matHeaderCellDef>คำอธิบายเพิ่มเติม</th>
+        <td mat-cell *matCellDef="let element">{{ element.Description }}</td>
+    </ng-container>
+    <ng-container matColumnDef="Actions">
+        <th mat-header-cell *matHeaderCellDef>#</th>
+        <td mat-cell *matCellDef="let element">
+            <button mat-button [routerLink]="['/learning-area-details']" [queryParams]="{id:element.Id}">
+                <mat-icon>search</mat-icon>
+            </button>
+        </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="['No','Name','Description','Actions']">
+    </tr>
+    <tr mat-row *matRowDef="let row; columns: ['No','Name','Description','Actions'];">
+    </tr>
+</table>
+<br />
+<app-skeleton *ngIf="!data_learningArea.Data" [style]="'table'" [column]="4"></app-skeleton>
+
+<h2>วิชา</h2>
+<div fxLayout="row wrap" fxLayoutGap="grid">
+    <div fxFlex="50%" fxFlex.xs="100%">
+        <button mat-raised-button color="primary" routerLink="/subject-create">+
+            เพิ่มวิชา</button>
+    </div>
+</div>
+<br />
+<table mat-table [dataSource]="data_subject.Data" class="mat-elevation-z8 full-width" *ngIf="data_subject.Data">
+    <ng-container matColumnDef="No">
+        <th mat-header-cell *matHeaderCellDef>#</th>
+        <td mat-cell *matCellDef="let i = index">{{ data_subject.LastCount + i + 1 }}</td>
+    </ng-container>
+    <ng-container matColumnDef="Name">
+        <th mat-header-cell *matHeaderCellDef>วิชา</th>
+        <td mat-cell *matCellDef="let element">{{ element.Name }}</td>
+    </ng-container>
+    <ng-container matColumnDef="Description">
+        <th mat-header-cell *matHeaderCellDef>คำอธิบายเพิ่มเติม</th>
+        <td mat-cell *matCellDef="let element">{{ element.Description }}</td>
+    </ng-container>
+    <ng-container matColumnDef="LearningAreaName">
+        <th mat-header-cell *matHeaderCellDef>กลุ่มสาระการเรียนรู้</th>
+        <td mat-cell *matCellDef="let element">{{ element.LearningArea?.Name }}</td>
+    </ng-container>
+    <ng-container matColumnDef="Actions">
+        <th mat-header-cell *matHeaderCellDef>#</th>
+        <td mat-cell *matCellDef="let element">
+            <button mat-button [routerLink]="['/subject-details']" [queryParams]="{id:element.Id}">
+                <mat-icon>search</mat-icon>
+            </button>
+        </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="['No','Name','Description','LearningAreaName','Actions']">
+    </tr>
+    <tr mat-row *matRowDef="let row; columns: ['No','Name','Description','LearningAreaName','Actions'];">
+    </tr>
+</table>
+<br />
+<app-skeleton *ngIf="!data_subject.Data" [style]="'table'" [column]="4"></app-skeleton>

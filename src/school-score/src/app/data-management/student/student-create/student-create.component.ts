@@ -48,7 +48,7 @@ export class StudentCreateComponent {
           .then(response => this.router.navigate(['/student-details'], { queryParams: { id: this.editingId } }));
       } else {
         this.studentService.Create(this.fg.value)
-          .then(response => this.router.navigate(['/data-management']));
+          .then(response => this.router.navigate(['/person-manage']));
       }
     }
   }

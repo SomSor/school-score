@@ -45,6 +45,9 @@ export class CourseComponent {
       });
     });
     this.table.renderRows();
+    console.log(this.displayData);
+    console.log(this.data_registerOpenSubject);
+    
 
     return event;
   }
@@ -59,6 +62,10 @@ export class CourseComponent {
 
   fetchSubject(subjectIds: any): any {
     return this.data_registerOpenSubject.Subjects.filter((x: any) => subjectIds.indexOf(x.Id) >= 0);
+  }
+
+  fetchEvaluates(openSubjectId: any): any {
+    return this.data_registerOpenSubject.OpenSubjects.filter((x: any) => x.Id == openSubjectId)[0].Evaluates;
   }
 
 }

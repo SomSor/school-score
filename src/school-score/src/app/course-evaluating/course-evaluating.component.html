@@ -1,116 +1,90 @@
-<style>
-    table {
-        width: 100%;
-    }
-
-    table,
-    tr,
-    td,
-    th {
-        border: 1px solid black;
-    }
-
-    tr.stdCheck td {
-        text-align: center;
-        text-decoration: none;
-    }
-</style>
 <div class="breadcrumb">
-    <a routerLink="/home">หน้าหลัก</a> > <a routerLink="/course">บันทึกการพัฒนาผู้เรียน</a> > บันทึกการประเมิน (การประเมิน การอ่าน คิดวิเคราะห์และเขียน)
+    <a routerLink="/home">หน้าหลัก</a> > <a routerLink="/course">บันทึกการพัฒนาผู้เรียน</a> > บันทึกการประเมินตัวชี้วัด
 </div>
-<div class="center">
-    <h1>บันทึกการประเมิน</h1>
-</div>
-<div class="center">
-    <h2>การประเมิน การอ่าน คิดวิเคราะห์และเขียน</h2>
-</div>
+<div class="page-header" *ngIf="dataEvaluate">{{ dataEvaluate.Name }}</div>
+<app-skeleton [style]="'detail'" [row]="1" *ngIf="!dataEvaluate"></app-skeleton>
 
-<mat-card class="example-card">
+<mat-card class="example-card" *ngIf="data">
     <mat-card-content>
-        <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="data">
+        <div fxLayout="row wrap" fxLayoutGap="grid">
             <div fxFlex="20%" fxFlex.xs="100%"><b>ชั้นปี:</b></div>
-            <div fxFlex="80%" fxFlex.xs="100%">3/2</div>
+            <div fxFlex="80%" fxFlex.xs="100%">
+                {{ GetTier(data.Classroom.Tier) }} {{ data.Classroom.ClassYear }} / {{data.Classroom.Subclass }}
+            </div>
             <div fxFlex="20%" fxFlex.xs="100%"><b>กลุ่มสาระการเรียนรู้:</b></div>
-            <div fxFlex="80%" fxFlex.xs="100%">การงานอาชีพ</div>
+            <div fxFlex="80%" fxFlex.xs="100%">{{ data.LearningArea.Name }}</div>
             <div fxFlex="20%" fxFlex.xs="100%"><b>วิชา:</b></div>
-            <div fxFlex="80%" fxFlex.xs="100%">คอมพิวเตอร์</div>
-        </div>
-        <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="!data">
-            <div fxFlex="100%" fxFlex.xs="100%">
-                <div class="skeleton skeleton-text"></div>
-            </div>
-            <div fxFlex="100%" fxFlex.xs="100%">
-                <div class="skeleton skeleton-text"></div>
-            </div>
-            <div fxFlex="100%" fxFlex.xs="100%">
-                <div class="skeleton skeleton-text"></div>
-            </div>
-            <div fxFlex="100%" fxFlex.xs="100%">
-                <div class="skeleton skeleton-text"></div>
-            </div>
-            <div fxFlex="100%" fxFlex.xs="100%">
-                <div class="skeleton skeleton-text"></div>
-            </div>
-            <div fxFlex="100%" fxFlex.xs="100%">
-                <div class="skeleton skeleton-text"></div>
+            <div fxFlex="80%" fxFlex.xs="100%">{{ data.Subject.Code }} {{ data.Subject.Name }}</div>
+            <div fxFlex="20%" fxFlex.xs="100%"><b>ครูผู้สอน:</b></div>
+            <div fxFlex="80%" fxFlex.xs="100%">
+                {{ data.Teacher.Prefix }}{{ data.Teacher.Name }} {{ data.Teacher.Lastname }}
             </div>
         </div>
     </mat-card-content>
 </mat-card>
+<app-skeleton [style]="'detail'" *ngIf="!data"></app-skeleton>
 <br />
-
-<mat-tab-group>
-    <mat-tab label="การอ่าน">
-    </mat-tab>
-    <mat-tab label="การคิดวิเคราะห์">
-    </mat-tab>
-    <mat-tab label="การเขียน">
-    </mat-tab>
-</mat-tab-group>
-<br />
-<button mat-raised-button color="primary">💾 บันทึก</button>
-&nbsp;
-<button mat-raised-button color="primary">📃 ลงโดยย่อ</button>
+<button mat-raised-button color="primary" (click)="OnSave()">💾 บันทึก</button>
 <br />
 <br />
-<table>
+<table *ngIf="data">
     <thead>
         <tr>
-            <th rowspan="3">เลขที่</th>
-            <th rowspan="3">เลขประจำตัวนักเรียน</th>
-            <th rowspan="3">ชื่อ - สกุล</th>
-            <th rowspan="2">ข้อ 1. เต็ม 3 ได้</th>
-            <th rowspan="2">ข้อ 2. เต็ม 3 ได้</th>
-            <th rowspan="2">ข้อ 3. เต็ม 3 ได้</th>
-            <th rowspan="2">ข้อ 4. เต็ม 3 ได้</th>
-            <th rowspan="2">รวม</th>
+            <th rowspan="2">เลขที่</th>
+            <th rowspan="2">เลขประจำตัวนักเรียน</th>
+            <th rowspan="2">ชื่อ - สกุล</th>
+            <th rowspan="2" *ngFor="let scoringSubGroup of this.dataEvaluate.ScoringSubGroups"
+                style="writing-mode: vertical-rl;text-align: left;">
+                {{ scoringSubGroup.Name }}
+            </th>
+            <th rowspan="2" style="writing-mode: vertical-rl;">รวมคะแนน</th>
             <th colspan="4">สรุปผลการประเมิน</th>
+            <th rowspan="2">หมายเหตุ</th>
         </tr>
         <tr>
-            <th style="writing-mode: vertical-rl;">ดีเยี่ยม</th>
-            <th style="writing-mode: vertical-rl;">ดี</th>
-            <th style="writing-mode: vertical-rl;">ผ่านเกณฑ์การประเมิน</th>
-            <th style="writing-mode: vertical-rl;">ไม่ผ่านผ่านเกณฑ์การประเมิน</th>
+            <th *ngFor="let criteria of this.dataEvaluate.GradingCriterias" style="writing-mode: vertical-rl;">
+                {{ criteria.Grade }}
+            </th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]" class="stdCheck">
-            <td>{{i}}</td>
-            <td>5432</td>
-            <td>ด.ช.กก ขข</td>
-            <td><input type="text" value="2" /></td>
-            <td><input type="text" value="2" /></td>
-            <td><input type="text" value="2" /></td>
-            <td><input type="text" value="2" /></td>
-            <td><input type="text" value="8" /></td>
-            <td>✅</td>
-            <td> </td>
-            <td> </td>
-            <td> </td>
+        <tr *ngFor="let classroomStudent of data.Data;let i = index" class="stdCheck">
+            <td>{{ i + 1 }}</td>
+            <td>{{ classroomStudent.Student.Code }}</td>
+            <td>
+                {{ classroomStudent.Student.Prefix }}{{ classroomStudent.Student.Name }}
+                {{classroomStudent.Student.Lastname }}
+            </td>
+            <td *ngFor="let scoringSubGroup of this.dataEvaluate.ScoringSubGroups">
+                <div fxLayout="row wrap" fxLayoutGap="grid">
+                    <div fxFlex *ngFor="let scoring of scoringSubGroup.Scorings"
+                        [ngClass]="{'editing-row':checkScoreChange(classroomStudent.StudentId, scoringSubGroup.Id, scoring.Id)}">
+                        <mat-select [value]="getScore(classroomStudent.StudentId, scoring.Id)"
+                            (valueChange)="ScoreChange(classroomStudent.StudentId, scoring.Id, $event)">
+                            <mat-option *ngFor="let score of getArrayFromNumber(scoring.MaxScore);let i=index"
+                                [value]="i+1">{{ i+1 }}</mat-option>
+                        </mat-select>
+                    </div>
+                    <!-- <div fxFlex>{{ GetGrade(classroomStudent.StudentId) }}</div> -->
+                </div>
+            </td>
+            <td>{{ SumScore(classroomStudent.StudentId) }}</td>
+            <td *ngFor="let criteria of this.dataEvaluate.GradingCriterias">
+                <span *ngIf="GetGrade(classroomStudent.StudentId)==criteria.Grade">✅</span>
+            </td>
+            <td [ngClass]="{'editing-row':checkRemarkChange(classroomStudent.StudentId)}" style="width: 200px;">
+                <input type="text" (change)="RemarkChange(classroomStudent.StudentId, $event)"
+                    value="{{ getRemark(classroomStudent.StudentId) }}" />
+            </td>
         </tr>
     </tbody>
 </table>
+<app-skeleton [style]="'table'" [column]="12" *ngIf="!data"></app-skeleton>
 <br />
-<button mat-raised-button color="primary">💾 บันทึก</button>
-&nbsp;
-<button mat-raised-button color="primary">📃 ลงโดยย่อ</button>
+<button mat-raised-button color="primary" (click)="OnSave()">💾 บันทึก</button>
+<br />
+<br />
+<h2><b>เกณฑ์การประเมิณ</b></h2>
+<div *ngFor="let criteria of dataEvaluate.GradingCriterias">
+    มากกว่าหรือเท่ากับ <b>{{ criteria.Score }}</b> ได้ <b>{{ criteria.Grade }}</b>
+</div>

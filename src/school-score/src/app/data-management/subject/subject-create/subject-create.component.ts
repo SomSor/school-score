@@ -55,7 +55,7 @@ export class SubjectCreateComponent {
           .then(response => this.router.navigate(['/subject-details'], { queryParams: { id: this.editingId } }));
       } else {
         this.subjectService.Create(this.fg.value)
-          .then(response => this.router.navigate(['/data-management']));
+          .then(response => this.router.navigate(['/subject-manage']));
       }
     }
   }

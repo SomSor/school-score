@@ -12,6 +12,8 @@ import { RegistrationComponent } from './registration/registration.component';
 import { ReportComponent } from './report/report.component';
 
 import { DataManagementComponent } from './data-management/data-management/data-management.component';
+import { PersonManageComponent } from './data-management/data-management/person-manage/person-manage.component';
+
 import { LearningAreaCreateComponent } from './data-management/learning-area/learning-area-create/learning-area-create.component';
 import { LearningAreaDetailsComponent } from './data-management/learning-area/learning-area-details/learning-area-details.component';
 import { SubjectCreateComponent } from './data-management/subject/subject-create/subject-create.component';
@@ -30,6 +32,9 @@ import { OpenSubjectCreateComponent } from './data-management/open-subject/open-
 import { OpenSubjectDetailsComponent } from './data-management/open-subject/open-subject-details/open-subject-details.component';
 import { RegisterOpenSubjectCreateComponent } from './data-management/register-open-subject/register-open-subject-create/register-open-subject-create.component';
 import { RegisterOpenSubjectDetailsComponent } from './data-management/register-open-subject/register-open-subject-details/register-open-subject-details.component';
+import { ClassroomManageComponent } from './data-management/data-management/classroom-manage/classroom-manage.component';
+import { OpensubjectManageComponent } from './data-management/data-management/opensubject-manage/opensubject-manage.component';
+import { SubjectManageComponent } from './data-management/data-management/subject-manage/subject-manage.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -44,6 +49,10 @@ const routes: Routes = [
   { path: 'report', component: ReportComponent },
 
   { path: 'data-management', component: DataManagementComponent },
+  { path: 'classroom-manage', component: ClassroomManageComponent },
+  { path: 'opensubject-manage', component: OpensubjectManageComponent },
+  { path: 'person-manage', component: PersonManageComponent },
+  { path: 'subject-manage', component: SubjectManageComponent },
   { path: 'learning-area-create', component: LearningAreaCreateComponent },
   { path: 'learning-area-details', component: LearningAreaDetailsComponent },
   { path: 'subject-create', component: SubjectCreateComponent },

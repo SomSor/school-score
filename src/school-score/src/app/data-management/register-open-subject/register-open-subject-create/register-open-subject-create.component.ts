@@ -63,7 +63,7 @@ export class RegisterOpenSubjectCreateComponent {
           .then(response => this.router.navigate(['/classroomStudent-details'], { queryParams: { id: this.editingId } }));
       } else {
         this.classroomStudentService.RegisterOpenSubjects(this.fg.value)
-          .then(response => this.router.navigate(['/data-management']));
+          .then(response => this.router.navigate(['/opensubject-manage']));
       }
     }
   }

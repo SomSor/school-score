@@ -42,7 +42,7 @@ export class LearningAreaCreateComponent {
           .then(response => this.router.navigate(['/learning-area-details'], { queryParams: { id: this.editingId } }));
       } else {
         this.learningAreaService.Create(this.fg.value)
-          .then(response => this.router.navigate(['/data-management']));
+          .then(response => this.router.navigate(['/subject-manage']));
       }
     }
   }

@@ -258,8 +258,8 @@ namespace SchoolScore.Api.Controllers
             return Ok();
         }
 
-        [HttpPut("savescore")]
-        public async Task<IActionResult> SaveSCore([FromBody] SaveSCoreRequest request)
+        [HttpPut("exam")]
+        public async Task<IActionResult> Exam([FromBody] SaveScoringGroupRequest request)
         {
             var classRoomStudents = await classroomStudentDac.List(x => x.ClassroomId == request.ClassroomId);
 
@@ -277,6 +277,40 @@ namespace SchoolScore.Api.Controllers
                                 && x.ScoringSubGroupId == scoringSubGroupResult.ScoringSubGroupId
                                 && x.ScoringId == scoringResult.ScoringId)?.Score ?? oldScore;
                         }
+                    }
+                    var remark = request.ClassroomStudentRemarks.FirstOrDefault(x => x.StudentId == classRoomStudent.StudentId && x.ScoringGroupId == registerOpenSubject.ExamResult.ScoringGroupId)?.Remark;
+                    registerOpenSubject.ExamResult.Remark = remark;
+                }
+                classRoomStudent.RegisterOpenSubjects = registerOpenSubjects;
+                await classroomStudentDac.ReplaceOne(x => x.Id == classRoomStudent.Id, classRoomStudent);
+            }
+            return Ok();
+        }
+
+        [HttpPut("evaluate")]
+        public async Task<IActionResult> Evaluate([FromBody] SaveScoringGroupRequest request)
+        {
+            var classRoomStudents = await classroomStudentDac.List(x => x.ClassroomId == request.ClassroomId);
+
+            foreach (var classRoomStudent in classRoomStudents)
+            {
+                var registerOpenSubjects = classRoomStudent.RegisterOpenSubjects.ToList();
+                foreach (var registerOpenSubject in registerOpenSubjects.Where(x => x.OpenSubjectId == request.OpenSubjectId))
+                {
+                    foreach (var evaluateResult in registerOpenSubject.EvaluateResults)
+                    {
+                        foreach (var scoringSubGroupResult in evaluateResult.ScoringSubGroupResults)
+                        {
+                            foreach (var scoringResult in scoringSubGroupResult.ScoringResults)
+                            {
+                                var oldScore = scoringResult.Score;
+                                scoringResult.Score = request.ClassroomStudentScores.FirstOrDefault(x => x.StudentId == classRoomStudent.StudentId
+                                    && x.ScoringSubGroupId == scoringSubGroupResult.ScoringSubGroupId
+                                    && x.ScoringId == scoringResult.ScoringId)?.Score ?? oldScore;
+                            }
+                        }
+                        var remark = request.ClassroomStudentRemarks.FirstOrDefault(x => x.StudentId == classRoomStudent.StudentId && x.ScoringGroupId == evaluateResult.ScoringGroupId)?.Remark;
+                        evaluateResult.Remark = remark;
                     }
                 }
                 classRoomStudent.RegisterOpenSubjects = registerOpenSubjects;

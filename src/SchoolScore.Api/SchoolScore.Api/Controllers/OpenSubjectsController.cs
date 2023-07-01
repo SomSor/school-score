@@ -76,41 +76,78 @@ namespace SchoolScore.Api.Controllers
             documentDb.Init(AccountsController.Username);
             documentDb.SchoolYearId = SchoolYearId;
 
-            var scorings_eval1 = new List<DbModels.Scoring>
+
+            var scorings_eval1 = delegate ()
             {
-                new DbModels.Scoring
+                return new List<DbModels.Scoring>
                 {
-                    Id = DbModels.DbModelBase.RunId(),
-                    Name = "เต็ม 4",
-                    MaxScore = 4,
-                },
+                    new DbModels.Scoring
+                    {
+                        Id = DbModels.DbModelBase.RunId(),
+                        Name = "ประเมิน",
+                        MaxScore = 4,
+                    },
+                };
             };
-            var scorings_eval2 = new List<DbModels.Scoring>
+            var scorings_eval2 = delegate ()
             {
-                new DbModels.Scoring
+                return new List<DbModels.Scoring>
                 {
-                    Id = DbModels.DbModelBase.RunId(),
-                    Name = "ข้อ 1 เต็ม 3",
-                    MaxScore = 3,
-                },
-                new DbModels.Scoring
+                    new DbModels.Scoring
+                    {
+                        Id = DbModels.DbModelBase.RunId(),
+                        Name = "ข้อ 1 เต็ม 3",
+                        MaxScore = 3,
+                    },
+                    new DbModels.Scoring
+                    {
+                        Id = DbModels.DbModelBase.RunId(),
+                        Name = "ข้อ 2 เต็ม 3",
+                        MaxScore = 3,
+                    },
+                    new DbModels.Scoring
+                    {
+                        Id = DbModels.DbModelBase.RunId(),
+                        Name = "ข้อ 3 เต็ม 3",
+                        MaxScore = 3,
+                    },
+                    new DbModels.Scoring
+                    {
+                        Id = DbModels.DbModelBase.RunId(),
+                        Name = "ข้อ 4 เต็ม 3",
+                        MaxScore = 3,
+                    },
+                };
+            };
+            var criterias = delegate ()
+            {
+                return new List<DbModels.GradingCriteria>
                 {
-                    Id = DbModels.DbModelBase.RunId(),
-                    Name = "ข้อ 2 เต็ม 3",
-                    MaxScore = 3,
-                },
-                new DbModels.Scoring
-                {
-                    Id = DbModels.DbModelBase.RunId(),
-                    Name = "ข้อ 3 เต็ม 3",
-                    MaxScore = 3,
-                },
-                new DbModels.Scoring
-                {
-                    Id = DbModels.DbModelBase.RunId(),
-                    Name = "ข้อ 4 เต็ม 3",
-                    MaxScore = 3,
-                },
+                    new DbModels.GradingCriteria
+                    {
+                        Id = DbModels.DbModelBase.RunId(),
+                        Grade = "ดีเยี่ยม",
+                        Score = 13,
+                    },
+                    new DbModels.GradingCriteria
+                    {
+                        Id = DbModels.DbModelBase.RunId(),
+                        Grade = "ดี",
+                        Score = 9,
+                    },
+                    new DbModels.GradingCriteria
+                    {
+                        Id = DbModels.DbModelBase.RunId(),
+                        Grade = "ผ่านเกณฑ์",
+                        Score = 5,
+                    },
+                    new DbModels.GradingCriteria
+                    {
+                        Id = DbModels.DbModelBase.RunId(),
+                        Grade = "ไม่ผ่านเกณฑ์",
+                        Score = 0,
+                    },
+                };
             };
 
             documentDb.Evaluates = new List<DbModels.ScoringGroup>
@@ -126,83 +163,57 @@ namespace SchoolScore.Api.Controllers
                         {
                             Id = DbModels.DbModelBase.RunId(),
                             Name = "ข้อ 1. รักชาติ ศาสน์ กษัตริย์",
-                            Scorings = scorings_eval1.Adapt<IEnumerable<DbModels.Scoring>>(),
+                            Scorings = scorings_eval1().Adapt<IEnumerable<DbModels.Scoring>>(),
                         },
                         new DbModels.ScoringSubGroup
                         {
                             Id = DbModels.DbModelBase.RunId(),
                             Name = "ข้อ 2. ซื่อสัตย์ สุจริต",
-                            Scorings = scorings_eval1.Adapt<IEnumerable<DbModels.Scoring>>(),
+                            Scorings = scorings_eval1().Adapt<IEnumerable<DbModels.Scoring>>(),
                         },
                         new DbModels.ScoringSubGroup
                         {
                             Id = DbModels.DbModelBase.RunId(),
                             Name = "ข้อ 3. มีวินัย",
-                            Scorings = scorings_eval1.Adapt<IEnumerable<DbModels.Scoring>>(),
+                            Scorings = scorings_eval1().Adapt<IEnumerable<DbModels.Scoring>>(),
                         },
                         new DbModels.ScoringSubGroup
                         {
                             Id = DbModels.DbModelBase.RunId(),
                             Name = "ข้อ 4. ใฝ่เรียนรู้",
-                            Scorings = scorings_eval1.Adapt<IEnumerable<DbModels.Scoring>>(),
+                            Scorings = scorings_eval1().Adapt<IEnumerable<DbModels.Scoring>>(),
                         },
                         new DbModels.ScoringSubGroup
                         {
                             Id = DbModels.DbModelBase.RunId(),
                             Name = "ข้อ 5. อยู่อย่างพอเพียง",
-                            Scorings = scorings_eval1.Adapt<IEnumerable<DbModels.Scoring>>(),
+                            Scorings = scorings_eval1().Adapt<IEnumerable<DbModels.Scoring>>(),
                         },
                         new DbModels.ScoringSubGroup
                         {
                             Id = DbModels.DbModelBase.RunId(),
                             Name = "ข้อ 6. มุ่งมั่นในการทำงาน",
-                            Scorings = scorings_eval1.Adapt<IEnumerable<DbModels.Scoring>>(),
+                            Scorings = scorings_eval1().Adapt<IEnumerable<DbModels.Scoring>>(),
                         },
                         new DbModels.ScoringSubGroup
                         {
                             Id = DbModels.DbModelBase.RunId(),
                             Name = "ข้อ 7. รักความเป็นไทย",
-                            Scorings = scorings_eval1.Adapt<IEnumerable<DbModels.Scoring>>(),
+                            Scorings = scorings_eval1().Adapt<IEnumerable<DbModels.Scoring>>(),
                         },
                         new DbModels.ScoringSubGroup
                         {
                             Id = DbModels.DbModelBase.RunId(),
                             Name = "ข้อ 8. มีจิตสาธารณะ",
-                            Scorings = scorings_eval1.Adapt<IEnumerable<DbModels.Scoring>>(),
+                            Scorings = scorings_eval1().Adapt<IEnumerable<DbModels.Scoring>>(),
                         },
                     },
-                    GradingCriterias = new List<DbModels.GradingCriteria>
-                    {
-                        new DbModels.GradingCriteria
-                        {
-                            Id = DbModels.DbModelBase.RunId(),
-                            Grade = "ดีเยี่ยม",
-                            Score = 13,
-                        },
-                        new DbModels.GradingCriteria
-                        {
-                            Id = DbModels.DbModelBase.RunId(),
-                            Grade = "ดี",
-                            Score = 9,
-                        },
-                        new DbModels.GradingCriteria
-                        {
-                            Id = DbModels.DbModelBase.RunId(),
-                            Grade = "ผ่านเกณฑ์",
-                            Score = 5,
-                        },
-                        new DbModels.GradingCriteria
-                        {
-                            Id = DbModels.DbModelBase.RunId(),
-                            Grade = "ไม่ผ่านเกณฑ์",
-                            Score = 0,
-                        },
-                    },
+                    GradingCriterias = criterias(),
                 },
                 new DbModels.ScoringGroup
                 {
                     Id = DbModels.DbModelBase.RunId(),
-                    Name = "การประเมิน การอ่าน คิดวิเคราะห์และเขียน",
+                    Name = "การประเมินการอ่าน",
                     Type = DbModels.ScoringGroupTypePossible.Evaluate,
                     ScoringSubGroups = new List<DbModels.ScoringSubGroup>
                     {
@@ -210,48 +221,68 @@ namespace SchoolScore.Api.Controllers
                         {
                             Id = DbModels.DbModelBase.RunId(),
                             Name = "การอ่าน",
-                            Scorings = scorings_eval2.Adapt<IEnumerable<DbModels.Scoring>>(),
+                            Scorings = scorings_eval2().Adapt<IEnumerable<DbModels.Scoring>>(),
                         },
+                    },
+                    GradingCriterias = new List<DbModels.GradingCriteria>
+                {
+                    new DbModels.GradingCriteria
+                    {
+                        Id = DbModels.DbModelBase.RunId(),
+                        Grade = "ดีเยี่ยม",
+                        Score = 25,
+                    },
+                    new DbModels.GradingCriteria
+                    {
+                        Id = DbModels.DbModelBase.RunId(),
+                        Grade = "ดี",
+                        Score = 17,
+                    },
+                    new DbModels.GradingCriteria
+                    {
+                        Id = DbModels.DbModelBase.RunId(),
+                        Grade = "ผ่านเกณฑ์",
+                        Score = 9,
+                    },
+                    new DbModels.GradingCriteria
+                    {
+                        Id = DbModels.DbModelBase.RunId(),
+                        Grade = "ไม่ผ่านเกณฑ์",
+                        Score = 0,
+                    },
+                },
+                },
+                new DbModels.ScoringGroup
+                {
+                    Id = DbModels.DbModelBase.RunId(),
+                    Name = "การประเมินการคิดวิเคราะห์",
+                    Type = DbModels.ScoringGroupTypePossible.Evaluate,
+                    ScoringSubGroups = new List<DbModels.ScoringSubGroup>
+                    {
                         new DbModels.ScoringSubGroup
                         {
                             Id = DbModels.DbModelBase.RunId(),
                             Name = "การคิดวิเคราะห์",
-                            Scorings = scorings_eval2.Adapt<IEnumerable<DbModels.Scoring>>(),
+                            Scorings = scorings_eval2().Adapt<IEnumerable<DbModels.Scoring>>(),
                         },
+                    },
+                    GradingCriterias = criterias(),
+                },
+                new DbModels.ScoringGroup
+                {
+                    Id = DbModels.DbModelBase.RunId(),
+                    Name = "การประเมินการเขียน",
+                    Type = DbModels.ScoringGroupTypePossible.Evaluate,
+                    ScoringSubGroups = new List<DbModels.ScoringSubGroup>
+                    {
                         new DbModels.ScoringSubGroup
                         {
                             Id = DbModels.DbModelBase.RunId(),
                             Name = "การเขียน",
-                            Scorings = scorings_eval2.Adapt<IEnumerable<DbModels.Scoring>>(),
+                            Scorings = scorings_eval2().Adapt<IEnumerable<DbModels.Scoring>>(),
                         },
                     },
-                    GradingCriterias = new List<DbModels.GradingCriteria>
-                    {
-                        new DbModels.GradingCriteria
-                        {
-                            Id = DbModels.DbModelBase.RunId(),
-                            Grade = "ดีเยี่ยม",
-                            Score = 4,
-                        },
-                        new DbModels.GradingCriteria
-                        {
-                            Id = DbModels.DbModelBase.RunId(),
-                            Grade = "ดี",
-                            Score = 3,
-                        },
-                        new DbModels.GradingCriteria
-                        {
-                            Id = DbModels.DbModelBase.RunId(),
-                            Grade = "ผ่านเกณฑ์",
-                            Score = 2,
-                        },
-                        new DbModels.GradingCriteria
-                        {
-                            Id = DbModels.DbModelBase.RunId(),
-                            Grade = "ไม่ผ่านเกณฑ์",
-                            Score = 0,
-                        },
-                    },
+                    GradingCriterias = criterias(),
                 },
             };
             documentDb.Exam = new DbModels.ScoringGroup
@@ -284,7 +315,7 @@ namespace SchoolScore.Api.Controllers
                     new DbModels.ScoringSubGroup
                     {
                         Id = DbModels.DbModelBase.RunId(),
-                        Name = "ผลการแก้ไข",
+                        Name = "ผลการแก้ไข เต็ม 100",
                         Scorings = new List<DbModels.Scoring>
                         {
                             new DbModels.Scoring

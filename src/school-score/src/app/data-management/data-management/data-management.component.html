@@ -4,9 +4,16 @@
 <div class="center">
     <h1>จัดการข้อมูล</h1>
 </div>
+<nav mat-tab-nav-bar [tabPanel]="tabPanel">
+    <a mat-tab-link routerLink="/opensubject-manage">วิชาที่เปิดสอน</a>
+    <a mat-tab-link routerLink="/classroom-manage">ห้องเรียน</a>
+    <a mat-tab-link routerLink="/subject-manage">กลุ่มสาระการเรียนรู้</a>
+    <a mat-tab-link routerLink="/person-manage">บุคคล</a>
+    </nav>
+<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
 
 <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
-    <mat-tab label="วิชาที่เปิดสอน">
+    <mat-tab label="วิชาที่เปิดสอน" routerLink="course">
         <br />
         <h2>วิชาที่เปิดสอน</h2>
         <div fxLayout="row wrap" fxLayoutGap="grid">

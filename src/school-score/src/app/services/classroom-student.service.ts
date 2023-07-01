@@ -34,8 +34,13 @@ export class ClassroomStudentService extends BaseApiService {
     return this.Post(url, request);
   }
 
-  SaveScore(request: any): Promise<any> {
-    let url = `${this.apiUrl}/api/${this.controllername}/savescore`;
+  SaveExam(request: any): Promise<any> {
+    let url = `${this.apiUrl}/api/${this.controllername}/exam`;
+    return this.Put(url, request);
+  }
+
+  SaveEvaluate(request: any): Promise<any> {
+    let url = `${this.apiUrl}/api/${this.controllername}/evaluate`;
     return this.Put(url, request);
   }
 

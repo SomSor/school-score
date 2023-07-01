@@ -57,7 +57,7 @@ export class ClassroomCreateComponent {
           .then(response => this.router.navigate(['/classroom-details'], { queryParams: { id: this.editingId } }));
       } else {
         this.classroomService.Create(this.fg.value)
-          .then(response => this.router.navigate(['/data-management']));
+          .then(response => this.router.navigate(['/classroom-management']));
       }
     }
   }

@@ -26,6 +26,7 @@ export class CourseGradingComponent {
       "ClassroomId": [null, Validators.required],
       "OpenSubjectId": [null, Validators.required],
       "ClassroomStudentScores": [[], Validators.required],
+      "ClassroomStudentRemarks": [[], Validators.required],
     });
   }
 
@@ -43,6 +44,9 @@ export class CourseGradingComponent {
   async getServerData(event?: PageEvent) {
     this.data = await this.classroomStudentService.getClassroomOpenSubjectData(this.classroomId, this.opensubjectId);
 
+    this.fg.value.ClassroomStudentScores = [];
+    this.fg.value.ClassroomStudentRemarks = [];
+
     this.data.Data.forEach((cs: any) => {
       cs.RegisterOpenSubjects.filter((x: any) => x.OpenSubjectId == this.opensubjectId).forEach((ros: any) => {
         ros.ExamResult.ScoringSubGroupResults.forEach((sgr: any) => {
@@ -55,19 +59,34 @@ export class CourseGradingComponent {
             });
           });
         });
+        this.fg.value.ClassroomStudentRemarks.push({
+          StudentId: cs.StudentId,
+          ScoringGroupId: ros.ExamResult.ScoringGroupId,
+          Remark: ros.ExamResult.Remark,
+        });
       });
     });
+    console.log(this.data);
+    
   }
 
-  getScore(item: any, scoringSubGroupId: any, scoringId: any): any {
-    let registerOpenSubject = item.RegisterOpenSubjects.filter((x: any) => x.OpenSubjectId == this.opensubjectId)[0];
-    let scoringSubGroupResult = registerOpenSubject.ExamResult.ScoringSubGroupResults.filter((x: any) => x.ScoringSubGroupId == scoringSubGroupId)[0]
-    let scoringResult = scoringSubGroupResult.ScoringResults.filter((x: any) => x.ScoringId == scoringId)[0];
-    return scoringResult.Score ?? 0;
+  getScore(studentId: any, scoringId: any): any {
+    let classroomStudentScore = this.fg.value.ClassroomStudentScores.filter((x: any) => x.StudentId == studentId && x.ScoringId == scoringId)[0];
+    return classroomStudentScore.Score ?? 0;
   }
 
-  IsPass(classroomStudent: any, scoringSubGroupId: any): any {
-    let score = this.SumScore(classroomStudent, scoringSubGroupId);
+  getRemark(studentId: any): any {
+    let classroomStudentScore = this.fg.value.ClassroomStudentRemarks.filter((x: any) => x.StudentId == studentId)[0];
+    return classroomStudentScore.Remark;
+  }
+
+  IsPass(studentId: any): any {
+    let score = this.SumScore(studentId);
+    return score >= 50;
+  }
+
+  IsPassFixed(studentId: any): any {
+    let score = this.SumScore(studentId, true);
     return score >= 50;
   }
 
@@ -76,6 +95,11 @@ export class CourseGradingComponent {
       && x.ScoringSubGroupId == scoringSubGroupId
       && x.ScoringId == scoringId)[0];
     classroomStudent.Score = parseFloat(event.target.value);
+  }
+
+  RemarkChange(studentId: any, event: any) {
+    var data = this.fg.value.ClassroomStudentRemarks.filter((x: any) => x.StudentId == studentId)[0];
+    data.Remark = event.target.value;
   }
 
   checkScoreChange(studentId: any, scoringSubGroupId: any, scoringId: any): any {
@@ -102,15 +126,26 @@ export class CourseGradingComponent {
     return inputScore < 0 || inputScore > maxScore;
   }
 
-  SumScore(classroomStudent: any, scoringSubGroupId: any): any {
-    let registerOpenSubject = classroomStudent.RegisterOpenSubjects.filter((x: any) => x.OpenSubjectId == this.opensubjectId)[0];
-    let scoringSubGroupResult = registerOpenSubject.ExamResult.ScoringSubGroupResults.filter((x: any) => x.ScoringSubGroupId == scoringSubGroupId)[0]
-    let sumScore = scoringSubGroupResult.ScoringResults.map((x: any) => x.Score).reduce((sum: any, current: any) => sum + current);
-    return sumScore
+  checkRemarkChange(studentId: any): any {
+    var inputRemark = this.fg.value.ClassroomStudentRemarks.filter((x: any) => x.StudentId == studentId)[0].Remark;
+
+    let studentClassroom = this.data.Data.filter((cs: any) => cs.StudentId == studentId)[0];
+    let registerOpenSubject = studentClassroom.RegisterOpenSubjects.filter((x: any) => x.OpenSubjectId == this.opensubjectId)[0];
+    let remark = registerOpenSubject.ExamResult.Remark
+
+    return remark != inputRemark;
   }
 
-  GetGrade(classroomStudent: any, scoringSubGroupId: any) {
-    let score = this.SumScore(classroomStudent, scoringSubGroupId);
+  SumScore(studentId: any, isFixed: any = false): any {
+    let scoringSubGroupId = this.data.OpenSubject.Exam.ScoringSubGroups[0].Id;
+    if (isFixed) scoringSubGroupId = this.data.OpenSubject.Exam.ScoringSubGroups[1].Id;
+    return this.fg.value.ClassroomStudentScores
+      .filter(((x: any) => x.StudentId == studentId && x.ScoringSubGroupId == scoringSubGroupId))
+      .map((x: any) => x.Score).reduce((sum: any, current: any) => sum + current);
+  }
+
+  GetGrade(studentId: any) {
+    let score = this.SumScore(studentId);
     let grade = 0;
     for (let i = 0; i < this.data.OpenSubject.Exam.GradingCriterias.length; i++) {
       if (score >= this.data.OpenSubject.Exam.GradingCriterias[i].Score) {
@@ -133,7 +168,7 @@ export class CourseGradingComponent {
 
   OnSave() {
     if (!confirm("ยืนยันการบันทึกคะแนน")) return;
-    this.classroomStudentService.SaveScore(this.fg.value)
+    this.classroomStudentService.SaveExam(this.fg.value)
       .then(response => this.getServerData(undefined));
   }
 

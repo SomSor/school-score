@@ -70,7 +70,7 @@ export class OpenSubjectCreateComponent {
           .then(response => this.router.navigate(['/open-subject-details'], { queryParams: { id: this.editingId } }));
       } else {
         this.openSubjectService.Create(this.fg.value)
-          .then(response => this.router.navigate(['/data-management']));
+          .then(response => this.router.navigate(['/opensubject-manage']));
       }
     }
   }
