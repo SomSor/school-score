@@ -9,9 +9,9 @@ export class ClassroomTierService {
 
   Get(tier: any) {
     if (tier == "PreSchool") return "อนุบาล";
-    else if (tier == "PrimarySchool") return "ประถมศึกษา";
-    else if (tier == "JuniorHighSchool") return "มัธยมศึกษาตอนต้น";
-    else if (tier == "SeniorHighSchool") return "มัธยมศึกษาตอนปลาย";
+    else if (tier == "PrimarySchool") return "ประถมศึกษาปีที่";
+    else if (tier == "JuniorHighSchool") return "มัธยมศึกษาปีที่";
+    else if (tier == "SeniorHighSchool") return "มัธยมศึกษาปีที่";
     else return "";
   }
 

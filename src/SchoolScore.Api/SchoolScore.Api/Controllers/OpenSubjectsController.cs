@@ -380,6 +380,16 @@ namespace SchoolScore.Api.Controllers
                 },
             };
 
+            var timeTables = new List<string>();
+            if (request.Sunday) timeTables.Add("0-8:00-16:00");
+            if (request.Monday) timeTables.Add("1-8:00-16:00");
+            if (request.Tuesday) timeTables.Add("2-8:00-16:00");
+            if (request.Wednesday) timeTables.Add("3-8:00-16:00");
+            if (request.Thursday) timeTables.Add("4-8:00-16:00");
+            if (request.Friday) timeTables.Add("5-8:00-16:00");
+            if (request.Saturday) timeTables.Add("6-8:00-16:00");
+            documentDb.TimeTables = timeTables;
+
             await openSubjectDac.Create(documentDb);
             return Ok();
         }

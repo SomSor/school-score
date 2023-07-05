@@ -10,7 +10,9 @@ namespace SchoolScore.Api.DACs.Imps
     {
         public SubjectDac(MongoDBConfiguration option) : base(option) { }
 
-        public async Task<IEnumerable<Models.Subject>> ListWithLearningArea(IMongoCollection<LearningArea> learningAreaCollection, Expression<Func<Subject, bool>> expression, int page = 1, int? pageSize = null)
+        public async Task<IEnumerable<Models.Subject>> ListWithLearningArea(
+            IMongoCollection<LearningArea> learningAreaCollection,
+            Expression<Func<Subject, bool>> expression, int page = 1, int? pageSize = null)
         {
             var query = Collection.AsQueryable()
                 .Where(expression)
@@ -35,7 +37,9 @@ namespace SchoolScore.Api.DACs.Imps
             return result;
         }
 
-        public async Task<Models.Subject> GetWithLearningArea(IMongoCollection<LearningArea> learningAreaCollection, Expression<Func<Subject, bool>> expression)
+        public async Task<Models.Subject> GetWithLearningArea(
+            IMongoCollection<LearningArea> learningAreaCollection,
+            Expression<Func<Subject, bool>> expression)
         {
             var document = Collection.AsQueryable()
                 .Where(expression)

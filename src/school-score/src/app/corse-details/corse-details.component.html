@@ -1,0 +1,32 @@
+<div class="breadcrumb">
+    <a routerLink="/home">หน้าหลัก</a> > <a routerLink="/course">บันทึกการพัฒนาผู้เรียน</a> > บันทึก
+</div>
+<div class="page-header" *ngIf="data">
+    ห้อง <span>{{ GetTier(data.Classroom.Tier) }} {{ data.Classroom.ClassYear }} / {{data.Classroom.Subclass }}</span>
+</div>
+<div class="page-header" *ngIf="data">
+    กลุ่มสาระการเรียนรู้ <span>{{ data.LearningArea.Name }}</span>
+    วิชา <span>{{ data.Subject.Code }} {{ data.Subject.Name }}</span>
+</div>
+<div class="page-header-sub" *ngIf="data">
+    ครูผู้สอน <span>{{ data.Teacher.Prefix }}{{ data.Teacher.Name }} {{ data.Teacher.Lastname }}</span>
+</div>
+<app-skeleton [style]="'detail'" [row]="6" *ngIf="!data"></app-skeleton>
+<nav mat-tab-nav-bar [tabPanel]="tabPanel" *ngIf="data">
+    <a mat-tab-link (click)="currentPage='course-check'" [active]="currentPage=='course-check'">บันทึกเวลาการเรียน</a>
+    <a mat-tab-link (click)="currentPage='course-grading'"
+        [active]="currentPage=='course-grading'">บันทึกการประเมินตัวชี้วัด</a>
+    <a mat-tab-link (click)="currentPage='course-evaluating-'+evaluate.Id"
+        [active]="currentPage=='course-evaluating-'+evaluate.Id" *ngFor="let evaluate of data.OpenSubject.Evaluates">{{
+        evaluate.Name }}</a>
+</nav>
+<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
+
+<app-course-check *ngIf="currentPage=='course-check'" [classroomId]="classroomId"
+    [opensubjectId]="opensubjectId"></app-course-check>
+<app-course-grading *ngIf="currentPage=='course-grading'" [classroomId]="classroomId"
+    [opensubjectId]="opensubjectId"></app-course-grading>
+<div *ngFor="let evaluate of data.OpenSubject.Evaluates">
+    <app-course-evaluating *ngIf="currentPage=='course-evaluating-'+evaluate.Id" [classroomId]="classroomId"
+        [opensubjectId]="opensubjectId" [scoringGroupId]="evaluate.Id"></app-course-evaluating>
+</div>

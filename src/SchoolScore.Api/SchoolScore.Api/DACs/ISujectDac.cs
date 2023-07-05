@@ -6,7 +6,11 @@ namespace SchoolScore.Api.DACs
 {
     public interface ISubjectDac<T> : IDataDAC<T>
     {
-        Task<IEnumerable<Models.Subject>> ListWithLearningArea(IMongoCollection<LearningArea> learningAreaCollection, Expression<Func<Subject, bool>> expression, int page = 1, int? pageSize = null);
-        Task<Models.Subject> GetWithLearningArea(IMongoCollection<LearningArea> learningAreaCollection, Expression<Func<Subject, bool>> expression);
+        Task<IEnumerable<Models.Subject>> ListWithLearningArea(
+            IMongoCollection<LearningArea> learningAreaCollection,
+            Expression<Func<Subject, bool>> expression, int page = 1, int? pageSize = null);
+        Task<Models.Subject> GetWithLearningArea(
+            IMongoCollection<LearningArea> learningAreaCollection,
+            Expression<Func<Subject, bool>> expression);
     }
 }

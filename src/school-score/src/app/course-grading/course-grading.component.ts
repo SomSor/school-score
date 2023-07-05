@@ -1,5 +1,5 @@
 import { ActivatedRoute } from '@angular/router';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -15,7 +15,9 @@ export class CourseGradingComponent {
 
   fg: FormGroup;
   data: any;
+  @Input()
   classroomId: any;
+  @Input()
   opensubjectId: any;
 
   constructor(private fb: FormBuilder, private activatedRoute: ActivatedRoute,
@@ -66,8 +68,6 @@ export class CourseGradingComponent {
         });
       });
     });
-    console.log(this.data);
-    
   }
 
   getScore(studentId: any, scoringId: any): any {

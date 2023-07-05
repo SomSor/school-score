@@ -10,7 +10,7 @@
         public IEnumerable<ScoringGroup> Evaluates { get; set; }
         public ScoringGroup Exam { get; set; }
         /// <summary>
-        /// mon-08:00-09:00
+        /// 1-08:00-09:00 > monday
         /// </summary>
         public IEnumerable<string> TimeTables { get; set; }
     }

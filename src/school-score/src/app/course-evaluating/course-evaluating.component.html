@@ -1,28 +1,28 @@
 <div class="breadcrumb">
-    <a routerLink="/home">หน้าหลัก</a> > <a routerLink="/course">บันทึกการพัฒนาผู้เรียน</a> > บันทึกการประเมินตัวชี้วัด
+    <a routerLink="/home">หน้าหลัก</a> > <a routerLink="/course">บันทึกการพัฒนาผู้เรียน</a> > {{ dataEvaluate?.Name }}
 </div>
-<div class="page-header" *ngIf="dataEvaluate">{{ dataEvaluate.Name }}</div>
-<app-skeleton [style]="'detail'" [row]="1" *ngIf="!dataEvaluate"></app-skeleton>
-
-<mat-card class="example-card" *ngIf="data">
-    <mat-card-content>
-        <div fxLayout="row wrap" fxLayoutGap="grid">
-            <div fxFlex="20%" fxFlex.xs="100%"><b>ชั้นปี:</b></div>
-            <div fxFlex="80%" fxFlex.xs="100%">
-                {{ GetTier(data.Classroom.Tier) }} {{ data.Classroom.ClassYear }} / {{data.Classroom.Subclass }}
-            </div>
-            <div fxFlex="20%" fxFlex.xs="100%"><b>กลุ่มสาระการเรียนรู้:</b></div>
-            <div fxFlex="80%" fxFlex.xs="100%">{{ data.LearningArea.Name }}</div>
-            <div fxFlex="20%" fxFlex.xs="100%"><b>วิชา:</b></div>
-            <div fxFlex="80%" fxFlex.xs="100%">{{ data.Subject.Code }} {{ data.Subject.Name }}</div>
-            <div fxFlex="20%" fxFlex.xs="100%"><b>ครูผู้สอน:</b></div>
-            <div fxFlex="80%" fxFlex.xs="100%">
-                {{ data.Teacher.Prefix }}{{ data.Teacher.Name }} {{ data.Teacher.Lastname }}
-            </div>
-        </div>
-    </mat-card-content>
-</mat-card>
-<app-skeleton [style]="'detail'" *ngIf="!data"></app-skeleton>
+<div class="page-header" *ngIf="data">
+    ห้อง <span>{{ GetTier(data.Classroom.Tier) }} {{ data.Classroom.ClassYear }} / {{data.Classroom.Subclass }}</span>
+</div>
+<div class="page-header" *ngIf="data">
+    กลุ่มสาระการเรียนรู้ <span>{{ data.LearningArea.Name }}</span>
+    วิชา <span>{{ data.Subject.Code }} {{ data.Subject.Name }}</span>
+</div>
+<div class="page-header-sub" *ngIf="data">
+    ครูผู้สอน <span>{{ data.Teacher.Prefix }}{{ data.Teacher.Name }} {{ data.Teacher.Lastname }}</span>
+</div>
+<app-skeleton [style]="'detail'" [row]="6" *ngIf="!data"></app-skeleton>
+<nav mat-tab-nav-bar [tabPanel]="tabPanel" *ngIf="data">
+    <a mat-tab-link routerLink="/course-check"
+        [queryParams]="{classroomid:classroomId,opensubjectid:opensubjectId}">บันทึกเวลาการเรียน</a>
+    <a mat-tab-link routerLink="/course-grading"
+        [queryParams]="{classroomid:classroomId,opensubjectid:opensubjectId}">บันทึกการประเมินตัวชี้วัด</a>
+    <a mat-tab-link routerLink="/course-evaluating" [active]="evaluate.Id==scoringGroupId"
+        [queryParams]="{classroomid:classroomId,opensubjectid:opensubjectId,scoringgroupid:evaluate.Id}"
+        *ngFor="let evaluate of data.OpenSubject.Evaluates">{{ evaluate.Name
+        }}</a>
+</nav>
+<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
 <br />
 <button mat-raised-button color="primary" (click)="OnSave()">💾 บันทึก</button>
 <br />
@@ -34,15 +34,15 @@
             <th rowspan="2">เลขประจำตัวนักเรียน</th>
             <th rowspan="2">ชื่อ - สกุล</th>
             <th rowspan="2" *ngFor="let scoringSubGroup of this.dataEvaluate.ScoringSubGroups"
-                style="writing-mode: vertical-rl;text-align: left;">
+                style="writing-mode: vertical-rl;transform: rotate(180deg);">
                 {{ scoringSubGroup.Name }}
             </th>
-            <th rowspan="2" style="writing-mode: vertical-rl;">รวมคะแนน</th>
+            <th rowspan="2" style="writing-mode: vertical-rl;transform: rotate(180deg);">รวมคะแนน</th>
             <th colspan="4">สรุปผลการประเมิน</th>
             <th rowspan="2">หมายเหตุ</th>
         </tr>
         <tr>
-            <th *ngFor="let criteria of this.dataEvaluate.GradingCriterias" style="writing-mode: vertical-rl;">
+            <th style="writing-mode: vertical-rl;transform: rotate(180deg);" *ngFor="let criteria of this.dataEvaluate.GradingCriterias">
                 {{ criteria.Grade }}
             </th>
         </tr>
@@ -85,6 +85,9 @@
 <br />
 <br />
 <h2><b>เกณฑ์การประเมิณ</b></h2>
-<div *ngFor="let criteria of dataEvaluate.GradingCriterias">
-    มากกว่าหรือเท่ากับ <b>{{ criteria.Score }}</b> ได้ <b>{{ criteria.Grade }}</b>
+<div *ngIf="dataEvaluate">
+    <div *ngFor="let criteria of dataEvaluate.GradingCriterias">
+        มากกว่าหรือเท่ากับ <b>{{ criteria.Score }}</b> ได้ <b>{{ criteria.Grade }}</b>
+    </div>
 </div>
+<app-skeleton [style]="'detail'" *ngIf="!dataEvaluate"></app-skeleton>

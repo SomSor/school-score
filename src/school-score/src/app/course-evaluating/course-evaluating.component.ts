@@ -1,5 +1,5 @@
 import { ActivatedRoute } from '@angular/router';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -16,8 +16,11 @@ export class CourseEvaluatingComponent {
   fg: FormGroup;
   data: any;
   dataEvaluate: any;
+  @Input()
   classroomId: any;
+  @Input()
   opensubjectId: any;
+  @Input()
   scoringGroupId: any;
 
   constructor(private fb: FormBuilder, private activatedRoute: ActivatedRoute,
@@ -45,9 +48,10 @@ export class CourseEvaluatingComponent {
   }
 
   async getServerData(event?: PageEvent) {
+    this.data = null;
+    // this.dataEvaluate = null;
     this.data = await this.classroomStudentService.getClassroomOpenSubjectData(this.classroomId, this.opensubjectId);
     this.dataEvaluate = this.data.OpenSubject.Evaluates.filter((x: any) => x.Id == this.scoringGroupId)[0];
-console.log(this.dataEvaluate);
 
     this.fg.value.ClassroomStudentScores = [];
     this.fg.value.ClassroomStudentRemarks = [];
@@ -94,7 +98,6 @@ console.log(this.dataEvaluate);
   RemarkChange(studentId: any, event: any) {
     var data = this.fg.value.ClassroomStudentRemarks.filter((x: any) => x.StudentId == studentId)[0];
     data.Remark = event.target.value;
-    
   }
 
   checkScoreChange(studentId: any, scoringSubGroupId: any, scoringId: any): any {

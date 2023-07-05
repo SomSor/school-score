@@ -13,9 +13,9 @@
     public class Attendance
     {
         /// <summary>
-        /// mon-08:00-09:00
+        /// 1-08:00-09:00 > monday
         /// </summary>
-        public string TimeTableKey { get; set; }
-        public DateTime StampDate { get; set; }
+        public string? TimeTableKey { get; set; }
+        public DateTime? StampDate { get; set; }
     }
 }

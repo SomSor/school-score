@@ -10,7 +10,10 @@ namespace SchoolScore.Api.DACs.Imps
     {
         public ClassroomDac(MongoDBConfiguration option) : base(option) { }
 
-        public async Task<IEnumerable<Models.Classroom>> ListWithTeacher(IMongoCollection<Teacher> teacherCollection, IMongoCollection<ClassroomStudent> classroomStudentCollection, Expression<Func<Classroom, bool>> expression, int page = 1, int? pageSize = null)
+        public async Task<IEnumerable<Models.Classroom>> ListWithTeacher(
+            IMongoCollection<Teacher> teacherCollection,
+            IMongoCollection<ClassroomStudent> classroomStudentCollection,
+            Expression<Func<Classroom, bool>> expression, int page = 1, int? pageSize = null)
         {
             var query = Collection.AsQueryable()
                 .Where(expression)
@@ -42,7 +45,10 @@ namespace SchoolScore.Api.DACs.Imps
             return result;
         }
 
-        public async Task<Models.Classroom> GetWithTeacher(IMongoCollection<Teacher> teacherCollection, IMongoCollection<ClassroomStudent> classroomStudentCollection, Expression<Func<Classroom, bool>> expression)
+        public async Task<Models.Classroom> GetWithTeacher(
+            IMongoCollection<Teacher> teacherCollection,
+            IMongoCollection<ClassroomStudent> classroomStudentCollection,
+            Expression<Func<Classroom, bool>> expression)
         {
             var query = Collection.AsQueryable()
                 .Where(expression)
@@ -64,7 +70,11 @@ namespace SchoolScore.Api.DACs.Imps
             return document;
         }
 
-        public async Task<Models.Classroom> GetWithTeacherAndStudent(IMongoCollection<Teacher> teacherCollection, IMongoCollection<ClassroomStudent> classroomStudentCollection, IMongoCollection<Student> studentCollection, Expression<Func<Classroom, bool>> expression)
+        public async Task<Models.Classroom> GetWithTeacherAndStudent(
+            IMongoCollection<Teacher> teacherCollection,
+            IMongoCollection<ClassroomStudent> classroomStudentCollection,
+            IMongoCollection<Student> studentCollection,
+            Expression<Func<Classroom, bool>> expression)
         {
             var document = Collection.AsQueryable()
                 .Where(expression)

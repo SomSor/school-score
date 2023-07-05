@@ -45,9 +45,6 @@ export class CourseComponent {
       });
     });
     this.table.renderRows();
-    console.log(this.displayData);
-    console.log(this.data_registerOpenSubject);
-    
 
     return event;
   }

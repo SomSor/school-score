@@ -28,13 +28,15 @@
                         <mat-form-field class="full-width" appearance="fill">
                             <mat-label>วิชา</mat-label>
                             <mat-select formControlName="SubjectId">
-                                <mat-option *ngFor="let item of data_subject.Data" [value]="item.Id">({{ item.Code }}) {{ item.Name }}</mat-option>
+                                <mat-option *ngFor="let item of data_subject.Data" [value]="item.Id">({{ item.Code }})
+                                    {{ item.Name }}</mat-option>
                             </mat-select>
                         </mat-form-field>
                         <mat-form-field class="full-width" appearance="fill">
                             <mat-label>ครูผู้สอน</mat-label>
                             <mat-select formControlName="MainTeacherId">
-                                <mat-option *ngFor="let item of data_teacher.Data" [value]="item.Id">({{ item.Code }}) {{ item.Prefix }}{{ item.Name }} {{ item.Lastname }}</mat-option>
+                                <mat-option *ngFor="let item of data_teacher.Data" [value]="item.Id">({{ item.Code }})
+                                    {{ item.Prefix }}{{ item.Name }} {{ item.Lastname }}</mat-option>
                             </mat-select>
                         </mat-form-field>
                         <mat-form-field class="full-width" appearance="fill">
@@ -49,6 +51,44 @@
                             <mat-label>คำอธิบายเพิ่มเติม</mat-label>
                             <input matInput formControlName="Description" placeholder="">
                         </mat-form-field>
+                        <h3>วันที่สอน</h3>
+                        <div fxLayout="row wrap" fxLayoutGap="grid">
+                            <div fxFlex="20%" fxFlex.xs="33%">
+                                <mat-form-field class="full-width" appearance="fill">
+                                    <input matInput formControlName="Monday" hidden />
+                                    <mat-checkbox (change)="fg.get('Monday')?.setValue($event.checked);"
+                                        [checked]="fg.get('Monday')?.value">จันทร์</mat-checkbox>
+                                </mat-form-field>
+                            </div>
+                            <div fxFlex="20%" fxFlex.xs="33%">
+                                <mat-form-field class="full-width" appearance="fill">
+                                    <input matInput formControlName="Tuesday" hidden />
+                                    <mat-checkbox (change)="fg.get('Tuesday')?.setValue($event.checked);"
+                                        [checked]="fg.get('Tuesday')?.value">อังคาร</mat-checkbox>
+                                </mat-form-field>
+                            </div>
+                            <div fxFlex="20%" fxFlex.xs="33%">
+                                <mat-form-field class="full-width" appearance="fill">
+                                    <input matInput formControlName="Wednesday" hidden />
+                                    <mat-checkbox (change)="fg.get('Wednesday')?.setValue($event.checked);"
+                                        [checked]="fg.get('Wednesday')?.value">พุธ</mat-checkbox>
+                                </mat-form-field>
+                            </div>
+                            <div fxFlex="20%" fxFlex.xs="33%">
+                                <mat-form-field class="full-width" appearance="fill">
+                                    <input matInput formControlName="Thursday" hidden />
+                                    <mat-checkbox (change)="fg.get('Thursday')?.setValue($event.checked);"
+                                        [checked]="fg.get('Thursday')?.value">พฤหัสบดี</mat-checkbox>
+                                </mat-form-field>
+                            </div>
+                            <div fxFlex="20%" fxFlex.xs="33%">
+                                <mat-form-field class="full-width" appearance="fill">
+                                    <input matInput formControlName="Friday" hidden />
+                                    <mat-checkbox (change)="fg.get('Friday')?.setValue($event.checked);"
+                                        [checked]="fg.get('Friday')?.value">ศุกร์</mat-checkbox>
+                                </mat-form-field>
+                            </div>
+                        </div>
                         <button type="submit" mat-raised-button color="primary">บันทึก</button>
                     </form>
                 </div>

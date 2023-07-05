@@ -1,0 +1,36 @@
+table {
+    width: 100%;
+}
+
+table,
+tr,
+td,
+th {
+    border: 1px solid black;
+}
+
+h1 a {
+    text-decoration: none;
+}
+
+tr.stdCheck td,
+tr.stdCheck td a {
+    text-align: center;
+    text-decoration: none;
+}
+
+.no-teach {
+    background-color: lightgray;
+}
+
+.dayoff {
+    background-color: grey;
+}
+
+.editing-row {
+    background-color: burlywood;
+}
+
+.editing-row-error {
+    background-color: brown;
+}

@@ -31,6 +31,13 @@ export class OpenSubjectCreateComponent {
       "MidTermMaxScore": [null, Validators.required],
       "FinalMaxScore": [null, Validators.required],
       "Description": [null],
+      "Sunday": [false],
+      "Monday": [false],
+      "Tuesday": [false],
+      "Wednesday": [false],
+      "Thursday": [false],
+      "Friday": [false],
+      "Saturday": [false],
     });
   }
 

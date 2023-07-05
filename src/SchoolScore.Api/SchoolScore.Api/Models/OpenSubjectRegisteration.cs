@@ -21,4 +21,18 @@
         public DbModels.LearningArea LearningArea { get; set; }
         public DbModels.OpenSubject OpenSubject { get; set; }
     }
+
+    public class RegisteredOpenSubjectTimeTable : ClassroomOpenSubjectDetails
+    {
+        public IEnumerable<TimeTable> TimeTables { get; set; }
+    }
+
+    public class TimeTable
+    {
+        public int Month { get; set; }
+        public int Week { get; set; }
+        public DateTime Date { get; set; }
+        public string Day { get; set; }
+        public int DayNo { get; set; }
+    }
 }

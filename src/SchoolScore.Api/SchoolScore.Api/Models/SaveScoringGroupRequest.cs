@@ -22,4 +22,19 @@
         public string ScoringGroupId { get; set; }
         public string Remark { get; set; }
     }
+
+    public class SaveAttendancesRequest
+    {
+        public string ClassroomId { get; set; }
+        public string OpenSubjectId { get; set; }
+        public IEnumerable<ClassroomStudentAttendence> ClassroomStudentChecks { get; set; }
+    }
+
+    public class ClassroomStudentAttendence
+    {
+        public string StudentId { get; set; }
+        public DateTime? Date { get; set; }
+        public string? TimeTableKey { get; set; }
+        public bool IsPresent { get; set; }
+    }
 }

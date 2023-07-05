@@ -29,6 +29,11 @@ export class ClassroomStudentService extends BaseApiService {
     return this.GetData(url);
   }
 
+  getClassroomOpenSubjectTimetableData(classroomid: any, opensubjectid: any): Promise<RegisteredOpenSubject> {
+    let url = `${this.apiUrl}/api/${this.controllername}/classrooms/${classroomid}/opensubjects/${opensubjectid}/timetables`;
+    return this.GetData(url);
+  }
+
   RegisterOpenSubjects(request: any): Promise<any> {
     let url = `${this.apiUrl}/api/${this.controllername}/opensubjects`;
     return this.Post(url, request);
@@ -41,6 +46,11 @@ export class ClassroomStudentService extends BaseApiService {
 
   SaveEvaluate(request: any): Promise<any> {
     let url = `${this.apiUrl}/api/${this.controllername}/evaluate`;
+    return this.Put(url, request);
+  }
+
+  SaveAttendances(request: any): Promise<any> {
+    let url = `${this.apiUrl}/api/${this.controllername}/attendances`;
     return this.Put(url, request);
   }
 

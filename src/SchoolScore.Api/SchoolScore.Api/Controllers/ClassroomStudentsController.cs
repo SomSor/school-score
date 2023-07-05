@@ -14,6 +14,7 @@ namespace SchoolScore.Api.Controllers
         private readonly IClassroomStudentDac<DbModels.ClassroomStudent> classroomStudentDac;
         private readonly ILearningAreaDac<DbModels.LearningArea> learningAreaDac;
         private readonly IOpenSubjectDac<DbModels.OpenSubject> openSubjectDac;
+        private readonly ISchoolYearDac<DbModels.SchoolYear> schoolYearDac;
         private readonly IStudentDac<DbModels.Student> studentDac;
         private readonly ISubjectDac<DbModels.Subject> subjectDac;
         private readonly ITeacherDac<DbModels.Teacher> teacherDac;
@@ -23,6 +24,7 @@ namespace SchoolScore.Api.Controllers
             IClassroomStudentDac<DbModels.ClassroomStudent> classroomStudentDac,
             ILearningAreaDac<DbModels.LearningArea> learningAreaDac,
             IOpenSubjectDac<DbModels.OpenSubject> openSubjectDac,
+            ISchoolYearDac<DbModels.SchoolYear> schoolYearDac,
             IStudentDac<DbModels.Student> studentDac,
             ISubjectDac<DbModels.Subject> subjectDac,
             ITeacherDac<DbModels.Teacher> teacherDac
@@ -32,6 +34,7 @@ namespace SchoolScore.Api.Controllers
             this.classroomStudentDac = classroomStudentDac;
             this.learningAreaDac = learningAreaDac;
             this.openSubjectDac = openSubjectDac;
+            this.schoolYearDac = schoolYearDac;
             this.studentDac = studentDac;
             this.subjectDac = subjectDac;
             this.teacherDac = teacherDac;
@@ -185,8 +188,8 @@ namespace SchoolScore.Api.Controllers
             if (string.IsNullOrWhiteSpace(search))
             {
                 var data = page == 0
-                    ? await classroomStudentDac.ListWithStudent(classroomid, studentDac.Collection)
-                    : await classroomStudentDac.ListWithStudent(classroomid, studentDac.Collection, page ?? 1, pageSize);
+                    ? await classroomStudentDac.ListWithStudent(studentDac.Collection, classroomid)
+                    : await classroomStudentDac.ListWithStudent(studentDac.Collection, classroomid, page ?? 1, pageSize);
                 var count = await classroomStudentDac.Count(x => true);
 
                 response.Data = data;
@@ -198,8 +201,8 @@ namespace SchoolScore.Api.Controllers
                 Expression<Func<DbModels.ClassroomStudent, bool>> func = x => true && x.ClassroomId.ToLower().Contains(txt);
 
                 var data = page == 0
-                    ? await classroomStudentDac.ListWithStudent(classroomid, studentDac.Collection)
-                    : await classroomStudentDac.ListWithStudent(classroomid, studentDac.Collection, page ?? 1, pageSize);
+                    ? await classroomStudentDac.ListWithStudent(studentDac.Collection, classroomid)
+                    : await classroomStudentDac.ListWithStudent(studentDac.Collection, classroomid, page ?? 1, pageSize);
                 var count = await classroomStudentDac.Count(func);
 
                 response.Data = data;
@@ -312,6 +315,82 @@ namespace SchoolScore.Api.Controllers
                         var remark = request.ClassroomStudentRemarks.FirstOrDefault(x => x.StudentId == classRoomStudent.StudentId && x.ScoringGroupId == evaluateResult.ScoringGroupId)?.Remark;
                         evaluateResult.Remark = remark;
                     }
+                }
+                classRoomStudent.RegisterOpenSubjects = registerOpenSubjects;
+                await classroomStudentDac.ReplaceOne(x => x.Id == classRoomStudent.Id, classRoomStudent);
+            }
+            return Ok();
+        }
+
+        [HttpGet("classrooms/{classroomid}/opensubjects/{opensubjectid}/timetables")]
+        public async Task<ActionResult<RegisteredOpenSubjectTimeTable>> GetTimeTables(string classroomid, string opensubjectid)
+        {
+            var classroom = await classroomDac.GetWithTeacher(teacherDac.Collection, classroomStudentDac.Collection, x => x.Id == classroomid);
+            var openSubject = await openSubjectDac.GetWithSubjectAndTeacher(subjectDac.Collection, teacherDac.Collection, x => x.Id == opensubjectid);
+            var learningArea = await learningAreaDac.Get(x => x.Id == openSubject.Subject.LearningAreaId);
+
+            var classroomStudents = await classroomStudentDac.ListWithStudent(studentDac.Collection, classroomid);
+            var schoolYear = await schoolYearDac.Get(x => true);
+
+            var dayCount = (int)(schoolYear.EndDate - schoolYear.StartDate).TotalDays + 1;
+            var dateList = Enumerable.Range(0, dayCount)
+                .Select(x => new
+                {
+                    DateNumber = x + 1,
+                    Date = schoolYear.StartDate.AddHours(7).AddDays(x)
+                })
+                .Select(x => new TimeTable
+                {
+                    Month = x.Date.Month,
+                    Week = (int)Math.Ceiling((x.DateNumber + (int)schoolYear.StartDate.AddHours(7).DayOfWeek) / 7.0),
+                    Date = x.Date,
+                    Day = x.Date.DayOfWeek.ToString(),
+                    DayNo = (int)x.Date.DayOfWeek,
+                })
+                //.Where(x=> x.DayNo != 0 && x.DayNo != 6)
+                ;
+
+            return new RegisteredOpenSubjectTimeTable
+            {
+                Data = classroomStudents,
+                Classroom = classroom,
+                Teacher = classroom.Teacher,
+                OpenSubject = openSubject,
+                Subject = openSubject.Subject,
+                LearningArea = learningArea,
+                TimeTables = dateList,
+            };
+        }
+
+        [HttpPut("attendances")]
+        public async Task<IActionResult> Attendances([FromBody] SaveAttendancesRequest request)
+        {
+            var classRoomStudents = await classroomStudentDac.List(x => x.ClassroomId == request.ClassroomId);
+
+            foreach (var classRoomStudent in classRoomStudents)
+            {
+                var registerOpenSubjects = classRoomStudent.RegisterOpenSubjects.ToList();
+                foreach (var registerOpenSubject in registerOpenSubjects.Where(x => x.OpenSubjectId == request.OpenSubjectId))
+                {
+                    var oldAttendances = registerOpenSubject.Attendances?.ToList() ?? new();
+                    var attendances = request.ClassroomStudentChecks.Where(x => x.StudentId == classRoomStudent.StudentId);
+                    foreach (var attendance in attendances)
+                    {
+                        var oldAttendance = oldAttendances.FirstOrDefault(x => x.TimeTableKey == attendance.TimeTableKey && x.StampDate == attendance.Date);
+                        if (oldAttendance == null && attendance.IsPresent)
+                        {
+                            oldAttendances.Add(new DbModels.Attendance
+                            {
+                                StampDate = attendance.Date,
+                                TimeTableKey = attendance.TimeTableKey,
+                            });
+                        }
+                        else if (oldAttendance != null && !attendance.IsPresent)
+                        {
+                            oldAttendances.Remove(oldAttendance);
+                        }
+                    };
+                    registerOpenSubject.Attendances = oldAttendances;
                 }
                 classRoomStudent.RegisterOpenSubjects = registerOpenSubjects;
                 await classroomStudentDac.ReplaceOne(x => x.Id == classRoomStudent.Id, classRoomStudent);

@@ -10,7 +10,10 @@ namespace SchoolScore.Api.DACs.Imps
     {
         public OpenSubjectDac(MongoDBConfiguration option) : base(option) { }
 
-        public async Task<IEnumerable<Models.OpenSubject>> ListWithSubjectAndTeacher(IMongoCollection<Subject> subjectCollection, IMongoCollection<Teacher> teacherCollection, Expression<Func<OpenSubject, bool>> expression, int page = 1, int? pageSize = null)
+        public async Task<IEnumerable<Models.OpenSubject>> ListWithSubjectAndTeacher(
+            IMongoCollection<Subject> subjectCollection,
+            IMongoCollection<Teacher> teacherCollection,
+            Expression<Func<OpenSubject, bool>> expression, int page = 1, int? pageSize = null)
         {
             var query = Collection.AsQueryable()
                 .Where(expression)
@@ -42,7 +45,10 @@ namespace SchoolScore.Api.DACs.Imps
             return result;
         }
 
-        public async Task<Models.OpenSubject> GetWithSubjectAndTeacher(IMongoCollection<Subject> subjectCollection, IMongoCollection<Teacher> teacherCollection, Expression<Func<OpenSubject, bool>> expression)
+        public async Task<Models.OpenSubject> GetWithSubjectAndTeacher(
+            IMongoCollection<Subject> subjectCollection,
+            IMongoCollection<Teacher> teacherCollection,
+            Expression<Func<OpenSubject, bool>> expression)
         {
             var document = Collection.AsQueryable()
                 .Where(expression)

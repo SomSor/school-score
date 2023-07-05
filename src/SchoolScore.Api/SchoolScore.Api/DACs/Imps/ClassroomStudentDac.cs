@@ -10,7 +10,9 @@ namespace SchoolScore.Api.DACs.Imps
     {
         public ClassroomStudentDac(MongoDBConfiguration option) : base(option) { }
 
-        public async Task<IEnumerable<Models.StudentInClassroom>> ListWithStudent(string classroomId, IMongoCollection<Student> studentCollection, int page = 1, int? pageSize = null)
+        public async Task<IEnumerable<Models.StudentInClassroom>> ListWithStudent(
+            IMongoCollection<Student> studentCollection,
+            string classroomId, int page = 1, int? pageSize = null)
         {
             var query = Collection.AsQueryable()
                 .Where(x => x.ClassroomId == classroomId)
@@ -34,7 +36,10 @@ namespace SchoolScore.Api.DACs.Imps
                 });
         }
 
-        public async Task<IEnumerable<Models.ClassroomStudent>> ListWithClassroomAndStudent(IMongoCollection<Classroom> classroomCollection, IMongoCollection<Student> studentCollection, Expression<Func<ClassroomStudent, bool>> expression, int page = 1, int? pageSize = null)
+        public async Task<IEnumerable<Models.ClassroomStudent>> ListWithClassroomAndStudent(
+            IMongoCollection<Classroom> classroomCollection,
+            IMongoCollection<Student> studentCollection,
+            Expression<Func<ClassroomStudent, bool>> expression, int page = 1, int? pageSize = null)
         {
             var query = Collection.AsQueryable()
                 .Where(expression)
@@ -66,7 +71,10 @@ namespace SchoolScore.Api.DACs.Imps
             return result;
         }
 
-        public async Task<Models.ClassroomStudent> GetWithClassroomAndStudent(IMongoCollection<Classroom> classroomCollection, IMongoCollection<Student> studentCollection, Expression<Func<ClassroomStudent, bool>> expression)
+        public async Task<Models.ClassroomStudent> GetWithClassroomAndStudent(
+            IMongoCollection<Classroom> classroomCollection,
+            IMongoCollection<Student> studentCollection,
+            Expression<Func<ClassroomStudent, bool>> expression)
         {
             var document = Collection.AsQueryable()
                 .Where(expression)
@@ -88,7 +96,12 @@ namespace SchoolScore.Api.DACs.Imps
             return result;
         }
 
-        public async Task<Models.RegisteredOpenSubject> ListWithOpenSubject(IMongoCollection<Classroom> classroomCollection, IMongoCollection<Student> studentCollection, IMongoCollection<OpenSubject> openSubjectCollection, IMongoCollection<Subject> subjectCollection, Expression<Func<ClassroomStudent, bool>> expression, int page = 1, int? pageSize = null)
+        public async Task<Models.RegisteredOpenSubject> ListWithOpenSubject(
+            IMongoCollection<Classroom> classroomCollection,
+            IMongoCollection<Student> studentCollection,
+            IMongoCollection<OpenSubject> openSubjectCollection,
+            IMongoCollection<Subject> subjectCollection,
+            Expression<Func<ClassroomStudent, bool>> expression, int page = 1, int? pageSize = null)
         {
             var query = Collection.AsQueryable()
                 .Where(expression)
