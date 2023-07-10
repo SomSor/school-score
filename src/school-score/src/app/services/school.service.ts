@@ -17,4 +17,9 @@ export class SchoolService extends BaseApiService {
     this.SetControllerName('schools');
   }
 
+  Current(): Promise<any> {
+    let url = `${this.apiUrl}/api/${this.controllername}`;
+    return this.GetData(url);
+  }
+
 }

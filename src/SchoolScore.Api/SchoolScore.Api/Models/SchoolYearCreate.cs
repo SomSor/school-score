@@ -1,12 +1,10 @@
-﻿namespace SchoolScore.Api.DbModels
+﻿namespace SchoolScore.Api.Models
 {
-    public class SchoolYear : DbModelBase
+    public class SchoolYearCreate
     {
         public string Year { get; set; }
         public int Semester { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public DateTime? ActivatedDate { get; set; }
-        public string SchoolId { get; set; }
     }
 }

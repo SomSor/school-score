@@ -9,15 +9,16 @@ namespace SchoolScore.Api.DACs
         Task<IEnumerable<Models.Classroom>> ListWithTeacher(
             IMongoCollection<Teacher> teacherCollection,
             IMongoCollection<ClassroomStudent> classroomStudentCollection,
-            Expression<Func<Classroom, bool>> expression, int page = 1, int? pageSize = null);
+            Expression<Func<Classroom, bool>> expression, string schoolYearId,
+            int page = 1, int? pageSize = null);
         Task<Models.Classroom> GetWithTeacher(
             IMongoCollection<Teacher> teacherCollection,
             IMongoCollection<ClassroomStudent> classroomStudentCollection,
-            Expression<Func<Classroom, bool>> expression);
+            Expression<Func<Classroom, bool>> expression, string schoolYearId);
         Task<Models.Classroom> GetWithTeacherAndStudent(
             IMongoCollection<Teacher> teacherCollection,
             IMongoCollection<ClassroomStudent> classroomStudentCollection,
             IMongoCollection<Student> studentCollection,
-            Expression<Func<Classroom, bool>> expression);
+            Expression<Func<Classroom, bool>> expression, string schoolYearId);
     }
 }

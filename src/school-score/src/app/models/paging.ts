@@ -12,3 +12,7 @@ export class RegisteredOpenSubject extends PagingModel{
     SubjectIds: any;
     OpenSubjects: any;
 }
+
+export class SchoolYearPaging extends PagingModel{
+    Current: any;
+}

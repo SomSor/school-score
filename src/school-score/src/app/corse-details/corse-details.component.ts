@@ -11,7 +11,6 @@ import { ClassroomTierService } from '../helpers/classroom-tier/classroom-tier.s
   styleUrls: ['./corse-details.component.css']
 })
 export class CorseDetailsComponent {
-
   
   data: any;
   currentPage: any = 'course-check';

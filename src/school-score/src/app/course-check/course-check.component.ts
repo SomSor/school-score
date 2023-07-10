@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ClassroomStudentService } from '../services/classroom-student.service';
 import { ClassroomTierService } from '../helpers/classroom-tier/classroom-tier.service';
+import { ThDateService } from '../services/th-date.service';
 
 @Component({
   selector: 'app-course-check',
@@ -13,8 +14,6 @@ import { ClassroomTierService } from '../helpers/classroom-tier/classroom-tier.s
 })
 export class CourseCheckComponent {
 
-  dayOfWeeks: any = ["อา.", "จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส."];
-  monthOfYears: any = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
   fg: FormGroup;
   data: any;
 
@@ -31,6 +30,7 @@ export class CourseCheckComponent {
   constructor(private fb: FormBuilder, private activatedRoute: ActivatedRoute,
     private classroomStudentService: ClassroomStudentService,
     private classroomTierService: ClassroomTierService,
+    public thDateService: ThDateService,
   ) {
     this.fg = this.fb.group({
       "ClassroomId": [null, Validators.required],
@@ -144,12 +144,6 @@ export class CourseCheckComponent {
     result.setHours(result.getHours() + hours);
     return result;
   };
-
-  THDate(dateStr: any): any {
-    let date = new Date(dateStr);
-    let thDate = `${date.getDate()} ${this.monthOfYears[date.getMonth()]} ${date.getFullYear() + 543}`;
-    return thDate;
-  }
 
   OnSave() {
     if (!confirm("ยืนยันการบันทึกคะแนน")) return;

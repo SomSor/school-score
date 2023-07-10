@@ -13,10 +13,12 @@ namespace SchoolScore.Api.DACs.Imps
         public async Task<IEnumerable<Models.OpenSubject>> ListWithSubjectAndTeacher(
             IMongoCollection<Subject> subjectCollection,
             IMongoCollection<Teacher> teacherCollection,
-            Expression<Func<OpenSubject, bool>> expression, int page = 1, int? pageSize = null)
+            Expression<Func<OpenSubject, bool>> expression, string schoolYearId,
+            int page = 1, int? pageSize = null)
         {
             var query = Collection.AsQueryable()
                 .Where(expression)
+                .Where(x => x.SchoolYearId == schoolYearId)
                 .Join(subjectCollection.AsQueryable(), o => o.SubjectId, i => i.Id, (x, y) => new
                 {
                     OpenSubject = x,

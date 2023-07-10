@@ -12,7 +12,8 @@ namespace SchoolScore.Api.DACs.Imps
 
         public async Task<IEnumerable<Models.StudentInClassroom>> ListWithStudent(
             IMongoCollection<Student> studentCollection,
-            string classroomId, int page = 1, int? pageSize = null)
+            string classroomId,
+            int page = 1, int? pageSize = null)
         {
             var query = Collection.AsQueryable()
                 .Where(x => x.ClassroomId == classroomId)
@@ -39,7 +40,8 @@ namespace SchoolScore.Api.DACs.Imps
         public async Task<IEnumerable<Models.ClassroomStudent>> ListWithClassroomAndStudent(
             IMongoCollection<Classroom> classroomCollection,
             IMongoCollection<Student> studentCollection,
-            Expression<Func<ClassroomStudent, bool>> expression, int page = 1, int? pageSize = null)
+            Expression<Func<ClassroomStudent, bool>> expression, string SchoolYearId,
+            int page = 1, int? pageSize = null)
         {
             var query = Collection.AsQueryable()
                 .Where(expression)
@@ -53,7 +55,8 @@ namespace SchoolScore.Api.DACs.Imps
                     ClassroomStudent = x.ClassroomStudent,
                     Classroom = x.Classroom,
                     Student = y,
-                });
+                })
+                .Where(x => x.Classroom.SchoolYearId == SchoolYearId);
 
             if (pageSize is not null && page >= 1)
             {
@@ -101,7 +104,8 @@ namespace SchoolScore.Api.DACs.Imps
             IMongoCollection<Student> studentCollection,
             IMongoCollection<OpenSubject> openSubjectCollection,
             IMongoCollection<Subject> subjectCollection,
-            Expression<Func<ClassroomStudent, bool>> expression, int page = 1, int? pageSize = null)
+            Expression<Func<ClassroomStudent, bool>> expression, string SchoolYearId,
+            int page = 1, int? pageSize = null)
         {
             var query = Collection.AsQueryable()
                 .Where(expression)
@@ -115,7 +119,8 @@ namespace SchoolScore.Api.DACs.Imps
                     ClassroomStudent = x.ClassroomStudent,
                     Classroom = x.Classroom,
                     Student = y,
-                });
+                })
+                .Where(x => x.Classroom.SchoolYearId == SchoolYearId);
 
             if (pageSize is not null && page >= 1)
             {
@@ -124,15 +129,25 @@ namespace SchoolScore.Api.DACs.Imps
             }
             var queryResult = query.ToList();
 
-            var openSubjectIds = queryResult.SelectMany(x => x.ClassroomStudent.RegisterOpenSubjects.Select(y => y.OpenSubjectId)).GroupBy(x => x).Select(x => x.Key).ToList();
-            var openSubjects = await openSubjectCollection.Find(x => openSubjectIds.Contains(x.Id)).ToListAsync();
+            var openSubjectIds = queryResult
+                .SelectMany(x => x.ClassroomStudent.RegisterOpenSubjects
+                .Select(y => y.OpenSubjectId))
+                .GroupBy(x => x)
+                .Select(x => x.Key)
+                .ToList();
+            var openSubjects = await openSubjectCollection
+                .Find(x => openSubjectIds.Contains(x.Id) && x.SchoolYearId == SchoolYearId)
+                .ToListAsync();
+            var openSubjectIdsInSemester = openSubjects.Select(x => x.Id).ToList();
 
             var subjectIds = openSubjects.Select(x => x.SubjectId).ToList();
             var subjects = await subjectCollection.Find(x => subjectIds.Contains(x.Id)).ToListAsync();
 
             return new Models.RegisteredOpenSubject
             {
-                Data = queryResult.GroupBy(x => x.Classroom.Id).Select(x => new Models.ClassroomOpenSubject
+                Data = queryResult
+                .Where(x => x.ClassroomStudent.RegisterOpenSubjects.Any(ros => openSubjectIdsInSemester.Contains(ros.OpenSubjectId)))
+                .GroupBy(x => x.Classroom.Id).Select(x => new Models.ClassroomOpenSubject
                 {
                     Classroom = x.First().Classroom,
                     OpenSubjectIds = openSubjectIds,

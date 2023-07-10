@@ -13,10 +13,12 @@ namespace SchoolScore.Api.DACs.Imps
         public async Task<IEnumerable<Models.Classroom>> ListWithTeacher(
             IMongoCollection<Teacher> teacherCollection,
             IMongoCollection<ClassroomStudent> classroomStudentCollection,
-            Expression<Func<Classroom, bool>> expression, int page = 1, int? pageSize = null)
+            Expression<Func<Classroom, bool>> expression, string schoolYearId,
+            int page = 1, int? pageSize = null)
         {
             var query = Collection.AsQueryable()
                 .Where(expression)
+                .Where(x => x.SchoolYearId == schoolYearId)
                 .Join(teacherCollection.AsQueryable(), o => o.TeacherId, i => i.Id, (x, y) => new
                 {
                     Classroom = x,
@@ -48,10 +50,11 @@ namespace SchoolScore.Api.DACs.Imps
         public async Task<Models.Classroom> GetWithTeacher(
             IMongoCollection<Teacher> teacherCollection,
             IMongoCollection<ClassroomStudent> classroomStudentCollection,
-            Expression<Func<Classroom, bool>> expression)
+            Expression<Func<Classroom, bool>> expression, string schoolYearId)
         {
             var query = Collection.AsQueryable()
                 .Where(expression)
+                .Where(x => x.SchoolYearId == schoolYearId)
                 .Join(teacherCollection.AsQueryable(), o => o.TeacherId, i => i.Id, (x, y) => new
                 {
                     Classroom = x,
@@ -74,10 +77,11 @@ namespace SchoolScore.Api.DACs.Imps
             IMongoCollection<Teacher> teacherCollection,
             IMongoCollection<ClassroomStudent> classroomStudentCollection,
             IMongoCollection<Student> studentCollection,
-            Expression<Func<Classroom, bool>> expression)
+            Expression<Func<Classroom, bool>> expression, string schoolYearId)
         {
             var document = Collection.AsQueryable()
                 .Where(expression)
+                .Where(x => x.SchoolYearId == schoolYearId)
                 .Join(teacherCollection.AsQueryable(), o => o.TeacherId, i => i.Id, (x, y) => new
                 {
                     Classroom = x,

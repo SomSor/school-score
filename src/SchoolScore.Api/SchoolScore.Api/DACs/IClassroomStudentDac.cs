@@ -8,11 +8,13 @@ namespace SchoolScore.Api.DACs
     {
         Task<IEnumerable<Models.StudentInClassroom>> ListWithStudent(
             IMongoCollection<Student> studentCollection,
-            string classroomId, int page = 1, int? pageSize = null);
+            string classroomId,
+            int page = 1, int? pageSize = null);
         Task<IEnumerable<Models.ClassroomStudent>> ListWithClassroomAndStudent(
             IMongoCollection<Classroom> classroomCollection,
             IMongoCollection<Student> studentCollection,
-            Expression<Func<ClassroomStudent, bool>> expression, int page = 1, int? pageSize = null);
+            Expression<Func<ClassroomStudent, bool>> expression, string SchoolYearId,
+            int page = 1, int? pageSize = null);
         Task<Models.ClassroomStudent> GetWithClassroomAndStudent(
             IMongoCollection<Classroom> classroomCollection,
             IMongoCollection<Student> studentCollection,
@@ -22,6 +24,7 @@ namespace SchoolScore.Api.DACs
             IMongoCollection<Student> studentCollection,
             IMongoCollection<OpenSubject> openSubjectCollection,
             IMongoCollection<Subject> subjectCollection,
-            Expression<Func<ClassroomStudent, bool>> expression, int page = 1, int? pageSize = null);
+            Expression<Func<ClassroomStudent, bool>> expression, string SchoolYearId,
+            int page = 1, int? pageSize = null);
     }
 }

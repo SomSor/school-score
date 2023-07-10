@@ -23,7 +23,7 @@ namespace SchoolScore.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PagingModel<DbModels.Student>>>> Get(string? search, int? page = 1, int? pageSize = 100)
+        public async Task<ActionResult<PagingModel<DbModels.Student>>> Get(string? search, int? page = 1, int? pageSize = 100)
         {
             if (string.IsNullOrWhiteSpace(search))
             {

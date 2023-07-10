@@ -58,6 +58,8 @@ import { OpenSubjectDetailsComponent } from './data-management/open-subject/open
 import { RegisterOpenSubjectCreateComponent } from './data-management/register-open-subject/register-open-subject-create/register-open-subject-create.component';
 import { RegisterOpenSubjectDetailsComponent } from './data-management/register-open-subject/register-open-subject-details/register-open-subject-details.component';
 import { CorseDetailsComponent } from './corse-details/corse-details.component';
+import { SchoolYearCreateComponent } from './configuration/school-year-create/school-year-create.component';
+import { SchoolYearDetailsComponent } from './configuration/school-year-details/school-year-details.component';
 
 const routes: Routes = [];
 
@@ -99,6 +101,8 @@ const routes: Routes = [];
     RegisterOpenSubjectCreateComponent,
     RegisterOpenSubjectDetailsComponent,
     CorseDetailsComponent,
+    SchoolYearCreateComponent,
+    SchoolYearDetailsComponent,
   ],
   imports: [
     AppRoutingModule,

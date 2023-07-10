@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using SchoolScore.Api.DACs;
+using SchoolScore.Api.DACs.Imps;
 using SchoolScore.Api.Models;
 using System.Linq.Expressions;
 
@@ -12,30 +13,33 @@ namespace SchoolScore.Api.Controllers
     {
         private readonly IClassroomStudentDac<DbModels.ClassroomStudent> classroomStudentDac;
         private readonly IOpenSubjectDac<DbModels.OpenSubject> openSubjectDac;
+        private readonly ISchoolYearDac<DbModels.SchoolYear> schoolYearDac;
         private readonly ISubjectDac<DbModels.Subject> subjectDac;
         private readonly ITeacherDac<DbModels.Teacher> teacherDac;
 
         public OpenSubjectsController(
             IClassroomStudentDac<DbModels.ClassroomStudent> classroomStudentDac,
             IOpenSubjectDac<DbModels.OpenSubject> openSubjectDac,
+            ISchoolYearDac<DbModels.SchoolYear> schoolYearDac,
             ISubjectDac<DbModels.Subject> subjectDac,
             ITeacherDac<DbModels.Teacher> teacherDac
             )
         {
             this.classroomStudentDac = classroomStudentDac;
             this.openSubjectDac = openSubjectDac;
+            this.schoolYearDac = schoolYearDac;
             this.subjectDac = subjectDac;
             this.teacherDac = teacherDac;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PagingModel<OpenSubject>>>> Get(string? search, int? page = 1, int? pageSize = 100)
+        public async Task<ActionResult<PagingModel<OpenSubject>>> Get(string? search, int? page = 1, int? pageSize = 100)
         {
             if (string.IsNullOrWhiteSpace(search))
             {
                 var data = page == 0
-                    ? await openSubjectDac.ListWithSubjectAndTeacher(subjectDac.Collection, teacherDac.Collection, x => true)
-                    : await openSubjectDac.ListWithSubjectAndTeacher(subjectDac.Collection, teacherDac.Collection, x => true, page ?? 1, pageSize);
+                    ? await openSubjectDac.ListWithSubjectAndTeacher(subjectDac.Collection, teacherDac.Collection, x => true, SchoolYearId(schoolYearDac))
+                    : await openSubjectDac.ListWithSubjectAndTeacher(subjectDac.Collection, teacherDac.Collection, x => true, SchoolYearId(schoolYearDac), page ?? 1, pageSize);
                 var count = await openSubjectDac.Count(x => true);
 
                 return Ok(new PagingModel<OpenSubject>
@@ -50,8 +54,8 @@ namespace SchoolScore.Api.Controllers
                 Expression<Func<DbModels.OpenSubject, bool>> func = x => true && x.SubjectId.ToLower().Contains(txt);
 
                 var data = page == 0
-                    ? await openSubjectDac.ListWithSubjectAndTeacher(subjectDac.Collection, teacherDac.Collection, func)
-                    : await openSubjectDac.ListWithSubjectAndTeacher(subjectDac.Collection, teacherDac.Collection, func, page ?? 1, pageSize);
+                    ? await openSubjectDac.ListWithSubjectAndTeacher(subjectDac.Collection, teacherDac.Collection, func, SchoolYearId(schoolYearDac))
+                    : await openSubjectDac.ListWithSubjectAndTeacher(subjectDac.Collection, teacherDac.Collection, func, SchoolYearId(schoolYearDac), page ?? 1, pageSize);
                 var count = await openSubjectDac.Count(func);
 
                 return Ok(new PagingModel<OpenSubject>
@@ -74,7 +78,7 @@ namespace SchoolScore.Api.Controllers
         {
             var documentDb = request.Adapt<DbModels.OpenSubject>();
             documentDb.Init(AccountsController.Username);
-            documentDb.SchoolYearId = SchoolYearId;
+            documentDb.SchoolYearId = SchoolYearId(schoolYearDac);
 
 
             var scorings_eval1 = delegate ()

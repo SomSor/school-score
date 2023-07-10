@@ -41,13 +41,13 @@ namespace SchoolScore.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PagingModel<ClassroomStudent>>>> Get(string? search, int? page = 1, int? pageSize = 100)
+        public async Task<ActionResult<PagingModel<ClassroomStudent>>> Get(string? search, int? page = 1, int? pageSize = 100)
         {
             if (string.IsNullOrWhiteSpace(search))
             {
                 var data = page == 0
-                    ? await classroomStudentDac.ListWithClassroomAndStudent(classroomDac.Collection, studentDac.Collection, x => true)
-                    : await classroomStudentDac.ListWithClassroomAndStudent(classroomDac.Collection, studentDac.Collection, x => true, page ?? 1, pageSize);
+                    ? await classroomStudentDac.ListWithClassroomAndStudent(classroomDac.Collection, studentDac.Collection, x => true, SchoolYearId(schoolYearDac))
+                    : await classroomStudentDac.ListWithClassroomAndStudent(classroomDac.Collection, studentDac.Collection, x => true, SchoolYearId(schoolYearDac), page ?? 1, pageSize);
                 var count = await classroomStudentDac.Count(x => true);
 
                 return Ok(new PagingModel<ClassroomStudent>
@@ -62,8 +62,8 @@ namespace SchoolScore.Api.Controllers
                 Expression<Func<DbModels.ClassroomStudent, bool>> func = x => true && x.ClassroomId.ToLower().Contains(txt);
 
                 var data = page == 0
-                    ? await classroomStudentDac.ListWithClassroomAndStudent(classroomDac.Collection, studentDac.Collection, func)
-                    : await classroomStudentDac.ListWithClassroomAndStudent(classroomDac.Collection, studentDac.Collection, func, page ?? 1, pageSize);
+                    ? await classroomStudentDac.ListWithClassroomAndStudent(classroomDac.Collection, studentDac.Collection, func, SchoolYearId(schoolYearDac))
+                    : await classroomStudentDac.ListWithClassroomAndStudent(classroomDac.Collection, studentDac.Collection, func, SchoolYearId(schoolYearDac), page ?? 1, pageSize);
                 var count = await classroomStudentDac.Count(func);
 
                 return Ok(new PagingModel<ClassroomStudent>
@@ -92,39 +92,39 @@ namespace SchoolScore.Api.Controllers
             return Ok();
         }
 
-        [HttpPost("many")]
-        public async Task<IActionResult> CreateMany([FromBody] IEnumerable<ClassroomStudentCreate> request)
-        {
-            var documentDbs = request.Adapt<IEnumerable<DbModels.ClassroomStudent>>();
-            documentDbs = documentDbs.Select(x =>
-            {
-                x.Init(AccountsController.Username);
-                return x;
-            }).ToList();
-            await classroomStudentDac.CreateMany(documentDbs);
-            return Ok();
-        }
+        //[HttpPost("many")]
+        //public async Task<IActionResult> CreateMany([FromBody] IEnumerable<ClassroomStudentCreate> request)
+        //{
+        //    var documentDbs = request.Adapt<IEnumerable<DbModels.ClassroomStudent>>();
+        //    documentDbs = documentDbs.Select(x =>
+        //    {
+        //        x.Init(AccountsController.Username);
+        //        return x;
+        //    }).ToList();
+        //    await classroomStudentDac.CreateMany(documentDbs);
+        //    return Ok();
+        //}
 
-        [HttpPost("text")]
-        public async Task<IActionResult> ImportByText([FromBody] ClassroomStudentCreate request)
-        {
-            var rows = request.ClassroomId.Trim().Split(Environment.NewLine).Where(x => !string.IsNullOrWhiteSpace(x));
-            var rowsSplit = rows.Select(x => x.Split("\t"));
-            var documentDbs = rowsSplit.Select(x =>
-            {
-                var documentDb = new DbModels.ClassroomStudent
-                {
-                    ClassroomId = x[0],
-                    StudentId = x[1],
-                };
-                documentDb.Init(AccountsController.Username);
+        //[HttpPost("text")]
+        //public async Task<IActionResult> ImportByText([FromBody] ClassroomStudentCreate request)
+        //{
+        //    var rows = request.ClassroomId.Trim().Split(Environment.NewLine).Where(x => !string.IsNullOrWhiteSpace(x));
+        //    var rowsSplit = rows.Select(x => x.Split("\t"));
+        //    var documentDbs = rowsSplit.Select(x =>
+        //    {
+        //        var documentDb = new DbModels.ClassroomStudent
+        //        {
+        //            ClassroomId = x[0],
+        //            StudentId = x[1],
+        //        };
+        //        documentDb.Init(AccountsController.Username);
 
-                return documentDb;
-            });
+        //        return documentDb;
+        //    });
 
-            await classroomStudentDac.CreateMany(documentDbs);
-            return Ok();
-        }
+        //    await classroomStudentDac.CreateMany(documentDbs);
+        //    return Ok();
+        //}
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, [FromBody] ClassroomStudentCreate request)
@@ -149,8 +149,8 @@ namespace SchoolScore.Api.Controllers
             if (string.IsNullOrWhiteSpace(search))
             {
                 var data = page == 0
-                    ? await classroomStudentDac.ListWithOpenSubject(classroomDac.Collection, studentDac.Collection, openSubjectDac.Collection, subjectDac.Collection, x => true)
-                    : await classroomStudentDac.ListWithOpenSubject(classroomDac.Collection, studentDac.Collection, openSubjectDac.Collection, subjectDac.Collection, x => true, page ?? 1, pageSize);
+                    ? await classroomStudentDac.ListWithOpenSubject(classroomDac.Collection, studentDac.Collection, openSubjectDac.Collection, subjectDac.Collection, x => true, SchoolYearId(schoolYearDac))
+                    : await classroomStudentDac.ListWithOpenSubject(classroomDac.Collection, studentDac.Collection, openSubjectDac.Collection, subjectDac.Collection, x => true, SchoolYearId(schoolYearDac), page ?? 1, pageSize);
                 data.Length = await classroomStudentDac.Count(x => true);
 
                 return Ok(data);
@@ -161,8 +161,8 @@ namespace SchoolScore.Api.Controllers
                 Expression<Func<DbModels.ClassroomStudent, bool>> func = x => true && x.ClassroomId.ToLower().Contains(txt);
 
                 var data = page == 0
-                    ? await classroomStudentDac.ListWithOpenSubject(classroomDac.Collection, studentDac.Collection, openSubjectDac.Collection, subjectDac.Collection, func)
-                    : await classroomStudentDac.ListWithOpenSubject(classroomDac.Collection, studentDac.Collection, openSubjectDac.Collection, subjectDac.Collection, func, page ?? 1, pageSize);
+                    ? await classroomStudentDac.ListWithOpenSubject(classroomDac.Collection, studentDac.Collection, openSubjectDac.Collection, subjectDac.Collection, func, SchoolYearId(schoolYearDac))
+                    : await classroomStudentDac.ListWithOpenSubject(classroomDac.Collection, studentDac.Collection, openSubjectDac.Collection, subjectDac.Collection, func, SchoolYearId(schoolYearDac), page ?? 1, pageSize);
                 data.Length = await classroomStudentDac.Count(x => true);
 
                 return Ok(data);
@@ -172,7 +172,7 @@ namespace SchoolScore.Api.Controllers
         [HttpGet("classrooms/{classroomid}/opensubjects/{opensubjectid}")]
         public async Task<ActionResult<ClassroomOpenSubjectDetails>> GetClassroomOpenSubjects(string classroomid, string opensubjectid, string? search, int? page = 1, int? pageSize = 100)
         {
-            var classroom = await classroomDac.GetWithTeacher(teacherDac.Collection, classroomStudentDac.Collection, x => x.Id == classroomid);
+            var classroom = await classroomDac.GetWithTeacher(teacherDac.Collection, classroomStudentDac.Collection, x => x.Id == classroomid, SchoolYearId(schoolYearDac));
             var openSubject = await openSubjectDac.GetWithSubjectAndTeacher(subjectDac.Collection, teacherDac.Collection, x => x.Id == opensubjectid);
             var learningArea = await learningAreaDac.Get(x => x.Id == openSubject.Subject.LearningAreaId);
 
@@ -325,7 +325,7 @@ namespace SchoolScore.Api.Controllers
         [HttpGet("classrooms/{classroomid}/opensubjects/{opensubjectid}/timetables")]
         public async Task<ActionResult<RegisteredOpenSubjectTimeTable>> GetTimeTables(string classroomid, string opensubjectid)
         {
-            var classroom = await classroomDac.GetWithTeacher(teacherDac.Collection, classroomStudentDac.Collection, x => x.Id == classroomid);
+            var classroom = await classroomDac.GetWithTeacher(teacherDac.Collection, classroomStudentDac.Collection, x => x.Id == classroomid, SchoolYearId(schoolYearDac));
             var openSubject = await openSubjectDac.GetWithSubjectAndTeacher(subjectDac.Collection, teacherDac.Collection, x => x.Id == opensubjectid);
             var learningArea = await learningAreaDac.Get(x => x.Id == openSubject.Subject.LearningAreaId);
 

@@ -9,7 +9,8 @@ namespace SchoolScore.Api.DACs
         Task<IEnumerable<Models.OpenSubject>> ListWithSubjectAndTeacher(
             IMongoCollection<Subject> subjectCollection,
             IMongoCollection<Teacher> teacherCollection,
-            Expression<Func<OpenSubject, bool>> expression, int page = 1, int? pageSize = null);
+            Expression<Func<OpenSubject, bool>> expression, string schoolYearId,
+            int page = 1, int? pageSize = null);
         Task<Models.OpenSubject> GetWithSubjectAndTeacher(
             IMongoCollection<Subject> subjectCollection,
             IMongoCollection<Teacher> teacherCollection,
