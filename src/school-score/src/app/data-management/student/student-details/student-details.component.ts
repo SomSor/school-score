@@ -29,6 +29,6 @@ export class StudentDetailsComponent implements OnInit {
   async delete() {
     if (!confirm(`ยืนยันการลบนักเรียน ${this.data.Name} !!!`)) { return; }
     await this.studentService.Delete(this.id)
-      .then((response) => this.router.navigate(['/data-management']));
+      .then((response) => this.router.navigate(['/person-manage']));
   }
 }

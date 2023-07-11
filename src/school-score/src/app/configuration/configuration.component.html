@@ -50,7 +50,7 @@
         <td mat-cell *matCellDef="let element">{{ element.Semester }}</td>
     </ng-container>
     <ng-container matColumnDef="StartDate">
-        <th mat-header-cell *matHeaderCellDef>วันเปิดเทอม</th>
+        <th mat-header-cell *matHeaderCellDef>วันเปิดภาคเรียน</th>
         <td mat-cell *matCellDef="let element">{{ thDateService.THDate(element.StartDate) }}</td>
     </ng-container>
     <ng-container matColumnDef="EndDate">
@@ -68,14 +68,11 @@
             <button mat-button [routerLink]="['/schoolyear-details']" [queryParams]="{id:element.Id}">
                 <mat-icon>search</mat-icon>
             </button>
-            <button mat-button [routerLink]="['/schoolyear-details']" [queryParams]="{id:element.Id}">
-                ตั้งค่าเป็นภาคเรียนปัจจุบัน
-            </button>
         </td>
     </ng-container>
-    <tr mat-header-row *matHeaderRowDef="['No','Year','Semester','StartDate','StartDate','Current','Actions']">
+    <tr mat-header-row *matHeaderRowDef="['No','Year','Semester','StartDate','EndDate','Current','Actions']">
     </tr>
-    <tr mat-row *matRowDef="let row; columns: ['No','Year','Semester','StartDate','StartDate','Current','Actions'];">
+    <tr mat-row *matRowDef="let row; columns: ['No','Year','Semester','StartDate','EndDate','Current','Actions'];">
     </tr>
 </table>
 <br />

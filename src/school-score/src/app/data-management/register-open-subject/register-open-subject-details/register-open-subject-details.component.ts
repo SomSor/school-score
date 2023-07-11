@@ -37,7 +37,7 @@ export class RegisterOpenSubjectDetailsComponent implements OnInit {
   async delete() {
     if (!confirm(`ยืนยันการลบ ${this.data.Name} !!!`)) { return; }
     await this.classroomStudentService.Delete(this.id)
-      .then((response) => this.router.navigate(['/data-management']));
+      .then((response) => this.router.navigate(['/classroom-manage']));
   }
 
   GetTier(tier: any) {

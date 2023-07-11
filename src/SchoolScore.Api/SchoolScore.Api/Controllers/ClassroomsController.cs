@@ -1,11 +1,14 @@
 ﻿using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SchoolScore.Api.DACs;
 using SchoolScore.Api.Models;
+using System.Data;
 using System.Linq.Expressions;
 
 namespace SchoolScore.Api.Controllers
 {
+    [Authorize(Roles = "Admin,Mod")]
     [ApiController]
     [Route("api/[controller]")]
     public class ClassroomsController : ApiControllerBase
@@ -34,11 +37,12 @@ namespace SchoolScore.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<PagingModel<Classroom>>> Get(string? search, int? page = 1, int? pageSize = 100)
         {
+            var schoolYear = await schoolYearDac.Current();
             if (string.IsNullOrWhiteSpace(search))
             {
                 var data = page == 0
-                    ? await classroomDac.ListWithTeacher(teacherDac.Collection, classroomStudentDac.Collection, x => true, SchoolYearId(schoolYearDac))
-                    : await classroomDac.ListWithTeacher(teacherDac.Collection, classroomStudentDac.Collection, x => true, SchoolYearId(schoolYearDac), page ?? 1, pageSize);
+                    ? await classroomDac.ListWithTeacher(teacherDac.Collection, classroomStudentDac.Collection, x => true, schoolYear.Id)
+                    : await classroomDac.ListWithTeacher(teacherDac.Collection, classroomStudentDac.Collection, x => true, schoolYear.Id, page ?? 1, pageSize);
                 var count = await classroomDac.Count(x => true);
 
                 return Ok(new PagingModel<Classroom>
@@ -53,8 +57,8 @@ namespace SchoolScore.Api.Controllers
                 Expression<Func<DbModels.Classroom, bool>> func = x => true && x.ClassYear.ToLower().Contains(txt);
 
                 var data = page == 0
-                    ? await classroomDac.ListWithTeacher(teacherDac.Collection, classroomStudentDac.Collection, func, SchoolYearId(schoolYearDac))
-                    : await classroomDac.ListWithTeacher(teacherDac.Collection, classroomStudentDac.Collection, func, SchoolYearId(schoolYearDac), page ?? 1, pageSize);
+                    ? await classroomDac.ListWithTeacher(teacherDac.Collection, classroomStudentDac.Collection, func, schoolYear.Id)
+                    : await classroomDac.ListWithTeacher(teacherDac.Collection, classroomStudentDac.Collection, func, schoolYear.Id, page ?? 1, pageSize);
                 var count = await classroomDac.Count(func);
 
                 return Ok(new PagingModel<Classroom>
@@ -68,7 +72,8 @@ namespace SchoolScore.Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Classroom>> Get(string id)
         {
-            var documentDb = await classroomDac.GetWithTeacherAndStudent(teacherDac.Collection, classroomStudentDac.Collection, studentDac.Collection, x => x.Id == id, SchoolYearId(schoolYearDac));
+            var schoolYear = await schoolYearDac.Current();
+            var documentDb = await classroomDac.GetWithTeacherAndStudent(teacherDac.Collection, classroomStudentDac.Collection, studentDac.Collection, x => x.Id == id, schoolYear.Id);
             var document = documentDb.Adapt<Classroom>();
             return Ok(document);
         }
@@ -76,9 +81,10 @@ namespace SchoolScore.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] ClassroomCreate request)
         {
+            var schoolYear = await schoolYearDac.Current();
             var documentDb = request.Adapt<DbModels.Classroom>();
-            documentDb.Init(AccountsController.Username);
-            documentDb.SchoolYearId = SchoolYearId(schoolYearDac);
+            documentDb.Init(UserId);
+            documentDb.SchoolYearId = schoolYear.Id;
             await classroomDac.Create(documentDb);
             return Ok();
         }
@@ -89,7 +95,7 @@ namespace SchoolScore.Api.Controllers
         //    var documentDbs = request.Adapt<IEnumerable<DbModels.Classroom>>();
         //    documentDbs = documentDbs.Select(x =>
         //    {
-        //        x.Init(AccountsController.Username);
+        //        x.Init(UserId);
         //        x.SchoolYearId = SchoolYearId;
         //        return x;
         //    }).ToList();
@@ -111,7 +117,7 @@ namespace SchoolScore.Api.Controllers
         //            TeacherId = x[2],
         //            SchoolYearId = SchoolYearId,
         //        };
-        //        documentDb.Init(AccountsController.Username);
+        //        documentDb.Init(UserId);
 
         //        return documentDb;
         //    });

@@ -1,6 +1,6 @@
 <div class="breadcrumb">
     <a routerLink="/home">หน้าหลัก</a> >
-    <a routerLink="/data-management">จัดการข้อมูล</a> >
+    <a routerLink="/classroom-manage">จัดการข้อมูลห้องเรียน</a> >
     <span *ngIf="!editingId">เพิ่มห้องเรียน</span>
     <span *ngIf="editingId">
         <a [routerLink]="['/classroom-details']" [queryParams]="{id:editingId}">รายเอียดห้องเรียน</a> >

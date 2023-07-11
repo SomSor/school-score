@@ -29,6 +29,6 @@ export class LearningAreaDetailsComponent implements OnInit {
   async delete() {
     if (!confirm(`ยืนยันการลบกลุ่มสาระการเรียนรู้ ${this.data.Name} !!!`)) { return; }
     await this.learningAreaService.Delete(this.id)
-      .then((response) => this.router.navigate(['/data-management']));
+      .then((response) => this.router.navigate(['/subject-manage']));
   }
 }

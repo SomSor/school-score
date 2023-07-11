@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddTransient(x => builder.Configuration.GetSection(nameof(MongoDBConfiguration)).Get<MongoDBConfiguration>());
 
+builder.Services.AddTransient<IAccountDac<Account>, AccountDac>();
 builder.Services.AddTransient<IClassroomDac<Classroom>, ClassroomDac>();
 builder.Services.AddTransient<IClassroomStudentDac<ClassroomStudent>, ClassroomStudentDac>();
 builder.Services.AddTransient<ILearningAreaDac<LearningArea>, LearningAreaDac>();

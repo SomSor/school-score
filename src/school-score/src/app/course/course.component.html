@@ -50,4 +50,4 @@
         *matRowDef="let row; columns: ['ClassRoom','Subject','CourseCheck','CourseGrading','CourseEvaluating'];">
     </tr>
 </table>
-<app-skeleton [style]="'table'" *ngIf="!displayData.length" [column]="5"></app-skeleton>
+<app-skeleton [style]="'table'" *ngIf="!displayData" [column]="5"></app-skeleton>

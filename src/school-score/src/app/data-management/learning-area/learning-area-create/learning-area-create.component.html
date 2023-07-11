@@ -1,6 +1,6 @@
 <div class="breadcrumb">
     <a routerLink="/home">หน้าหลัก</a> >
-    <a routerLink="/data-management">จัดการข้อมูล</a> >
+    <a routerLink="/subject-manage">จัดการข้อมูลกลุ่มสาระการเรียนรู้</a> >
     <span *ngIf="!editingId">เพิ่มกลุ่มสาระการเรียนรู้</span>
     <span *ngIf="editingId">
         <a [routerLink]="['/learning-area-details']" [queryParams]="{id:editingId}">รายเอียดกลุ่มสาระการเรียนรู้</a> >

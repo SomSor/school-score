@@ -29,6 +29,6 @@ export class OpenSubjectDetailsComponent implements OnInit {
   async delete() {
     if (!confirm(`ยืนยันการลบวิชาที่เปิดสอน ${this.data.Name} !!!`)) { return; }
     await this.openSubjectService.Delete(this.id)
-      .then((response) => this.router.navigate(['/data-management']));
+      .then((response) => this.router.navigate(['/opensubject-manage']));
   }
 }

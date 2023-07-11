@@ -1,6 +1,6 @@
 <div class="breadcrumb">
     <a routerLink="/home">หน้าหลัก</a> >
-    <a routerLink="/data-management">จัดการข้อมูล</a> >
+    <a routerLink="/opensubject-manage">จัดการข้อมูลวิชาที่เปิดสอน</a> >
     <span *ngIf="!editingId">เพิ่มวิชาที่เปิดสอน</span>
     <span *ngIf="editingId">
         <a [routerLink]="['/open-subject-details']" [queryParams]="{id:editingId}">รายเอียดวิชาที่เปิดสอน</a> >

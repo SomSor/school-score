@@ -1,1 +1,45 @@
-<p>school-year-details works!</p>
+<div class="breadcrumb">
+    <a routerLink="/home">หน้าหลัก</a> >
+    <a routerLink="/configuration">ตั้งค่า</a> >
+    รายเอียดปีการศึกษา
+</div>
+<div class="center">
+    <h1>รายเอียดปีการศึกษา</h1>
+</div>
+<br />
+<div fxLayout="row wrap" fxLayoutGap="grid">
+    <div fxFlex="100%" fxFlex.xs="100%">
+        <button mat-raised-button color="primary" [routerLink]="['/schoolyear-create']"
+            [queryParams]="{id:id}">แก้ไขปีการศึกษา</button>
+        <span class="spacer"></span>
+        <button mat-raised-button color="primary" (click)="setCurrent()">ตั้งค่าเป็นภาคเรียนปัจจุบัน</button>
+        <span class="spacer"></span>
+        <button mat-raised-button color="warn" (click)="delete()">ลบปีการศึกษา</button>
+        <br />
+        <br />
+        <mat-card class="example-card" *ngIf="data">
+            <mat-card-content>
+                <h2>รายละเอียด <span *ngIf="isCurrentSemester()">✅ ภาคเรียนปัจจุบัน</span></h2>
+                <div fxLayout="row wrap" fxLayoutGap="grid">
+                    <div fxFlex="30%" fxFlex.xs="100%"><b>ปีการศึกษา:</b></div>
+                    <div fxFlex="70%" fxFlex.xs="100%">{{ data.Year }}</div>
+                </div>
+                <div fxLayout="row wrap" fxLayoutGap="grid">
+                    <div fxFlex="30%" fxFlex.xs="100%"><b>ภาคเรียนที่:</b></div>
+                    <div fxFlex="70%" fxFlex.xs="100%">{{ data.Semester }}</div>
+                </div>
+                <div fxLayout="row wrap" fxLayoutGap="grid">
+                    <div fxFlex="30%" fxFlex.xs="100%"><b>วันเปิดภาคเรียน:</b></div>
+                    <div fxFlex="70%" fxFlex.xs="100%">{{ thDateService.THDate(data.StartDate) }} {{
+                        data.Teacher?.Lastname }}</div>
+                </div>
+                <div fxLayout="row wrap" fxLayoutGap="grid">
+                    <div fxFlex="30%" fxFlex.xs="100%"><b>วันสุดท้ายที่มีการเรียนการสอน:</b></div>
+                    <div fxFlex="70%" fxFlex.xs="100%">{{ thDateService.THDate(data.EndDate) }} {{
+                        data.Teacher?.Lastname }}</div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+        <app-skeleton *ngIf="!data"></app-skeleton>
+    </div>
+</div>

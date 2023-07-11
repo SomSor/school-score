@@ -24,4 +24,9 @@ export class SchoolYearService extends BaseApiService {
     return this.GetDataPagging(url, event);
   }
 
+  SetCurrent(id: any): Promise<any> {
+    let url = `${this.apiUrl}/api/${this.controllername}/${id}/current`;
+    return this.Put(url, {});
+  }
+
 }

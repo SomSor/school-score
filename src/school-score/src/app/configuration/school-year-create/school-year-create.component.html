@@ -1,1 +1,47 @@
-<p>school-year-create works!</p>
+<div class="breadcrumb">
+    <a routerLink="/home">หน้าหลัก</a> >
+    <a routerLink="/configuration">ตั้งค่า</a> >
+    <span *ngIf="!editingId">เพิ่มปีการศึกษา</span>
+    <span *ngIf="editingId">
+        <a [routerLink]="['/schoolyear-details']" [queryParams]="{id:editingId}">รายเอียดปีการศึกษา</a> >
+        แก้ไขปีการศึกษา
+    </span>
+</div>
+<div class="center">
+    <h1 *ngIf="!editingId">เพิ่มปีการศึกษา</h1>
+    <h1 *ngIf="editingId">แก้ไขปีการศึกษา</h1>
+</div>
+
+<div fxLayout="row wrap" fxLayoutGap="grid">
+    <div fxFlex="50%" fxFlex.xs="100%">
+        <mat-card class="example-card">
+            <mat-card-content>
+                <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="fg">
+                    <form [formGroup]="fg" (ngSubmit)="onSave()">
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>ปีการศึกษา</mat-label>
+                            <input type="number" matInput formControlName="Year" placeholder="">
+                        </mat-form-field>
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>ภาคเรียนที่</mat-label>
+                            <input type="number" matInput formControlName="Semester" placeholder="">
+                        </mat-form-field>
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>วันเปิดภาคเรียน</mat-label>
+                            <input matInput formControlName="StartDate" [matDatepicker]="StartDate" readonly />
+                            <mat-datepicker-toggle matSuffix [for]="StartDate"></mat-datepicker-toggle>
+                            <mat-datepicker #StartDate></mat-datepicker>
+                        </mat-form-field>
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>วันสุดท้ายที่มีการเรียนการสอน</mat-label>
+                            <input matInput formControlName="EndDate" [matDatepicker]="EndDate" readonly />
+                            <mat-datepicker-toggle matSuffix [for]="EndDate"></mat-datepicker-toggle>
+                            <mat-datepicker #EndDate></mat-datepicker>
+                        </mat-form-field>
+                        <button type="submit" mat-raised-button color="primary">บันทึก</button>
+                    </form>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

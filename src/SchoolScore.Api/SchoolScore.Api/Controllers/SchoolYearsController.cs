@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SchoolScore.Api.DACs;
 using SchoolScore.Api.Models;
@@ -6,6 +7,7 @@ using System.Linq.Expressions;
 
 namespace SchoolScore.Api.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [ApiController]
     [Route("api/[controller]")]
     public class SchoolYearsController : ApiControllerBase
@@ -61,54 +63,54 @@ namespace SchoolScore.Api.Controllers
             var documentDb = await schoolYearDac.Get(x => x.Id == id);
             var document = documentDb.Adapt<SchoolYear>();
             document.Current = await schoolYearDac.Current();
-            return Ok(documentDb);
+            return Ok(document);
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] SchoolYearCreate request)
         {
             var documentDb = request.Adapt<DbModels.SchoolYear>();
-            documentDb.Init(AccountsController.Username);
+            documentDb.Init(UserId);
             await schoolYearDac.Create(documentDb);
             return Ok();
         }
 
-        [HttpPost("many")]
-        public async Task<IActionResult> CreateMany([FromBody] IEnumerable<SchoolYearCreate> request)
-        {
-            var documentDbs = request.Adapt<IEnumerable<DbModels.SchoolYear>>();
-            documentDbs = documentDbs.Select(x =>
-            {
-                x.Init(AccountsController.Username);
-                return x;
-            }).ToList();
-            await schoolYearDac.CreateMany(documentDbs);
-            return Ok();
-        }
+        //[HttpPost("many")]
+        //public async Task<IActionResult> CreateMany([FromBody] IEnumerable<SchoolYearCreate> request)
+        //{
+        //    var documentDbs = request.Adapt<IEnumerable<DbModels.SchoolYear>>();
+        //    documentDbs = documentDbs.Select(x =>
+        //    {
+        //        x.Init(UserId);
+        //        return x;
+        //    }).ToList();
+        //    await schoolYearDac.CreateMany(documentDbs);
+        //    return Ok();
+        //}
 
-        [HttpPost("text")]
-        public async Task<IActionResult> ImportByText([FromBody] SchoolYearCreate request)
-        {
-            var rows = request.Year.Trim().Split(Environment.NewLine).Where(x => !string.IsNullOrWhiteSpace(x));
-            var rowsSplit = rows.Select(x => x.Split("\t"));
-            var documentDbs = rowsSplit.Select(x =>
-            {
-                var documentDb = new DbModels.SchoolYear
-                {
-                    Year = x[0],
-                    Semester = int.Parse(x[1]),
-                    StartDate = DateTime.Parse(x[2]),
-                    EndDate = DateTime.Parse(x[3]),
-                    SchoolId = x[4],
-                };
-                documentDb.Init(AccountsController.Username);
+        //[HttpPost("text")]
+        //public async Task<IActionResult> ImportByText([FromBody] SchoolYearCreate request)
+        //{
+        //    var rows = request.Year.Trim().Split(Environment.NewLine).Where(x => !string.IsNullOrWhiteSpace(x));
+        //    var rowsSplit = rows.Select(x => x.Split("\t"));
+        //    var documentDbs = rowsSplit.Select(x =>
+        //    {
+        //        var documentDb = new DbModels.SchoolYear
+        //        {
+        //            Year = x[0],
+        //            Semester = int.Parse(x[1]),
+        //            StartDate = DateTime.Parse(x[2]),
+        //            EndDate = DateTime.Parse(x[3]),
+        //            SchoolId = x[4],
+        //        };
+        //        documentDb.Init(UserId);
 
-                return documentDb;
-            });
+        //        return documentDb;
+        //    });
 
-            await schoolYearDac.CreateMany(documentDbs);
-            return Ok();
-        }
+        //    await schoolYearDac.CreateMany(documentDbs);
+        //    return Ok();
+        //}
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, [FromBody] SchoolYearCreate request)
@@ -126,6 +128,15 @@ namespace SchoolScore.Api.Controllers
         public async Task<IActionResult> Delete(string id)
         {
             await schoolYearDac.DeleteOne(x => x.Id == id);
+            return Ok();
+        }
+
+        [HttpPut("{id}/current")]
+        public async Task<IActionResult> SetCurrent(string id)
+        {
+            var documentDb = await schoolYearDac.Get(x => x.Id == id);
+            documentDb.ActivatedDate = DateTime.UtcNow;
+            await schoolYearDac.ReplaceOne(x => x.Id == id, documentDb);
             return Ok();
         }
     }

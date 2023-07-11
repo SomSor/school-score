@@ -1,7 +1,9 @@
 ﻿using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SchoolScore.Api.DACs;
 using SchoolScore.Api.Models;
+using System.Data;
 using System.Linq.Expressions;
 
 namespace SchoolScore.Api.Controllers
@@ -40,14 +42,16 @@ namespace SchoolScore.Api.Controllers
             this.teacherDac = teacherDac;
         }
 
+        [Authorize(Roles = "Admin,Mod")]
         [HttpGet]
         public async Task<ActionResult<PagingModel<ClassroomStudent>>> Get(string? search, int? page = 1, int? pageSize = 100)
         {
+            var schoolYear = await schoolYearDac.Current();
             if (string.IsNullOrWhiteSpace(search))
             {
                 var data = page == 0
-                    ? await classroomStudentDac.ListWithClassroomAndStudent(classroomDac.Collection, studentDac.Collection, x => true, SchoolYearId(schoolYearDac))
-                    : await classroomStudentDac.ListWithClassroomAndStudent(classroomDac.Collection, studentDac.Collection, x => true, SchoolYearId(schoolYearDac), page ?? 1, pageSize);
+                    ? await classroomStudentDac.ListWithClassroomAndStudent(classroomDac.Collection, studentDac.Collection, x => true, schoolYear.Id)
+                    : await classroomStudentDac.ListWithClassroomAndStudent(classroomDac.Collection, studentDac.Collection, x => true, schoolYear.Id, page ?? 1, pageSize);
                 var count = await classroomStudentDac.Count(x => true);
 
                 return Ok(new PagingModel<ClassroomStudent>
@@ -62,8 +66,8 @@ namespace SchoolScore.Api.Controllers
                 Expression<Func<DbModels.ClassroomStudent, bool>> func = x => true && x.ClassroomId.ToLower().Contains(txt);
 
                 var data = page == 0
-                    ? await classroomStudentDac.ListWithClassroomAndStudent(classroomDac.Collection, studentDac.Collection, func, SchoolYearId(schoolYearDac))
-                    : await classroomStudentDac.ListWithClassroomAndStudent(classroomDac.Collection, studentDac.Collection, func, SchoolYearId(schoolYearDac), page ?? 1, pageSize);
+                    ? await classroomStudentDac.ListWithClassroomAndStudent(classroomDac.Collection, studentDac.Collection, func, schoolYear.Id)
+                    : await classroomStudentDac.ListWithClassroomAndStudent(classroomDac.Collection, studentDac.Collection, func, schoolYear.Id, page ?? 1, pageSize);
                 var count = await classroomStudentDac.Count(func);
 
                 return Ok(new PagingModel<ClassroomStudent>
@@ -74,6 +78,7 @@ namespace SchoolScore.Api.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin,Mod")]
         [HttpGet("{id}")]
         public async Task<ActionResult<ClassroomStudent>> Get(string id)
         {
@@ -82,11 +87,12 @@ namespace SchoolScore.Api.Controllers
             return Ok(document);
         }
 
+        [Authorize(Roles = "Admin,Mod")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] ClassroomStudentCreate request)
         {
             var documentDb = request.Adapt<DbModels.ClassroomStudent>();
-            documentDb.Init(AccountsController.Username);
+            documentDb.Init(UserId);
             documentDb.RegisterOpenSubjects = Enumerable.Empty<DbModels.RegisterOpenSubject>();
             await classroomStudentDac.Create(documentDb);
             return Ok();
@@ -98,7 +104,7 @@ namespace SchoolScore.Api.Controllers
         //    var documentDbs = request.Adapt<IEnumerable<DbModels.ClassroomStudent>>();
         //    documentDbs = documentDbs.Select(x =>
         //    {
-        //        x.Init(AccountsController.Username);
+        //        x.Init(UserId);
         //        return x;
         //    }).ToList();
         //    await classroomStudentDac.CreateMany(documentDbs);
@@ -117,7 +123,7 @@ namespace SchoolScore.Api.Controllers
         //            ClassroomId = x[0],
         //            StudentId = x[1],
         //        };
-        //        documentDb.Init(AccountsController.Username);
+        //        documentDb.Init(UserId);
 
         //        return documentDb;
         //    });
@@ -126,6 +132,7 @@ namespace SchoolScore.Api.Controllers
         //    return Ok();
         //}
 
+        [Authorize(Roles = "Admin,Mod")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, [FromBody] ClassroomStudentCreate request)
         {
@@ -136,6 +143,7 @@ namespace SchoolScore.Api.Controllers
             return Ok();
         }
 
+        [Authorize(Roles = "Admin,Mod")]
         [HttpPut("delete/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
@@ -143,14 +151,16 @@ namespace SchoolScore.Api.Controllers
             return Ok();
         }
 
+        [Authorize(Roles = "Admin,Mod,Teacher")]
         [HttpGet("opensubjects")]
         public async Task<ActionResult<RegisteredOpenSubject>> GetOpenSubjects(string? search, int? page = 1, int? pageSize = 100)
         {
+            var schoolYear = await schoolYearDac.Current();
             if (string.IsNullOrWhiteSpace(search))
             {
                 var data = page == 0
-                    ? await classroomStudentDac.ListWithOpenSubject(classroomDac.Collection, studentDac.Collection, openSubjectDac.Collection, subjectDac.Collection, x => true, SchoolYearId(schoolYearDac))
-                    : await classroomStudentDac.ListWithOpenSubject(classroomDac.Collection, studentDac.Collection, openSubjectDac.Collection, subjectDac.Collection, x => true, SchoolYearId(schoolYearDac), page ?? 1, pageSize);
+                    ? await classroomStudentDac.ListWithOpenSubject(classroomDac.Collection, studentDac.Collection, openSubjectDac.Collection, subjectDac.Collection, x => true, schoolYear.Id)
+                    : await classroomStudentDac.ListWithOpenSubject(classroomDac.Collection, studentDac.Collection, openSubjectDac.Collection, subjectDac.Collection, x => true, schoolYear.Id, page ?? 1, pageSize);
                 data.Length = await classroomStudentDac.Count(x => true);
 
                 return Ok(data);
@@ -161,18 +171,20 @@ namespace SchoolScore.Api.Controllers
                 Expression<Func<DbModels.ClassroomStudent, bool>> func = x => true && x.ClassroomId.ToLower().Contains(txt);
 
                 var data = page == 0
-                    ? await classroomStudentDac.ListWithOpenSubject(classroomDac.Collection, studentDac.Collection, openSubjectDac.Collection, subjectDac.Collection, func, SchoolYearId(schoolYearDac))
-                    : await classroomStudentDac.ListWithOpenSubject(classroomDac.Collection, studentDac.Collection, openSubjectDac.Collection, subjectDac.Collection, func, SchoolYearId(schoolYearDac), page ?? 1, pageSize);
+                    ? await classroomStudentDac.ListWithOpenSubject(classroomDac.Collection, studentDac.Collection, openSubjectDac.Collection, subjectDac.Collection, func, schoolYear.Id)
+                    : await classroomStudentDac.ListWithOpenSubject(classroomDac.Collection, studentDac.Collection, openSubjectDac.Collection, subjectDac.Collection, func, schoolYear.Id, page ?? 1, pageSize);
                 data.Length = await classroomStudentDac.Count(x => true);
 
                 return Ok(data);
             }
         }
 
+        [Authorize(Roles = "Admin,Mod,Teacher")]
         [HttpGet("classrooms/{classroomid}/opensubjects/{opensubjectid}")]
         public async Task<ActionResult<ClassroomOpenSubjectDetails>> GetClassroomOpenSubjects(string classroomid, string opensubjectid, string? search, int? page = 1, int? pageSize = 100)
         {
-            var classroom = await classroomDac.GetWithTeacher(teacherDac.Collection, classroomStudentDac.Collection, x => x.Id == classroomid, SchoolYearId(schoolYearDac));
+            var schoolYear = await schoolYearDac.Current();
+            var classroom = await classroomDac.GetWithTeacher(teacherDac.Collection, classroomStudentDac.Collection, x => x.Id == classroomid, schoolYear.Id);
             var openSubject = await openSubjectDac.GetWithSubjectAndTeacher(subjectDac.Collection, teacherDac.Collection, x => x.Id == opensubjectid);
             var learningArea = await learningAreaDac.Get(x => x.Id == openSubject.Subject.LearningAreaId);
 
@@ -212,6 +224,7 @@ namespace SchoolScore.Api.Controllers
             return response;
         }
 
+        [Authorize(Roles = "Admin,Mod,Teacher")]
         [HttpPost("opensubjects")]
         public async Task<IActionResult> RegisterOpenSubjects([FromBody] RegisterOpenSubjectCreate request)
         {
@@ -261,6 +274,7 @@ namespace SchoolScore.Api.Controllers
             return Ok();
         }
 
+        [Authorize(Roles = "Admin,Mod,Teacher")]
         [HttpPut("exam")]
         public async Task<IActionResult> Exam([FromBody] SaveScoringGroupRequest request)
         {
@@ -290,6 +304,7 @@ namespace SchoolScore.Api.Controllers
             return Ok();
         }
 
+        [Authorize(Roles = "Admin,Mod,Teacher")]
         [HttpPut("evaluate")]
         public async Task<IActionResult> Evaluate([FromBody] SaveScoringGroupRequest request)
         {
@@ -322,15 +337,16 @@ namespace SchoolScore.Api.Controllers
             return Ok();
         }
 
+        [Authorize(Roles = "Admin,Mod,Teacher")]
         [HttpGet("classrooms/{classroomid}/opensubjects/{opensubjectid}/timetables")]
         public async Task<ActionResult<RegisteredOpenSubjectTimeTable>> GetTimeTables(string classroomid, string opensubjectid)
         {
-            var classroom = await classroomDac.GetWithTeacher(teacherDac.Collection, classroomStudentDac.Collection, x => x.Id == classroomid, SchoolYearId(schoolYearDac));
+            var schoolYear = await schoolYearDac.Current();
+            var classroom = await classroomDac.GetWithTeacher(teacherDac.Collection, classroomStudentDac.Collection, x => x.Id == classroomid, schoolYear.Id);
             var openSubject = await openSubjectDac.GetWithSubjectAndTeacher(subjectDac.Collection, teacherDac.Collection, x => x.Id == opensubjectid);
             var learningArea = await learningAreaDac.Get(x => x.Id == openSubject.Subject.LearningAreaId);
 
             var classroomStudents = await classroomStudentDac.ListWithStudent(studentDac.Collection, classroomid);
-            var schoolYear = await schoolYearDac.Get(x => true);
 
             var dayCount = (int)(schoolYear.EndDate - schoolYear.StartDate).TotalDays + 1;
             var dateList = Enumerable.Range(0, dayCount)
@@ -362,6 +378,7 @@ namespace SchoolScore.Api.Controllers
             };
         }
 
+        [Authorize(Roles = "Admin,Mod,Teacher")]
         [HttpPut("attendances")]
         public async Task<IActionResult> Attendances([FromBody] SaveAttendancesRequest request)
         {

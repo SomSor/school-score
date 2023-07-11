@@ -1,12 +1,14 @@
 ﻿using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SchoolScore.Api.DACs;
-using SchoolScore.Api.DACs.Imps;
 using SchoolScore.Api.Models;
+using System.Data;
 using System.Linq.Expressions;
 
 namespace SchoolScore.Api.Controllers
 {
+    [Authorize(Roles = "Admin,Mod")]
     [ApiController]
     [Route("api/[controller]")]
     public class OpenSubjectsController : ApiControllerBase
@@ -35,11 +37,12 @@ namespace SchoolScore.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<PagingModel<OpenSubject>>> Get(string? search, int? page = 1, int? pageSize = 100)
         {
+            var schoolYear = await schoolYearDac.Current();
             if (string.IsNullOrWhiteSpace(search))
             {
                 var data = page == 0
-                    ? await openSubjectDac.ListWithSubjectAndTeacher(subjectDac.Collection, teacherDac.Collection, x => true, SchoolYearId(schoolYearDac))
-                    : await openSubjectDac.ListWithSubjectAndTeacher(subjectDac.Collection, teacherDac.Collection, x => true, SchoolYearId(schoolYearDac), page ?? 1, pageSize);
+                    ? await openSubjectDac.ListWithSubjectAndTeacher(subjectDac.Collection, teacherDac.Collection, x => true, schoolYear.Id)
+                    : await openSubjectDac.ListWithSubjectAndTeacher(subjectDac.Collection, teacherDac.Collection, x => true, schoolYear.Id, page ?? 1, pageSize);
                 var count = await openSubjectDac.Count(x => true);
 
                 return Ok(new PagingModel<OpenSubject>
@@ -54,8 +57,8 @@ namespace SchoolScore.Api.Controllers
                 Expression<Func<DbModels.OpenSubject, bool>> func = x => true && x.SubjectId.ToLower().Contains(txt);
 
                 var data = page == 0
-                    ? await openSubjectDac.ListWithSubjectAndTeacher(subjectDac.Collection, teacherDac.Collection, func, SchoolYearId(schoolYearDac))
-                    : await openSubjectDac.ListWithSubjectAndTeacher(subjectDac.Collection, teacherDac.Collection, func, SchoolYearId(schoolYearDac), page ?? 1, pageSize);
+                    ? await openSubjectDac.ListWithSubjectAndTeacher(subjectDac.Collection, teacherDac.Collection, func, schoolYear.Id)
+                    : await openSubjectDac.ListWithSubjectAndTeacher(subjectDac.Collection, teacherDac.Collection, func, schoolYear.Id, page ?? 1, pageSize);
                 var count = await openSubjectDac.Count(func);
 
                 return Ok(new PagingModel<OpenSubject>
@@ -76,9 +79,10 @@ namespace SchoolScore.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] OpenSubjectCreate request)
         {
+            var schoolYear = await schoolYearDac.Current();
             var documentDb = request.Adapt<DbModels.OpenSubject>();
-            documentDb.Init(AccountsController.Username);
-            documentDb.SchoolYearId = SchoolYearId(schoolYearDac);
+            documentDb.Init(UserId);
+            documentDb.SchoolYearId = schoolYear.Id;
 
 
             var scorings_eval1 = delegate ()
@@ -404,7 +408,7 @@ namespace SchoolScore.Api.Controllers
             var documentDbs = request.Adapt<IEnumerable<DbModels.OpenSubject>>();
             documentDbs = documentDbs.Select(x =>
             {
-                x.Init(AccountsController.Username);
+                x.Init(UserId);
                 return x;
             }).ToList();
             await openSubjectDac.CreateMany(documentDbs);
@@ -424,7 +428,7 @@ namespace SchoolScore.Api.Controllers
                     MainTeacherId = x[1],
                     Description = x[2],
                 };
-                documentDb.Init(AccountsController.Username);
+                documentDb.Init(UserId);
 
                 return documentDb;
             });

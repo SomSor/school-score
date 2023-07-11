@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SchoolScore.Api.DACs;
 using SchoolScore.Api.DACs.Imps;
@@ -7,6 +8,7 @@ using System.Linq.Expressions;
 
 namespace SchoolScore.Api.Controllers
 {
+    [Authorize(Roles = "Admin,Mod")]
     [ApiController]
     [Route("api/[controller]")]
     public class SubjectsController : ApiControllerBase
@@ -71,7 +73,7 @@ namespace SchoolScore.Api.Controllers
         public async Task<IActionResult> Create([FromBody] SubjectCreate request)
         {
             var documentDb = request.Adapt<DbModels.Subject>();
-            documentDb.Init(AccountsController.Username);
+            documentDb.Init(UserId);
             await subjectDac.Create(documentDb);
             return Ok();
         }
@@ -82,7 +84,7 @@ namespace SchoolScore.Api.Controllers
             var documentDbs = request.Adapt<IEnumerable<DbModels.Subject>>();
             documentDbs = documentDbs.Select(x =>
             {
-                x.Init(AccountsController.Username);
+                x.Init(UserId);
                 return x;
             }).ToList();
             await subjectDac.CreateMany(documentDbs);
@@ -103,7 +105,7 @@ namespace SchoolScore.Api.Controllers
                     Description = x[2],
                     LearningAreaId = x[3],
                 };
-                documentDb.Init(AccountsController.Username);
+                documentDb.Init(UserId);
 
                 return documentDb;
             });

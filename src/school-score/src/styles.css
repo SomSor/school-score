@@ -13,6 +13,15 @@ body {
     justify-content: center;
 }
 
+.pointer {
+    cursor: pointer;
+}
+
+.spacer {
+    display: inline-block;
+    width: 16px;
+}
+
 .full-width {
     width: 100%;
 }
