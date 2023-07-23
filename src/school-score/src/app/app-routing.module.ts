@@ -14,6 +14,7 @@ import { CourseGradingComponent } from './course-grading/course-grading.componen
 import { PersonManageComponent } from './data-management/data-management/person-manage/person-manage.component';
 import { TeacherCreateComponent } from './data-management/teacher/teacher-create/teacher-create.component';
 import { TeacherDetailsComponent } from './data-management/teacher/teacher-details/teacher-details.component';
+import { TeacherAccountCreateComponent } from './data-management/teacher/teacher-account-create/teacher-account-create.component';
 import { StudentCreateComponent } from './data-management/student/student-create/student-create.component';
 import { StudentDetailsComponent } from './data-management/student/student-details/student-details.component';
 
@@ -38,7 +39,6 @@ import { CorseDetailsComponent } from './corse-details/corse-details.component';
 import { SchoolYearCreateComponent } from './configuration/school-year-create/school-year-create.component';
 import { SchoolYearDetailsComponent } from './configuration/school-year-details/school-year-details.component';
 
-
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
@@ -58,6 +58,7 @@ const routes: Routes = [
   { path: 'person-manage', component: PersonManageComponent },
   { path: 'teacher-create', component: TeacherCreateComponent },
   { path: 'teacher-details', component: TeacherDetailsComponent },
+  { path: 'teacher-account-create', component: TeacherAccountCreateComponent },
   { path: 'student-create', component: StudentCreateComponent },
   { path: 'student-details', component: StudentDetailsComponent },
 

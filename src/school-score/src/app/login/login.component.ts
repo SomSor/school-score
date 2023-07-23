@@ -11,8 +11,8 @@ import { environment } from '../../environments/environment.development';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  
-  dataUrl = environment.API_URL + "/api/accounts";
+
+  dataUrl = environment.API_URL + "/api/accounts/login";
 
   fg: FormGroup;
 
@@ -26,7 +26,7 @@ export class LoginComponent {
   ngOnInit(): void {
   }
 
-  onSave() {
+  async onSave() {
     if (this.fg.valid) {
       this.http.post<any>(this.dataUrl, this.fg.value).subscribe({
         next: (response) => {

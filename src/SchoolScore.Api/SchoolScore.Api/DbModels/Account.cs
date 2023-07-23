@@ -5,8 +5,9 @@
         public string PersonId { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
-        public string ActivateDate { get; set; }
-        public string SuspendDate { get; set; }
+        public string Salt { get; set; }
+        public DateTime? ActivateDate { get; set; }
+        public DateTime? SuspendDate { get; set; }
         public IEnumerable<string> Roles { get; set; }
 
         public class RolePossible

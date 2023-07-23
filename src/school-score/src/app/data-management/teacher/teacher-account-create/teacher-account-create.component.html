@@ -1,0 +1,68 @@
+<div class="breadcrumb">
+    <a routerLink="/home">หน้าหลัก</a> >
+    <a routerLink="/person-manage">จัดการข้อมูลบุคคล</a> >
+    <span *ngIf="!editingId">เพิ่มครู</span>
+    <span *ngIf="editingId">
+        <a [routerLink]="['/teacher-details']" [queryParams]="{id:editingId}">รายเอียดครู</a> >
+        ข้อมูลผู้ใช้งาน
+    </span>
+</div>
+<div class="center">
+    <h1 *ngIf="editingId">ข้อมูลผู้ใช้งาน</h1>
+</div>
+<div fxLayout="row wrap" fxLayoutGap="grid">
+    <div fxFlex="50%" fxFlex.xs="100%">
+        <mat-card class="example-card" *ngIf="data">
+            <mat-card-content>
+                <h2>รายละเอียด</h2>
+                <div fxLayout="row wrap" fxLayoutGap="grid">
+                    <div fxFlex="30%" fxFlex.xs="100%"><b>รหัสประจำตัว:</b></div>
+                    <div fxFlex="70%" fxFlex.xs="100%">{{ data.Name }}</div>
+                </div>
+                <div fxLayout="row wrap" fxLayoutGap="grid">
+                    <div fxFlex="30%" fxFlex.xs="100%"><b>ชื่อ:</b></div>
+                    <div fxFlex="70%" fxFlex.xs="100%">{{ data.Prefix }}{{ data.Name }} {{ data.Lastname }}</div>
+                </div>
+                <div fxLayout="row wrap" fxLayoutGap="grid">
+                    <div fxFlex="30%" fxFlex.xs="100%"><b>รหัสประชาชน:</b></div>
+                    <div fxFlex="70%" fxFlex.xs="100%">{{ data.PID }}</div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+        <app-skeleton *ngIf="!data"></app-skeleton>
+    </div>
+</div>
+
+<div fxLayout="row wrap" fxLayoutGap="grid">
+    <div fxFlex="50%" fxFlex.xs="100%">
+        <mat-card class="example-card">
+            <mat-card-content>
+                <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="fg?.value">
+                    <form [formGroup]="fg" (ngSubmit)="onSave()">
+                        <input matInput formControlName="PersonId" hidden>
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>รหัสผู้ใช้งาน</mat-label>
+                            <input matInput formControlName="Username" placeholder="">
+                        </mat-form-field>
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>รหัสผ่าน</mat-label>
+                            <input matInput formControlName="Password" placeholder="">
+                        </mat-form-field>
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>สิทธิ์</mat-label>
+                            <mat-select formControlName="Roles" multiple>
+                                <mat-select-trigger>
+                                    <span *ngFor="let role of fg.value.Roles">{{roles.Teacher}} </span>
+                                </mat-select-trigger>
+                                <mat-option value="Teacher">ครู</mat-option>
+                                <mat-option value="Mod">ผู้ช่วย ผู้ดูแลระบบ</mat-option>
+                                <mat-option value="Admin">ผู้ดูแลระบบ</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <button type="submit" mat-raised-button color="primary">บันทึก</button>
+                    </form>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

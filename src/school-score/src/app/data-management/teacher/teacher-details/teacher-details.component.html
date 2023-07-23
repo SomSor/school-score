@@ -8,29 +8,63 @@
 </div>
 <br />
 <div fxLayout="row wrap" fxLayoutGap="grid">
-    <div fxFlex="100%" fxFlex.xs="100%">
-        <button mat-raised-button color="primary" [routerLink]="['/teacher-create']"
-            [queryParams]="{id:id}">แก้ไขครู</button>
+    <div fxFlex="50%" fxFlex.xs="100%">
+        <button mat-raised-button color="primary" [routerLink]="['/teacher-create']" [queryParams]="{id:id}">
+            แก้ไขครู
+        </button>
+        &nbsp;
+        <button mat-raised-button color="primary" [routerLink]="['/teacher-account-create']" [queryParams]="{id:id}"
+            disabled="{{data_account!=null&&data_account.Id!=null}}">
+            ลงทะเบียนผู้ใช้งาน
+        </button>
         &nbsp;
         <button mat-raised-button color="warn" (click)="delete()">ลบครู</button>
         <br />
         <br />
-        <mat-card class="example-card">
+        <mat-card class="example-card" *ngIf="data">
             <mat-card-content>
                 <h2>รายละเอียด</h2>
-                <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="data">
+                <div fxLayout="row wrap" fxLayoutGap="grid">
                     <div fxFlex="30%" fxFlex.xs="100%"><b>รหัสประจำตัว:</b></div>
                     <div fxFlex="70%" fxFlex.xs="100%">{{ data.Name }}</div>
                 </div>
-                <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="data">
+                <div fxLayout="row wrap" fxLayoutGap="grid">
                     <div fxFlex="30%" fxFlex.xs="100%"><b>ชื่อ:</b></div>
                     <div fxFlex="70%" fxFlex.xs="100%">{{ data.Prefix }}{{ data.Name }} {{ data.Lastname }}</div>
                 </div>
-                <div fxLayout="row wrap" fxLayoutGap="grid" *ngIf="data">
+                <div fxLayout="row wrap" fxLayoutGap="grid">
                     <div fxFlex="30%" fxFlex.xs="100%"><b>รหัสประชาชน:</b></div>
                     <div fxFlex="70%" fxFlex.xs="100%">{{ data.PID }}</div>
                 </div>
-                <app-skeleton *ngIf="!data" [row]="2"></app-skeleton>
+            </mat-card-content>
+        </mat-card>
+        <app-skeleton *ngIf="!data"></app-skeleton>
+    </div>
+</div>
+<br />
+<div fxLayout="row wrap" fxLayoutGap="grid">
+    <div fxFlex="50%" fxFlex.xs="100%">
+        <mat-card class="example-card" *ngIf="data_account">
+            <mat-card-content>
+                <h2>ข้อมูลผู้ใช้งาน</h2>
+                <div fxLayout="row wrap" fxLayoutGap="grid">
+                    <div fxFlex="30%" fxFlex.xs="100%"><b>รหัสผู้ใช้งาน:</b></div>
+                    <div fxFlex="70%" fxFlex.xs="100%">{{ data_account.Username }}</div>
+                </div>
+                <div fxLayout="row wrap" fxLayoutGap="grid">
+                    <div fxFlex="30%" fxFlex.xs="100%"><b>วันที่อนุญาตให้ใช้งาน:</b></div>
+                    <div fxFlex="70%" fxFlex.xs="100%">{{ data_account.ActivateDate ? thDateService.THDate(data_account.ActivateDate) : "-" }}</div>
+                </div>
+                <div fxLayout="row wrap" fxLayoutGap="grid">
+                    <div fxFlex="30%" fxFlex.xs="100%"><b>วันที่ระงับการใช้งาน:</b></div>
+                    <div fxFlex="70%" fxFlex.xs="100%">
+                        {{ data_account.SuspendDate ? thDateService.THDate(data_account.SuspendDate) : "-" }}
+                    </div>
+                </div>
+                <div fxLayout="row wrap" fxLayoutGap="grid">
+                    <div fxFlex="30%" fxFlex.xs="100%"><b>สิทธิ์:</b></div>
+                    <div fxFlex="70%" fxFlex.xs="100%">{{ data_account.Roles }}</div>
+                </div>
             </mat-card-content>
         </mat-card>
     </div>

@@ -12,32 +12,36 @@ namespace SchoolScore.Api.Controllers
     [Route("api/[controller]")]
     public class TeachersController : ApiControllerBase
     {
+        private readonly IAccountDac<DbModels.Account> accountDac;
         private readonly IClassroomDac<DbModels.Classroom> classroomDac;
         private readonly IOpenSubjectDac<DbModels.OpenSubject> openSubjectDac;
         private readonly ITeacherDac<DbModels.Teacher> teacherDac;
 
         public TeachersController(
+            IAccountDac<DbModels.Account> accountDac,
             IClassroomDac<DbModels.Classroom> classroomDac,
             IOpenSubjectDac<DbModels.OpenSubject> openSubjectDac,
             ITeacherDac<DbModels.Teacher> teacherDac
             )
         {
             this.teacherDac = teacherDac;
+            this.accountDac = accountDac;
             this.classroomDac = classroomDac;
             this.openSubjectDac = openSubjectDac;
         }
 
         [HttpGet]
-        public async Task<ActionResult<PagingModel<DbModels.Teacher>>> Get(string? search, int? page = 1, int? pageSize = 100)
+        public async Task<ActionResult<PagingModel<Teacher>>> Get(string? search, int? page = 1, int? pageSize = 100)
         {
             if (string.IsNullOrWhiteSpace(search))
             {
-                var data = page == 0
-                    ? await teacherDac.ListAll(x => true)
-                    : await teacherDac.List(x => true, page ?? 1, pageSize);
+                //var data = page == 0
+                //    ? await teacherDac.ListWithTeacher(accountDac.Collection, x => true)
+                //    : await teacherDac.List(x => true, page ?? 1, pageSize);
+                var data = await teacherDac.ListWithTeacher(accountDac.Collection, x => true);
                 var count = await teacherDac.Count(x => true);
 
-                return Ok(new PagingModel<DbModels.Teacher>
+                return Ok(new PagingModel<Teacher>
                 {
                     Data = data,
                     Length = count,

@@ -20,7 +20,8 @@ namespace SchoolScore.Api.DACs.Imps
                     Teacher = y,
                 })
                 .FirstOrDefault();
-            var result = document.Account.Adapt<Models.Account>();
+            if (document == null) return null;
+            var result = document.Account?.Adapt<Models.Account>();
             result.Teacher = document.Teacher;
             return result;
         }

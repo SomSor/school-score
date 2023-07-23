@@ -7,7 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { AuthService } from './auth.service';
 import { BaseApiService } from './base-api.service';
-import { PagingModel, RegisteredOpenSubject } from '../models/paging';
+import { RegisteredOpenSubject } from '../models/paging';
 
 @Injectable({
   providedIn: 'root'

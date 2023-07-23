@@ -39,6 +39,7 @@ import { CourseEvaluatingComponent } from './course-evaluating/course-evaluating
 import { PersonManageComponent } from './data-management/data-management/person-manage/person-manage.component';
 import { TeacherCreateComponent } from './data-management/teacher/teacher-create/teacher-create.component';
 import { TeacherDetailsComponent } from './data-management/teacher/teacher-details/teacher-details.component';
+import { TeacherAccountCreateComponent } from './data-management/teacher/teacher-account-create/teacher-account-create.component';
 import { StudentCreateComponent } from './data-management/student/student-create/student-create.component';
 import { StudentDetailsComponent } from './data-management/student/student-details/student-details.component';
 
@@ -105,6 +106,7 @@ const routes: Routes = [];
     CorseDetailsComponent,
     SchoolYearCreateComponent,
     SchoolYearDetailsComponent,
+    TeacherAccountCreateComponent,
   ],
   imports: [
     AppRoutingModule,
