@@ -29,12 +29,8 @@
 </div>
 <br />
 <h2>ปีการศึกษา</h2>
-<div fxLayout="row wrap" fxLayoutGap="grid">
-    <div fxFlex="50%" fxFlex.xs="100%">
-        <button mat-raised-button color="primary" routerLink="/schoolyear-create">+
-            เพิ่มปีการศึกษา</button>
-    </div>
-</div>
+<app-paging-controls [data]="data_schoolYear" [showSearch]="false" [addButtonText]="'+ เพิ่มปีการศึกษา'"
+    [link]="'/schoolyear-create'" (getDataFunc)="getServerData_schoolYear($event)"></app-paging-controls>
 <br />
 <table mat-table [dataSource]="data_schoolYear.Data" class="mat-elevation-z8 full-width" *ngIf="data_schoolYear.Data">
     <ng-container matColumnDef="No">

@@ -13,11 +13,9 @@
 <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
 <br />
 <h2>ครู</h2>
-<div fxLayout="row wrap" fxLayoutGap="grid">
-    <div fxFlex="50%" fxFlex.xs="100%">
-        <button mat-raised-button color="primary" routerLink="/teacher-create">+ เพิ่มครู</button>
-    </div>
-</div>
+<br />
+<app-paging-controls [data]="data_teacher" [showSearch]="false" [addButtonText]="'+ เพิ่มครู'"
+    [link]="'/teacher-create'" (getDataFunc)="getTeacherData($event)"></app-paging-controls>
 <br />
 <table mat-table [dataSource]="data_teacher.Data" class="mat-elevation-z8 full-width" *ngIf="data_teacher.Data">
     <ng-container matColumnDef="No">
@@ -58,11 +56,9 @@
 <app-skeleton *ngIf="!data_teacher.Data" [style]="'table'" [column]="4"></app-skeleton>
 
 <h2>นักเรียน</h2>
-<div fxLayout="row wrap" fxLayoutGap="grid">
-    <div fxFlex="50%" fxFlex.xs="100%">
-        <button mat-raised-button color="primary" routerLink="/student-create">+ เพิ่มนักเรียน</button>
-    </div>
-</div>
+<br />
+<app-paging-controls [data]="data_student" [showSearch]="false" [addButtonText]="'+ เพิ่มนักเรียน'"
+    [link]="'/student-create'" (getDataFunc)="getStudentData($event)"></app-paging-controls>
 <br />
 <table mat-table [dataSource]="data_student.Data" class="mat-elevation-z8 full-width" *ngIf="data_student.Data">
     <ng-container matColumnDef="No">

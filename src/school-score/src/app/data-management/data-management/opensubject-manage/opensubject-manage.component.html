@@ -13,12 +13,9 @@
 <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
 <br />
 <h2>วิชาที่เปิดสอน</h2>
-<div fxLayout="row wrap" fxLayoutGap="grid">
-    <div fxFlex="50%" fxFlex.xs="100%">
-        <button mat-raised-button color="primary" routerLink="/open-subject-create">+
-            เพิ่มวิชาที่เปิดสอน</button>
-    </div>
-</div>
+<br />
+<app-paging-controls [data]="data_openSubject" [showSearch]="false" [addButtonText]="'+ เพิ่มวิชาที่เปิดสอน'"
+    [link]="'/open-subject-create'" (getDataFunc)="getOpenSubjectData($event)"></app-paging-controls>
 <br />
 <table mat-table [dataSource]="data_openSubject.Data" class="mat-elevation-z8 full-width" *ngIf="data_openSubject.Data">
     <ng-container matColumnDef="No">
@@ -55,12 +52,9 @@
 <app-skeleton *ngIf="!data_openSubject.Data" [style]="'table'" [column]="4"></app-skeleton>
 
 <h2>ลงทะเบียนห้องเรียน</h2>
-<div fxLayout="row wrap" fxLayoutGap="grid">
-    <div fxFlex="50%" fxFlex.xs="100%">
-        <button mat-raised-button color="primary" routerLink="/register-open-subject-create">+
-            ลงทะเบียนห้องเรียน</button>
-    </div>
-</div>
+<br />
+<app-paging-controls [data]="data_registerOpenSubject" [showSearch]="false" [addButtonText]="'+ ลงทะเบียนห้องเรียน'"
+    [link]="'/register-open-subject-create'" (getDataFunc)="getRegisterOpenSubjectData($event)"></app-paging-controls>
 <br />
 <table mat-table [dataSource]="data_registerOpenSubject.Data" class="mat-elevation-z8 full-width"
     *ngIf="data_registerOpenSubject.Data">

@@ -13,12 +13,9 @@
 <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
 <br />
 <h2>กลุ่มสาระการเรียนรู้</h2>
-<div fxLayout="row wrap" fxLayoutGap="grid">
-    <div fxFlex="50%" fxFlex.xs="100%">
-        <button mat-raised-button color="primary" routerLink="/learning-area-create">+
-            เพิ่มกลุ่มสาระการเรียนรู้</button>
-    </div>
-</div>
+<br />
+<app-paging-controls [data]="data_learningArea" [showSearch]="false" [addButtonText]="'+ เพิ่มกลุ่มสาระการเรียนรู้'"
+    [link]="'/learning-area-create'" (getDataFunc)="getLearingAreaData($event)"></app-paging-controls>
 <br />
 <table mat-table [dataSource]="data_learningArea.Data" class="mat-elevation-z8 full-width"
     *ngIf="data_learningArea.Data">
@@ -51,12 +48,9 @@
 <app-skeleton *ngIf="!data_learningArea.Data" [style]="'table'" [column]="4"></app-skeleton>
 
 <h2>วิชา</h2>
-<div fxLayout="row wrap" fxLayoutGap="grid">
-    <div fxFlex="50%" fxFlex.xs="100%">
-        <button mat-raised-button color="primary" routerLink="/subject-create">+
-            เพิ่มวิชา</button>
-    </div>
-</div>
+<br />
+<app-paging-controls [data]="data_subject" [showSearch]="false" [addButtonText]="'+ เพิ่มวิชา'"
+    [link]="'/subject-create'" (getDataFunc)="getSubjectData($event)"></app-paging-controls>
 <br />
 <table mat-table [dataSource]="data_subject.Data" class="mat-elevation-z8 full-width" *ngIf="data_subject.Data">
     <ng-container matColumnDef="No">

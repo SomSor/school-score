@@ -5,6 +5,7 @@
         public int Page { get; set; }
         public int PageSize { get; set; }
         public long Length { get; set; }
+        public string SearchText { get; set; }
         public IEnumerable<T> Data { get; set; }
     }
 }

@@ -65,6 +65,7 @@ namespace SchoolScore.Api.Controllers
                 {
                     Data = data,
                     Length = count,
+                    SearchText = txt,
                 });
             }
         }

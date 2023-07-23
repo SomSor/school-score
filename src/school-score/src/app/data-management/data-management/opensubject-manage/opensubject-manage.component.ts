@@ -23,8 +23,8 @@ export class OpensubjectManageComponent {
   ) { }
 
   ngOnInit(): void {
-    this.getOpenSubjectData(undefined);
-    this.getRegisterOpenSubjectData(undefined);
+    this.getOpenSubjectData();
+    this.getRegisterOpenSubjectData();
   }
 
   async getOpenSubjectData(event?: PageEvent) {

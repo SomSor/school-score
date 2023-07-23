@@ -15,7 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
-// import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -63,6 +63,7 @@ import { RegisterOpenSubjectDetailsComponent } from './data-management/register-
 import { CorseDetailsComponent } from './corse-details/corse-details.component';
 import { SchoolYearCreateComponent } from './configuration/school-year-create/school-year-create.component';
 import { SchoolYearDetailsComponent } from './configuration/school-year-details/school-year-details.component';
+import { PagingControlsComponent } from './helpers/paging-controls/paging-controls.component';
 
 const routes: Routes = [];
 
@@ -107,6 +108,7 @@ const routes: Routes = [];
     SchoolYearCreateComponent,
     SchoolYearDetailsComponent,
     TeacherAccountCreateComponent,
+    PagingControlsComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -127,7 +129,7 @@ const routes: Routes = [];
     MatIconModule,
     MatInputModule,
     MatMenuModule,
-    // MatPaginatorModule,
+    MatPaginatorModule,
     MatNativeDateModule,
     MatSelectModule,
     MatSnackBarModule,
