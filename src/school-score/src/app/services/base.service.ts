@@ -39,30 +39,32 @@ export class BaseService {
     });
   }
 
-  Post(url: any, request: any): Promise<any> {
+  Post(url: any, request: any, showMessage?: boolean, message?: any, callback?: any): Promise<any> {
     return new Promise(resolve => {
       this.http.post(url, request, { headers: this.authService.AuthHeaders() }).subscribe({
         next: (response) => {
           this.snackBar.open("Data created", "Close", { duration: 5000 });
-          resolve(response);
+          if (callback) callback();
+          else resolve(response);
         },
         error: (error) => {
-          this.Error(error);
-          resolve(null);
+          this.Error(error, showMessage, message);
+          resolve(error);
         },
       })
     });
   }
 
-  Put(url: any, request: any): Promise<any> {
+  Put(url: any, request: any, showMessage?: boolean, message?: any, callback?: any): Promise<any> {
     return new Promise(resolve => {
       this.http.put(url, request, { headers: this.authService.AuthHeaders() }).subscribe({
         next: (response) => {
           this.snackBar.open("Data updated", "Close", { duration: 5000 });
-          resolve(response);
+          if (callback) callback();
+          else resolve(response);
         },
         error: (error) => {
-          this.Error(error);
+          this.Error(error, showMessage, message);
           resolve(null);
         },
       })

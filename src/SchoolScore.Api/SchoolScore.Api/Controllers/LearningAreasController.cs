@@ -70,6 +70,9 @@ namespace SchoolScore.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] LearningAreaCreate request)
         {
+            var checkDoc = await learningAreaDac.Get(x => x.Name == request.Name);
+            if (checkDoc != null) return Conflict($"ไม่สำเร็จ มีกลุ่มสาระการเรียนรู้ {request.Name} นี้ในระบบแล้วแล้ว");
+
             var documentDb = request.Adapt<DbModels.LearningArea>();
             documentDb.Init(UserId);
             documentDb.SchoolId = SchoolId;
@@ -116,6 +119,9 @@ namespace SchoolScore.Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, [FromBody] LearningAreaCreate request)
         {
+            var checkDoc = await learningAreaDac.Get(x => x.Id != id && x.Name == request.Name);
+            if (checkDoc != null) return Conflict($"ไม่สำเร็จ มีกลุ่มสาระการเรียนรู้ {request.Name} นี้ในระบบแล้วแล้ว");
+
             var documentDb = await learningAreaDac.Get(x => x.Id == id);
             documentDb.Name = request.Name;
             documentDb.Description = request.Description;

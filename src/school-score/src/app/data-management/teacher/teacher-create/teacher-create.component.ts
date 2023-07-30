@@ -44,11 +44,9 @@ export class TeacherCreateComponent {
   onSave() {
     if (this.fg.valid) {
       if (this.editingId) {
-        this.teacherService.Replace(this.editingId, this.fg.value)
-          .then(response => this.router.navigate(['/teacher-details'], { queryParams: { id: this.editingId } }));
+        this.teacherService.Replace(this.editingId, this.fg.value, true, null, (() => this.router.navigate(['/teacher-details'], { queryParams: { id: this.editingId } })));
       } else {
-        this.teacherService.Create(this.fg.value)
-          .then(response => this.router.navigate(['/person-manage']));
+        this.teacherService.Create(this.fg.value, true, null, (() => this.router.navigate(['/person-manage'])));
       }
     }
   }

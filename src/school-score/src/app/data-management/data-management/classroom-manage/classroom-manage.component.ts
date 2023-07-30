@@ -38,7 +38,7 @@ export class ClassroomManageComponent {
   }
 
   GetTier(tier: any) {
-    return this.classroomTierService.Get(tier);
+    return this.classroomTierService.GetAbb(tier);
   }
 
 }

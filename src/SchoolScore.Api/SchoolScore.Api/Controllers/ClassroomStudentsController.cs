@@ -91,6 +91,9 @@ namespace SchoolScore.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] ClassroomStudentCreate request)
         {
+            var checkDoc = await classroomStudentDac.Get(x => x.ClassroomId == request.ClassroomId && x.StudentId == request.StudentId);
+            if (checkDoc != null) return Conflict($"ไม่สำเร็จ มีนักเรียนในห้องเรียนอยู่แล้ว");
+
             var documentDb = request.Adapt<DbModels.ClassroomStudent>();
             documentDb.Init(UserId);
             documentDb.RegisterOpenSubjects = Enumerable.Empty<DbModels.RegisterOpenSubject>();
@@ -136,6 +139,9 @@ namespace SchoolScore.Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, [FromBody] ClassroomStudentCreate request)
         {
+            var checkDoc = await classroomStudentDac.Get(x => x.Id != id && x.ClassroomId == request.ClassroomId && x.StudentId == request.StudentId);
+            if (checkDoc != null) return Conflict($"ไม่สำเร็จ มีนักเรียนในห้องเรียนอยู่แล้ว");
+
             var documentDb = await classroomStudentDac.Get(x => x.Id == id);
             documentDb.ClassroomId = request.ClassroomId;
             documentDb.StudentId = request.StudentId;

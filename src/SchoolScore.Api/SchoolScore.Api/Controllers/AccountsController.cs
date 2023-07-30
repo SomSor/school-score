@@ -30,10 +30,8 @@ namespace SchoolScore.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AccountCreate request)
         {
-            if (await accountDac.Get(x => x.Username == request.Username) != null)
-            {
-                return Conflict(new { Message = "Username already exists." });
-            }
+            var checkDoc = await accountDac.Get(x => x.Username == request.Username);
+            if (checkDoc != null) return Conflict(new { Message = $"ไม่สำเร็จ มีรหัสผู้ใช้งาน {request.Username} นี้ในระบบแล้ว" });
 
             var documentDb = request.Adapt<DbModels.Account>();
             documentDb.Init(UserId);

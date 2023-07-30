@@ -68,8 +68,12 @@ namespace SchoolScore.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] StudentCreate request)
         {
+            var checkDoc = await studentDac.Get(x => x.Code == request.Code);
+            if (checkDoc != null) return Conflict($"ไม่สำเร็จ มีรหัสประจำตัว {request.Code} นี้ในระบบแล้วแล้ว");
+
             var documentDb = request.Adapt<DbModels.Student>();
             documentDb.Init(UserId);
+            documentDb.SchoolId = SchoolId;
             await studentDac.Create(documentDb);
             return Ok();
         }
@@ -114,6 +118,9 @@ namespace SchoolScore.Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, [FromBody] StudentCreate request)
         {
+            var checkDoc = await studentDac.Get(x => x.Id != id && x.Code == request.Code);
+            if (checkDoc != null) return Conflict($"ไม่สำเร็จ มีรหัสประจำตัว {request.Code} นี้ในระบบแล้วแล้ว");
+
             var documentDb = await studentDac.Get(x => x.Id == id);
             documentDb.Code = request.Code;
             documentDb.Prefix = request.Prefix;

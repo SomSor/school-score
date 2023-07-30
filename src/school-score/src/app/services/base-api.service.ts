@@ -37,9 +37,9 @@ export class BaseApiService extends BaseService {
     return this.GetDataPagging(url);
   }
 
-  Create(request: any): Promise<any> {
+  Create(request: any, showMessage?: boolean, message?: any, callback?: any): Promise<any> {
     let url = `${this.apiUrl}/api/${this.controllername}`;
-    return this.Post(url, request);
+    return this.Post(url, request, showMessage, message, callback);
   }
 
   Get(id: any): Promise<any> {
@@ -47,9 +47,9 @@ export class BaseApiService extends BaseService {
     return this.GetData(url);
   }
 
-  Replace(id: any, request: any): Promise<any> {
+  Replace(id: any, request: any, showMessage?: boolean, message?: any, callback?: any): Promise<any> {
     let url = `${this.apiUrl}/api/${this.controllername}/${id}`;
-    return this.Put(url, request);
+    return this.Put(url, request, showMessage, message, callback);
   }
 
   Delete(id: any): Promise<any> {

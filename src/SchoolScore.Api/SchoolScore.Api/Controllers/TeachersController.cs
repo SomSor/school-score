@@ -75,8 +75,12 @@ namespace SchoolScore.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] TeacherCreate request)
         {
+            var checkDoc = await teacherDac.Get(x => x.Code == request.Code);
+            if (checkDoc != null) return Conflict($"ไม่สำเร็จ มีรหัสประจำตัว {request.Code} นี้ในระบบแล้วแล้ว");
+
             var documentDb = request.Adapt<DbModels.Teacher>();
             documentDb.Init(UserId);
+            documentDb.SchoolId = SchoolId;
             await teacherDac.Create(documentDb);
             return Ok();
         }
@@ -121,6 +125,9 @@ namespace SchoolScore.Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, [FromBody] TeacherCreate request)
         {
+            var checkDoc = await teacherDac.Get(x => x.Id != id && x.Code == request.Code);
+            if (checkDoc != null) return Conflict($"ไม่สำเร็จ มีรหัสประจำตัว {request.Code} นี้ในระบบแล้วแล้ว");
+
             var documentDb = await teacherDac.Get(x => x.Id == id);
             documentDb.Code = request.Code;
             documentDb.Prefix = request.Prefix;
@@ -128,7 +135,8 @@ namespace SchoolScore.Api.Controllers
             documentDb.Lastname = request.Lastname;
             documentDb.PID = request.PID;
             await teacherDac.ReplaceOne(x => x.Id == id, documentDb);
-            return Ok();
+            return Ok(new { msg = "test" });
+            //return Ok();
         }
 
         [HttpPut("delete/{id}")]

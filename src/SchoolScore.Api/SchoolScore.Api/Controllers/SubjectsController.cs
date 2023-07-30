@@ -72,6 +72,9 @@ namespace SchoolScore.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] SubjectCreate request)
         {
+            var checkDoc = await subjectDac.Get(x => x.Code == request.Code);
+            if (checkDoc != null) return Conflict($"ไม่สำเร็จ มีรหัสวิชา {request.Code} นี้ในระบบแล้วแล้ว");
+
             var documentDb = request.Adapt<DbModels.Subject>();
             documentDb.Init(UserId);
             await subjectDac.Create(documentDb);
@@ -117,6 +120,9 @@ namespace SchoolScore.Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, [FromBody] SubjectCreate request)
         {
+            var checkDoc = await subjectDac.Get(x => x.Id != id && x.Code == request.Code);
+            if (checkDoc != null) return Conflict($"ไม่สำเร็จ มีรหัสวิชา {request.Code} นี้ในระบบแล้วแล้ว");
+
             var documentDb = await subjectDac.Get(x => x.Id == id);
             documentDb.Code = request.Code;
             documentDb.Name = request.Name;

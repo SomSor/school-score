@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SchoolScore.Api.DACs;
 using SchoolScore.Api.Models;
-using System.Data;
 using System.Linq.Expressions;
 
 namespace SchoolScore.Api.Controllers
@@ -13,6 +12,14 @@ namespace SchoolScore.Api.Controllers
     [Route("api/[controller]")]
     public class ClassroomsController : ApiControllerBase
     {
+        private readonly IDictionary<string, string> Tiers = new Dictionary<string, string>
+        {
+            { DbModels.ClassroomTierPossible.PreSchool, "อ." },
+            { DbModels.ClassroomTierPossible.PrimarySchool, "ป." },
+            { DbModels.ClassroomTierPossible.JuniorHighSchool, "ม." },
+            { DbModels.ClassroomTierPossible.SeniorHighSchool, "ม." },
+        };
+
         private readonly IClassroomDac<DbModels.Classroom> classroomDac;
         private readonly IClassroomStudentDac<DbModels.ClassroomStudent> classroomStudentDac;
         private readonly ISchoolYearDac<DbModels.SchoolYear> schoolYearDac;
@@ -82,6 +89,9 @@ namespace SchoolScore.Api.Controllers
         public async Task<IActionResult> Create([FromBody] ClassroomCreate request)
         {
             var schoolYear = await schoolYearDac.Current();
+            var checkDoc = await classroomDac.Get(x => x.SchoolYearId == schoolYear.Id && x.Tier == request.Tier && x.ClassYear == request.ClassYear && x.Subclass == request.Subclass);
+            if (checkDoc != null) return Conflict($"ไม่สำเร็จ มีห้องเรียน {Tiers[request.Tier]} {request.ClassYear}/{request.Subclass} นี้ในระบบแล้วแล้ว");
+
             var documentDb = request.Adapt<DbModels.Classroom>();
             documentDb.Init(UserId);
             documentDb.SchoolYearId = schoolYear.Id;
@@ -129,6 +139,10 @@ namespace SchoolScore.Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, [FromBody] ClassroomCreate request)
         {
+            var schoolYear = await schoolYearDac.Current();
+            var checkDoc = await classroomDac.Get(x => x.Id != id && x.SchoolYearId == schoolYear.Id && x.Tier == request.Tier && x.ClassYear == request.ClassYear && x.Subclass == request.Subclass);
+            if (checkDoc != null) return Conflict($"ไม่สำเร็จ มีห้องเรียน {Tiers[request.Tier]} {request.ClassYear}/{request.Subclass} นี้ในระบบแล้วแล้ว");
+
             var documentDb = await classroomDac.Get(x => x.Id == id);
             documentDb.ClassYear = request.ClassYear;
             documentDb.Subclass = request.Subclass;
